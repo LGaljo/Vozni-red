@@ -3175,4 +3175,6 @@
         <item>Žvirče</item>
         <item>Zvirče</item>
     </string-array>
+    <string name="vstop">Vstop:</string>
+    <string name="izstop">Izstop:</string>
 </resources>
