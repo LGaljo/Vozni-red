@@ -29,6 +29,7 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_MESSAGE = "com.lukag.atvoznired";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +64,9 @@ public class MainActivity extends AppCompatActivity {
 
                 Log.d("Vhod","Sem ga dobil: " + vstop_text + " " + izstop_text); //to deluje
 
+                String vstopnaPostaja = null;
+                String izstopnaPostaja = null;
+
                 if (vstop_text.equals(izstop_text)) {
                     new AlertDialog.Builder(MainActivity.this)
                             .setTitle("Brezveznež")
@@ -74,18 +78,33 @@ public class MainActivity extends AppCompatActivity {
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .show();
                 } else {
-                    //tukaj kličem POSTit????
-                    POSTiT("0129", "0855", "23.3.2017");
+                    try {
+                        JSONObject objV = new JSONObject(postajeFromAsset(1));
+                        JSONObject objIZ = new JSONObject(postajeFromAsset(2));
+                        vstopnaPostaja = objV.getString(vstop_text);
+                        izstopnaPostaja = objIZ.getString(izstop_text);
+                        Log.d("Iskanje", "Našel sem: " + vstopnaPostaja + " " + izstopnaPostaja);
+
+                    } catch(JSONException e) {
+                        Log.e("JSON Parser", "Napaka pri pridobivanju podatkov");
+                    }
+                    Log.i("Postaje", "Vstopna postaja: " + vstopnaPostaja + " Izstopna postaja: " + izstopnaPostaja);
+                    POSTiT(vstopnaPostaja, izstopnaPostaja, "24.3.2017");
                 }
 
             }
         });
     }
 
-    public String VstopneFromAsset(int index) {
+    public String postajeFromAsset(int index) {
         String v_json = null;
         try {
-            InputStream is = getAssets().open("vstopnePostaje.json");
+            InputStream is = null;
+            if (index == 1) {
+                is = getAssets().open("vstopnePostaje.json");
+            } else {
+                is = getAssets().open("izstopnePostaje.json");
+            }
             int size = is.available();
             byte[] buffer = new byte[size];
             is.read(buffer);
@@ -97,6 +116,8 @@ public class MainActivity extends AppCompatActivity {
         }
         return v_json;
     }
+
+
 
     public void POSTiT(final String fromID, final String toID, final String date) {
         RequestQueue queue = Volley.newRequestQueue(this);
