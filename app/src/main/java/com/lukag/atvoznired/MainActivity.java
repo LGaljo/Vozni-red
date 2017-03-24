@@ -1,10 +1,12 @@
 package com.lukag.atvoznired;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -23,12 +25,15 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_MESSAGE = "com.lukag.atvoznired";
+
+    public JSONObject POSTreply = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,7 +122,47 @@ public class MainActivity extends AppCompatActivity {
         return v_json;
     }
 
+    private void writeToFile(String data, Context context) {
+        try {
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("reply.json", Context.MODE_PRIVATE));
+            outputStreamWriter.write(data);
+            outputStreamWriter.close();
+        }
+        catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
+    }
 
+    public void SetVozniRed(JSONObject reply) {
+
+        HashMap<String, String> vozniRed = new HashMap<>();
+        vozniRed.put("key", "value");
+        String status = null;
+        String message = null;
+
+        try {
+            status = reply.get("status").toString();
+            message = reply.get("message").toString();
+            Log.d("Status","Strežnik je vrnil " + status + ": " + message);
+            JSONArray schedule = reply.getJSONArray("schedule");
+
+            for (int i = 0; i < schedule.length(); i++) {
+                vozniRed.put("ID", schedule.getJSONObject(i).getString("ID"));
+                vozniRed.put("ODHOD_FORMATED", schedule.getJSONObject(i).getString("ODHOD_FORMATED"));
+                vozniRed.put("PRIHOD_FORMATED", schedule.getJSONObject(i).getString("PRIHOD_FORMATED"));
+                vozniRed.put("KM_POT", schedule.getJSONObject(i).getString("KM_POT"));
+                vozniRed.put("CAS_FORMATED", schedule.getJSONObject(i).getString("CAS_FORMATED"));
+                vozniRed.put("STATUS", schedule.getJSONObject(i).getString("STATUS"));
+            }
+        } catch (JSONException e) {
+            Log.e("getResponse", "Napaka v pri parsanju JSON datoteke");
+        }
+
+        Intent intent;
+        intent = new Intent(MainActivity.this, DisplayMessageActivity.class);
+        intent.putExtra(EXTRA_MESSAGE, vozniRed);
+        startActivity(intent);
+    }
 
     public void POSTiT(final String fromID, final String toID, final String date) {
         RequestQueue queue = Volley.newRequestQueue(this);
@@ -127,9 +172,12 @@ public class MainActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Intent intent = new Intent(MainActivity.this, DisplayMessageActivity.class);
-                        intent.putExtra(EXTRA_MESSAGE, response);
-                        startActivity(intent);
+                        try {
+                            POSTreply = new JSONObject(response);
+                            SetVozniRed(POSTreply);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 },
                 new Response.ErrorListener() {
