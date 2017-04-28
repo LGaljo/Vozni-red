@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Alpetour vozni red</string>
     <string name="button_send">Prikaži</string>
+    <string name="button_calendar">Koledar</string>
 
     <string-array name="izstopne_postaje">
         <item>Adergas</item>

@@ -2,6 +2,9 @@
 <resources>
     <string name="app_name">Alpetour vozni red</string>
     <string name="button_send">Show</string>
+    <string name="calendar">Calendar</string>
     <string name="izstop">Exit:</string>
     <string name="vstop">Entry:</string>
+    <string name="button_calendar">Calendar</string>
+
 </resources>
