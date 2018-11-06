@@ -2,6 +2,13 @@
     <string name="app_name">Alpetour vozni red</string>
     <string name="button_send">Prikaži</string>
     <string name="button_calendar">Koledar</string>
+    <string name="vstop">Vstop:</string>
+    <string name="izstop">Izstop:</string>
+    <string name="vstop_hint">Vstopna postaja</string>
+    <string name="izstop_hint">Izstopna postaja</string>
+    <string name="koledar">Koledar</string>
+    <string name="izberi_dan">Izberi dan:</string>
+    <string name="menjaj">Menjaj</string>
 
     <string-array name="izstopne_postaje">
         <item>Adergas</item>
@@ -3176,6 +3183,4 @@
         <item>Žvirče</item>
         <item>Zvirče</item>
     </string-array>
-    <string name="vstop">Vstop:</string>
-    <string name="izstop">Izstop:</string>
 </resources>

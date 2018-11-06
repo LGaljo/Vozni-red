@@ -2,9 +2,12 @@
 <resources>
     <string name="app_name">Alpetour vozni red</string>
     <string name="button_send">Show</string>
-    <string name="calendar">Calendar</string>
     <string name="izstop">Exit:</string>
     <string name="vstop">Entry:</string>
     <string name="button_calendar">Calendar</string>
-
+    <string name="vstop_hint">Entrance</string>
+    <string name="izstop_hint">Exit</string>
+    <string name="koledar">Calendar</string>
+    <string name="izberi_dan">Choose date:</string>
+    <string name="menjaj">Invert</string>
 </resources>
