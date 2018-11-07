@@ -7,7 +7,7 @@
     tools:context="com.lukag.atvoznired.DisplayMessageActivity">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view"
+        android:id="@+id/recycler_view_pogled_urnik"
         android:scrollbars="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>

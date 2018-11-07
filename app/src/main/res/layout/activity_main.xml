@@ -81,6 +81,7 @@
         android:ems="10"
         android:freezesText="true"
         android:gravity="center"
+        android:autofillHints=""
         android:hint="@string/koledar"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toTopOf="@+id/submit"
@@ -93,16 +94,40 @@
         android:id="@+id/invert"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="45dp"
         android:drawableStart="@android:drawable/stat_notify_sync"
         android:drawablePadding="5dp"
         android:gravity="center"
         android:text="@string/menjaj"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/izstopna_text"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/zvezda"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/vstopna_text" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_pogled_priljubljenih"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/submit" />
+
+    <ImageView
+        android:id="@+id/zvezda"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="60dp"
+        android:contentDescription="@string/zvezda"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/invert"
+        app:layout_constraintTop_toBottomOf="@+id/vstopna_text"
+        app:srcCompat="@android:drawable/btn_star" />
 
 </android.support.constraint.ConstraintLayout>

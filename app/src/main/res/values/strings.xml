@@ -9,6 +9,7 @@
     <string name="koledar">Koledar</string>
     <string name="izberi_dan">Izberi dan:</string>
     <string name="menjaj">Menjaj</string>
+    <string name="zvezda">Zvezda</string>
 
     <string-array name="izstopne_postaje">
         <item>Adergas</item>

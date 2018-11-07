@@ -44,7 +44,7 @@ public class DisplayMessageActivity extends AppCompatActivity {
         relacija.setToName(prenos.get(3));
         relacija.initUrnik();
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view_pogled_urnik);
 
         sAdapter = new ScheduleAdapter(relacija.getUrnik(), this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());

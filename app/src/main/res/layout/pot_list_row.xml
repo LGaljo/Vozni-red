@@ -15,62 +15,62 @@
 
     <TextView
         android:id="@+id/start"
-        android:layout_width="60dp"
+        android:layout_width="65dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:gravity="center"
         android:textColor="@color/title"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:gravity="center"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/end"
-        android:layout_width="60dp"
+        android:layout_width="65dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
+        android:gravity="center"
         android:textColor="@color/title"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:gravity="center"
         app:layout_constraintStart_toEndOf="@+id/start"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/length"
-        android:layout_width="60dp"
+        android:layout_width="65dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
+        android:gravity="center"
         android:textColor="@color/title"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:gravity="center"
         app:layout_constraintStart_toEndOf="@+id/end"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/duration"
-        android:layout_width="60dp"
+        android:layout_width="52dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
+        android:gravity="center"
         android:textColor="@color/title"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:gravity="center"
         app:layout_constraintStart_toEndOf="@+id/length"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/cost"
-        android:layout_width="60dp"
+        android:layout_width="52dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="8dp"
+        android:gravity="center"
         android:textColor="@color/title"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/duration"
