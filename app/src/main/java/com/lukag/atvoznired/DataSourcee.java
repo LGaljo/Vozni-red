@@ -1,10 +1,10 @@
 package com.lukag.atvoznired;
 
 import android.content.Context;
-import android.util.Log;
+import android.content.SharedPreferences;
+import android.widget.AutoCompleteTextView;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -52,6 +52,24 @@ public class DataSourcee {
             return null;
         }
         return v_json;
+    }
+
+    public static void nastaviZadnjiIskani(Context context, AutoCompleteTextView vp, AutoCompleteTextView ip) {
+        SharedPreferences priljubljene = context.getSharedPreferences("zadnjiIskaniPostaji", Context.MODE_PRIVATE);
+        String fromID = priljubljene.getString("fromID", "");
+        String toID = priljubljene.getString("toID", "");
+
+        vp.setText(fromID, false);
+        ip.setText(toID, false);
+    }
+
+    public static void shraniZadnjiIskani(Context context, AutoCompleteTextView vp, AutoCompleteTextView ip) {
+        SharedPreferences priljubljene = context.getSharedPreferences("zadnjiIskaniPostaji", Context.MODE_PRIVATE);
+        SharedPreferences.Editor urejevalnik = priljubljene.edit();
+        urejevalnik.putString("fromID", vp.getText().toString());
+        urejevalnik.putString("toID", ip.getText().toString());
+
+        urejevalnik.apply();
     }
 
     public static String getIDfromMap(String str) {

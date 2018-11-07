@@ -21,13 +21,18 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_MESSAGE = "com.lukag.atvoznired";
 
+    AutoCompleteTextView vstopnaPostajaView;
+    AutoCompleteTextView izstopnaPostajaView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        vstopnaPostajaView = (AutoCompleteTextView) findViewById(R.id.vstopna_text);
+        izstopnaPostajaView = (AutoCompleteTextView) findViewById(R.id.izstopna_text);
 
         dodajDanasnjiDan();
         dodajAutoCompleteTextView();
+        DataSourcee.nastaviZadnjiIskani(this, vstopnaPostajaView, izstopnaPostajaView);
 
         // Gumb za prikaz
         final Button button = (Button) findViewById(R.id.submit);
