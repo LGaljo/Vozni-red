@@ -2,14 +2,19 @@ package com.lukag.atvoznired;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.view.WindowManager;
 import android.widget.AutoCompleteTextView;
+import android.widget.RelativeLayout;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class DataSourcee {
     private static HashMap<String, String> postaje = new HashMap<String, String>();
@@ -76,4 +81,11 @@ public class DataSourcee {
         return postaje.get(str);
     }
 
+    public static String dodajDanasnjiDan() {
+        // Današnji datum
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat today = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMANY);
+
+        return today.format(c.getTime());
+    }
 }

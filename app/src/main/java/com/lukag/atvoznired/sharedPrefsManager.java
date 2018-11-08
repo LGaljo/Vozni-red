@@ -10,59 +10,83 @@ import java.util.List;
 
 public class sharedPrefsManager {
     private Context context;
-    private SharedPreferences priljubljene;
+    private SharedPreferences shramba;
     private int size;
     public static List<Relacija> priljubljeneRelacije;
 
     sharedPrefsManager(Context context) {
         this.context = context;
-    }
-
-    public void init() {
-        priljubljene = this.context.getSharedPreferences("priljubljenePostaje", Context.MODE_PRIVATE);
-        //izbrisiVse();
-        size = priljubljene.getInt("number", 0);
+        shramba = this.context.getSharedPreferences("priljubljenePostaje", Context.MODE_PRIVATE);
         priljubljeneRelacije = new ArrayList<>();
+        //izbrisiPriljubljene();
+        size = shramba.getInt("number", 0);
         pridobiPriljubljene();
     }
 
-    private void izbrisiVse() {
-        SharedPreferences.Editor urejevalnik = this.priljubljene.edit();
+    private void izbrisiPriljubljene() {
+        SharedPreferences.Editor urejevalnik = this.shramba.edit();
         urejevalnik.clear();
         urejevalnik.putInt("number", 0);
-        urejevalnik.putString(Integer.toString(0), "");
-        urejevalnik.putString(Integer.toString(1), "");
-        urejevalnik.putString(Integer.toString(2), "");
-        urejevalnik.putString(Integer.toString(3), "");
-        urejevalnik.putString(Integer.toString(4), "");
-        urejevalnik.putString(Integer.toString(5), "");
-        urejevalnik.putString(Integer.toString(6), "");
-        urejevalnik.putString(Integer.toString(7), "");
-        urejevalnik.putString(Integer.toString(8), "");
-        urejevalnik.putString(Integer.toString(9), "");
-        urejevalnik.putString(Integer.toString(10), "");
-        urejevalnik.commit();
+        urejevalnik.apply();
     }
 
-    private Boolean aliObstaja(String fromID, String toID) {
-        for (int i = 0; i < this.size; i++) {
-            if (this.priljubljene.getString(Integer.toString(i), "").equals(fromID + ":" + toID)) {
+    private Boolean aliObstaja(Relacija relacija) {
+        for (int i = 0; i < priljubljeneRelacije.size(); i++) {
+            if (priljubljeneRelacije.get(i).getFromName().equals(relacija.getFromName()) && priljubljeneRelacije.get(i).getToName().equals(relacija.getToName())) {
                 return true;
             }
         }
-
         return false;
     }
 
-
-    public void dodajPriljubljene(String from, String to) {
-        if (!aliObstaja(from, to)) {
-            Log.d("Favs dodaj", from + to);
-            SharedPreferences.Editor urejevalnik = this.priljubljene.edit();
-            urejevalnik.putString(Integer.toString(this.size), from + ":" + to);
+    /**
+     * Shrani priljubljene iz arraylista v shared preferences
+     */
+    public void shraniPriljubljene() {
+        SharedPreferences.Editor urejevalnik = this.shramba.edit();
+        izbrisiPriljubljene();
+        for (int i = 0; i < priljubljeneRelacije.size(); i++) {
+            urejevalnik.putString(Integer.toString(i), priljubljeneRelacije.get(i).getFromName() + ":" + priljubljeneRelacije.get(i).getToName());
             this.size += 1;
-            urejevalnik.putInt("number", size);
-            urejevalnik.apply();
+            urejevalnik.putInt("number", i);
+        }
+
+        urejevalnik.apply();
+    }
+
+    /**
+     * Shrani priljubljene iz shared preferences v arraylist
+     */
+    public void pridobiPriljubljene() {
+        priljubljeneRelacije.clear();
+
+        for (int i = 0; i <= this.size; i++) {
+            Relacija rela = parseRelacija(this.shramba.getString(Integer.toString(i), ""));
+            Log.d("Favs pridobi", rela.getFromName() + " -> " + rela.getToName());
+            priljubljeneRelacije.add(rela);
+        }
+    }
+
+    /**
+     * Odstrani priljubljeno lokacijo iz Arraylista
+     * @param relacija - Relacija za dodati
+     */
+    public void odstraniPriljubljeno(Relacija relacija) {
+        for (int i = 0; i < priljubljeneRelacije.size(); i++) {
+            if (priljubljeneRelacije.get(i).getFromName().equals(relacija.getFromName()) && priljubljeneRelacije.get(i).getToName().equals(relacija.getToName())) {
+                priljubljeneRelacije.remove(i);
+                break;
+            }
+        }
+    }
+
+    /**
+     * Shrani priljubljeno lokacijo v Arraylist
+     * @param nova - Nova relacija za dodati
+     */
+    public void dodajPriljubljeno(Relacija nova) {
+        if (!aliObstaja(nova)) {
+            priljubljeneRelacije.add(nova);
         } else {
             Toast toast = Toast.makeText(context, "Lokacija že obstaja med priljubljenimi", Toast.LENGTH_SHORT);
             toast.show();
@@ -77,47 +101,5 @@ public class sharedPrefsManager {
             rel.setToName(relis[1]);
         }
         return rel;
-    }
-
-    public void pridobiPriljubljene() {
-                if (this.size == 0) {
-            return;
-        }
-
-        priljubljeneRelacije.clear();
-
-        for (int i = 0; i < this.size; i++) {
-            Relacija rela = parseRelacija(this.priljubljene.getString(Integer.toString(i), ""));
-            Log.d("Favs pridobi", rela.getFromName() + " -> " + rela.getToName());
-            priljubljeneRelacije.add(rela);
-        }
-    }
-
-    public void odstraniPriljubljeno(String from, String to) {
-        SharedPreferences.Editor urejevalnik = priljubljene.edit();
-        for (int i = 0; i < size; i++) {
-            String tmp = priljubljene.getString(Integer.toString(i), "");
-            if (tmp.equals(from + ":" + to)) {
-                for (int j = i + 1; j < size; i++) {
-                    tmp = priljubljene.getString(Integer.toString(j), "");
-                    urejevalnik.putString(Integer.toString(j - 1), tmp);
-                }
-
-                break;
-            }
-        }
-        size -= 1;
-        urejevalnik.putInt("number", size);
-        urejevalnik.apply();
-    }
-
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < this.size; i++) {
-            sb.append(this.priljubljene.getString(Integer.toString(i), ""));
-            sb.append("\n");
-        }
-
-        return sb.toString();
     }
 }

@@ -10,6 +10,7 @@
     <string name="izberi_dan">Izberi dan:</string>
     <string name="menjaj">Menjaj</string>
     <string name="zvezda">Zvezda</string>
+    <string name="zamenjaj">Zamenjaj</string>
 
     <string-array name="izstopne_postaje">
         <item>Adergas</item>
