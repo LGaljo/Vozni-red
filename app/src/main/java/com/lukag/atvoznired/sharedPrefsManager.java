@@ -48,7 +48,8 @@ public class sharedPrefsManager {
         for (int i = 0; i < priljubljeneRelacije.size(); i++) {
             urejevalnik.putString(Integer.toString(i), priljubljeneRelacije.get(i).getFromName() + ":" + priljubljeneRelacije.get(i).getToName());
             this.size += 1;
-            urejevalnik.putInt("number", i);
+            // +1, ker je iterator za 1 manjši od števila relacij
+            urejevalnik.putInt("number", i + 1);
         }
 
         urejevalnik.apply();
@@ -60,9 +61,8 @@ public class sharedPrefsManager {
     public void pridobiPriljubljene() {
         priljubljeneRelacije.clear();
 
-        for (int i = 0; i <= this.size; i++) {
+        for (int i = 0; i < this.size; i++) {
             Relacija rela = parseRelacija(this.shramba.getString(Integer.toString(i), ""));
-            Log.d("Favs pridobi", rela.getFromName() + " -> " + rela.getToName());
             priljubljeneRelacije.add(rela);
         }
     }

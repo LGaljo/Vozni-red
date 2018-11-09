@@ -39,7 +39,7 @@ public class priljubljenePostajeAdapter extends RecyclerView.Adapter<priljubljen
                     String vstopnaID = DataSourcee.getIDfromMap(vstopnaPostaja);
                     String izstopnaID = DataSourcee.getIDfromMap(izstopnaPostaja);
 
-                    DataSourcee.shraniZadnjiIskani(context, vstopnaPostajaView, izstopnaPostajaView);
+                    DataSourcee.shraniZadnjiIskani(context, vstopnaPostajaView, izstopnaPostajaView, DataSourcee.dodajDanasnjiDan());
 
                     ArrayList<String> prenos = new ArrayList<>();
                     prenos.add(vstopnaID);

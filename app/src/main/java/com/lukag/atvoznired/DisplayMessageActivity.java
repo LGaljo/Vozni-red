@@ -94,7 +94,6 @@ public class DisplayMessageActivity extends AppCompatActivity {
                 params.put("toID",relacija.getToID());
                 params.put("date", date);
                 params.put("general", "false");
-                Log.d("Volley", params.toString());
                 return params;
             }
         };
