@@ -1,13 +1,23 @@
 package com.lukag.atvoznired;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.WindowManager;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -53,6 +63,7 @@ public class DisplayMessageActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         recyclerView.setAdapter(sAdapter);
 
+        setMarginsToHeading(this);
         POSTiT(relacija, prenos.get(4));
         sAdapter.notifyDataSetChanged();
     }
@@ -126,5 +137,68 @@ public class DisplayMessageActivity extends AppCompatActivity {
         } catch (JSONException e) {
             Log.e("getResponse", "Napaka v pri parsanju JSON datoteke");
         }
+    }
+
+    private void setMarginsToHeading(Context context) {
+        TextView start = (TextView)findViewById(R.id.starth);
+        TextView end = (TextView)findViewById(R.id.endh);
+        TextView length = (TextView)findViewById(R.id.lengthh);
+        TextView duration = (TextView)findViewById(R.id.durationh);
+        TextView cost = (TextView)findViewById(R.id.costh);
+
+        Integer allMargins = 0;
+        Integer displayWidth = 0;
+        Integer contentWidth = DataSourcee.dpToPx(4*60+50+5);
+        Integer layoutPadding = DataSourcee.dpToPx(32);
+        Integer margins[] = new Integer[4];
+
+        try {
+            WindowManager wm = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
+            Display display = wm.getDefaultDisplay();
+            DisplayMetrics displaymatrics = new DisplayMetrics();
+            display.getMetrics(displaymatrics);
+
+            try{
+                Point size = new Point();
+                display.getSize(size);
+                displayWidth = size.x;
+            }catch(Exception e)
+            {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        allMargins = displayWidth - (contentWidth + layoutPadding);
+        if (allMargins < 0) {
+            margins[0] = 0;
+            margins[1] = 0;
+            margins[2] = 0;
+            margins[3] = 0;
+        } else {
+            margins[0] = allMargins / 10;
+            margins[1] = 0;
+            margins[2] = allMargins / 10;
+            margins[3] = 0;
+        }
+
+        //Log.d("Margins", "allmargins: "+allMargins+" display: "+displayWidth+" content: "+contentWidth);
+
+        RelativeLayout.LayoutParams lpStart =   (RelativeLayout.LayoutParams)start.getLayoutParams();
+        RelativeLayout.LayoutParams lpEnd =     (RelativeLayout.LayoutParams)end.getLayoutParams();
+        RelativeLayout.LayoutParams lpDuration =(RelativeLayout.LayoutParams)duration.getLayoutParams();
+        RelativeLayout.LayoutParams lpLength =  (RelativeLayout.LayoutParams)length.getLayoutParams();
+        RelativeLayout.LayoutParams lpCost =    (RelativeLayout.LayoutParams)cost.getLayoutParams();
+        lpStart.setMargins      (margins[0],0, margins[2],0);
+        lpEnd.setMargins        (margins[0],0, margins[2],0);
+        lpDuration.setMargins   (margins[0],0, margins[2],0);
+        lpLength.setMargins     (margins[0],0, margins[2],0);
+        lpCost.setMargins       (margins[0],0, margins[2],0);
+        start.setLayoutParams(lpStart);
+        end.setLayoutParams(lpEnd);
+        duration.setLayoutParams(lpDuration);
+        length.setLayoutParams(lpLength);
+        cost.setLayoutParams(lpCost);
     }
 }

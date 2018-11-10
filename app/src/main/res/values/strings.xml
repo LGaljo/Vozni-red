@@ -11,6 +11,7 @@
     <string name="menjaj">Menjaj</string>
     <string name="zvezda">Zvezda</string>
     <string name="zamenjaj">Zamenjaj</string>
+    <string name="shrani_relacijo">Shrani relacijo</string>
 
     <string-array name="izstopne_postaje">
         <item>Adergas</item>

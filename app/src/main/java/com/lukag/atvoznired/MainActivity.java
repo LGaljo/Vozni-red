@@ -2,6 +2,9 @@ package com.lukag.atvoznired;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Point;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.Constraints;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -9,6 +12,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
@@ -30,6 +34,9 @@ public class MainActivity extends AppCompatActivity {
     private AutoCompleteTextView vstopnaPostajaView;
     private AutoCompleteTextView izstopnaPostajaView;
     private Calendar calendarView;
+
+    ImageView delete_vp;
+    ImageView delete_ip;
 
     private TextView koledar;
 
@@ -65,6 +72,64 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         recyclerView.setAdapter(pAdapter);
+
+        onClickListeners();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        favs.shraniPriljubljene();
+    }
+
+    private void updateLabel() {
+        String format = "dd.MM.yyyy";
+        SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.GERMAN);
+
+        koledar.setText(sdf.format(calendarView.getTime()));
+    }
+
+    private void dodajAutoCompleteTextView() {
+        DataSourcee.init(this);
+
+        vstopnaPostajaView = (AutoCompleteTextView) findViewById(R.id.vstopna_text);
+        izstopnaPostajaView = (AutoCompleteTextView) findViewById(R.id.izstopna_text);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String> (this, R.layout.autocomplete_list_item, DataSourcee.samoPostaje);
+        vstopnaPostajaView.setDropDownBackgroundDrawable(this.getResources().getDrawable(R.drawable.autocomplete_dropdown));
+        izstopnaPostajaView.setDropDownBackgroundDrawable(this.getResources().getDrawable(R.drawable.autocomplete_dropdown));
+
+        vstopnaPostajaView.setThreshold(2);
+        vstopnaPostajaView.setAdapter(adapter);
+        izstopnaPostajaView.setThreshold(2);
+        izstopnaPostajaView.setAdapter(adapter);
+
+        ConstraintLayout.LayoutParams lp = (ConstraintLayout.LayoutParams) vstopnaPostajaView.getLayoutParams();
+
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+
+        Integer screenWidth = size.x;
+
+        vstopnaPostajaView.setDropDownWidth(screenWidth - (lp.leftMargin + lp.rightMargin));
+        izstopnaPostajaView.setDropDownWidth(screenWidth - (lp.leftMargin + lp.rightMargin));
+    }
+
+    private void onClickListeners() {
+        delete_vp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                vstopnaPostajaView.setText("", false);
+            }
+        });
+
+        delete_ip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                izstopnaPostajaView.setText("", false);
+            }
+        });
 
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -117,40 +182,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //Toast.makeText(MainActivity.this, "To bo odprlo koledar", Toast.LENGTH_SHORT).show();
-                new DatePickerDialog(MainActivity.this, R.style.DatePickerDialog, date, calendarView.get(Calendar.YEAR), calendarView.get(Calendar.MONTH), calendarView.get(Calendar.DAY_OF_MONTH)).show();
+                new DatePickerDialog(MainActivity.this, R.style.AppTheme, date, calendarView.get(Calendar.YEAR), calendarView.get(Calendar.MONTH), calendarView.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        favs.shraniPriljubljene();
-    }
-
-    private void updateLabel() {
-        String format = "dd.MM.yyyy";
-        SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.GERMAN);
-
-        koledar.setText(sdf.format(calendarView.getTime()));
-    }
-
-    private void dodajAutoCompleteTextView() {
-        AutoCompleteTextView vstop;
-        AutoCompleteTextView izstop;
-
-        DataSourcee.init(this);
-
-        vstop = (AutoCompleteTextView) findViewById(R.id.vstopna_text);
-        izstop = (AutoCompleteTextView) findViewById(R.id.izstopna_text);
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String> (this,R.layout.dropdown, DataSourcee.samoPostaje);
-
-        vstop.setThreshold(2);
-        vstop.setAdapter(adapter);
-        izstop.setThreshold(2);
-        izstop.setAdapter(adapter);
-
     }
 
     private void findViews() {
@@ -158,6 +192,8 @@ public class MainActivity extends AppCompatActivity {
         izstopnaPostajaView = (AutoCompleteTextView) findViewById(R.id.izstopna_text);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_pogled_priljubljenih);
         koledar = (TextView) findViewById(R.id.textCalendar);
+        delete_vp = (ImageView) findViewById(R.id.delete_vp);
+        delete_ip = (ImageView) findViewById(R.id.delete_ip);
     }
 
     private void submit() {

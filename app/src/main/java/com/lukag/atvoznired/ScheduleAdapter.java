@@ -47,19 +47,11 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.MyView
         return new MyViewHolder(itemView);
     }
 
-    public static int pxToDp(int px) {
-        return (int) (px / Resources.getSystem().getDisplayMetrics().density);
-    }
-
-    public static int dpToPx(int dp) {
-        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
-    }
-
-    public Integer[] getMarginsForRecyclerView() {
+    public Integer[] getMarginsForRecyclerView(MyViewHolder holder) {
         Integer allMargins = 0;
         Integer displayWidth = 0;
-        Integer contentWidth = dpToPx(290);
-        Integer layoutPadding = dpToPx(32);
+        Integer contentWidth = DataSourcee.dpToPx(3*60+65+50);
+        Integer layoutPadding = DataSourcee.dpToPx(32);
         Integer margins[] = new Integer[4];
 
         try {
@@ -87,9 +79,9 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.MyView
             margins[2] = 0;
             margins[3] = 0;
         } else {
-            margins[0] = allMargins / 8;
+            margins[0] = allMargins / 10;
             margins[1] = 0;
-            margins[2] = allMargins / 8;
+            margins[2] = allMargins / 10;
             margins[3] = 0;
         }
 
@@ -108,18 +100,18 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.MyView
             holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.over));
         }
 
-        Integer margins[] = getMarginsForRecyclerView();
+        Integer margins[] = getMarginsForRecyclerView(holder);
 
         RelativeLayout.LayoutParams lpStart =   (RelativeLayout.LayoutParams)holder.start.getLayoutParams();
         RelativeLayout.LayoutParams lpEnd =     (RelativeLayout.LayoutParams)holder.end.getLayoutParams();
         RelativeLayout.LayoutParams lpDuration =(RelativeLayout.LayoutParams)holder.duration.getLayoutParams();
         RelativeLayout.LayoutParams lpLength =  (RelativeLayout.LayoutParams)holder.length.getLayoutParams();
         RelativeLayout.LayoutParams lpCost =    (RelativeLayout.LayoutParams)holder.cost.getLayoutParams();
-        lpStart.setMargins      (0,0, margins[2],0);
+        lpStart.setMargins      (margins[0],0, margins[2],0);
         lpEnd.setMargins        (margins[0],0, margins[2],0);
         lpDuration.setMargins   (margins[0],0, margins[2],0);
         lpLength.setMargins     (margins[0],0, margins[2],0);
-        lpCost.setMargins       (margins[0],0, 0,0);
+        lpCost.setMargins       (margins[0],0, margins[2],0);
         holder.start.setLayoutParams(lpStart);
         holder.end.setLayoutParams(lpEnd);
         holder.duration.setLayoutParams(lpDuration);

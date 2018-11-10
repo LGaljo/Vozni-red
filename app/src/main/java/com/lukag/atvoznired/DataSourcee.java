@@ -2,9 +2,8 @@ package com.lukag.atvoznired;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.view.WindowManager;
+import android.content.res.Resources;
 import android.widget.AutoCompleteTextView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -91,5 +90,13 @@ public class DataSourcee {
         SimpleDateFormat today = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMANY);
 
         return today.format(c.getTime());
+    }
+
+    public static int pxToDp(int px) {
+        return (int) (px / Resources.getSystem().getDisplayMetrics().density);
+    }
+
+    public static int dpToPx(int dp) {
+        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
     }
 }

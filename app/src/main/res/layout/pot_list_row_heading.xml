@@ -11,78 +11,84 @@
     android:paddingTop="@dimen/row_padding_vertical"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingBottom="@dimen/row_padding_vertical"
-    tools:context="com.lukag.atvoznired.MainActivity">
+    android:background="@color/colorPrimary"
+    tools:context="com.lukag.atvoznired.DisplayMessageActivity">
 
     <TextView
-        android:id="@+id/start"
+        android:id="@+id/starth"
         android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:gravity="center"
-        android:textColor="@color/title"
+        android:textColor="@android:color/white"
         android:textSize="16sp"
         android:textStyle="bold"
         android:singleLine="true"
+        android:text="Vstop"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/end"
+        android:id="@+id/endh"
         android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/start"
+        android:layout_toEndOf="@+id/starth"
         android:gravity="center"
-        android:textColor="@color/title"
+        android:textColor="@android:color/white"
         android:textSize="16sp"
         android:textStyle="bold"
         android:singleLine="true"
-        app:layout_constraintStart_toEndOf="@+id/start"
+        android:text="Izstop"
+        app:layout_constraintStart_toEndOf="@+id/starth"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/length"
+        android:id="@+id/lengthh"
         android:layout_width="65dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/end"
+        android:layout_toEndOf="@+id/endh"
         android:gravity="center"
-        android:textColor="@color/title"
+        android:textColor="@android:color/white"
         android:textSize="16sp"
         android:textStyle="bold"
         android:singleLine="true"
-        app:layout_constraintStart_toEndOf="@+id/end"
+        android:text="Razdalja"
+        app:layout_constraintStart_toEndOf="@+id/endh"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/duration"
+        android:id="@+id/durationh"
         android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/length"
+        android:layout_toEndOf="@+id/lengthh"
         android:gravity="center"
-        android:textColor="@color/title"
+        android:textColor="@android:color/white"
         android:textSize="16sp"
         android:textStyle="bold"
         android:singleLine="true"
-        app:layout_constraintStart_toEndOf="@+id/length"
+        android:text="Trajanje"
+        app:layout_constraintStart_toEndOf="@+id/lengthh"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/cost"
+        android:id="@+id/costh"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/duration"
+        android:layout_toEndOf="@+id/durationh"
         android:gravity="center"
-        android:textColor="@color/title"
+        android:textColor="@android:color/white"
         android:textSize="16sp"
         android:textStyle="bold"
         android:singleLine="true"
+        android:text="Cena"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/duration"
+        app:layout_constraintStart_toEndOf="@+id/durationh"
         app:layout_constraintTop_toTopOf="parent" />
 
 </RelativeLayout>
