@@ -34,10 +34,12 @@ public class priljubljenePostajeAdapter extends RecyclerView.Adapter<priljubljen
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String vstopnaPostaja = vstopnaPostajaView.getText().toString();
-                    String izstopnaPostaja = izstopnaPostajaView.getText().toString();
+                    String vstopnaPostaja = priljubljeneList.get(getAdapterPosition()).getFromName();
+                    String izstopnaPostaja = priljubljeneList.get(getAdapterPosition()).getToName();
                     String vstopnaID = DataSourcee.getIDfromMap(vstopnaPostaja);
                     String izstopnaID = DataSourcee.getIDfromMap(izstopnaPostaja);
+                    vstopnaPostajaView.setText(priljubljeneList.get(getAdapterPosition()).getFromName(), false);
+                    izstopnaPostajaView.setText(priljubljeneList.get(getAdapterPosition()).getToName(), false);
 
                     DataSourcee.shraniZadnjiIskani(context, vstopnaPostajaView, izstopnaPostajaView, DataSourcee.dodajDanasnjiDan());
 
@@ -51,8 +53,6 @@ public class priljubljenePostajeAdapter extends RecyclerView.Adapter<priljubljen
                     intent.putStringArrayListExtra(EXTRA_MESSAGE, prenos);
                     view.getContext().startActivity(intent);
 
-                    vstopnaPostajaView.setText(priljubljeneList.get(getAdapterPosition()).getFromName(), false);
-                    izstopnaPostajaView.setText(priljubljeneList.get(getAdapterPosition()).getToName(), false);
                 }
             });
 
