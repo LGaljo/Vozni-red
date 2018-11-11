@@ -9,6 +9,11 @@
     <string name="izstop_hint">Exit</string>
     <string name="koledar">Calendar</string>
     <string name="izberi_dan">Choose date:</string>
-    <string name="menjaj">Invert</string>
+    <string name="zamenjaj">Invert</string>
+    <string name="shrani_relacijo">Save connection</string>
     <string name="priljubljene">Favourites:</string>
+    <string name="fav_already_saved">Connection is already saved</string>
+    <string name="no_connection">No connection at this moment</string>
+    <string name="invalid_search">Invalid search</string>
+    <string name="fav_saved">Saved to favourites</string>
 </resources>
