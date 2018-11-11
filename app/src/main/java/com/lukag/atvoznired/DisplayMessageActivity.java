@@ -26,6 +26,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.jude.swipbackhelper.SwipeBackHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -49,6 +50,8 @@ public class DisplayMessageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_message);
+
+        SwipeBackHelper.onCreate(this);
 
         Intent intent = getIntent();
         ArrayList<String> prenos = intent.getStringArrayListExtra(EXTRA_MESSAGE);
@@ -92,9 +95,16 @@ public class DisplayMessageActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        SwipeBackHelper.onPostCreate(this);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         favs.shraniPriljubljene();
+        SwipeBackHelper.onDestroy(this);
     }
 
     @Override
