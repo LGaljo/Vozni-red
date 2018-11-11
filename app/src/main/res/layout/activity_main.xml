@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#380001"
+    android:background="#252525"
     tools:context="com.lukag.atvoznired.MainActivity">
 
     <AutoCompleteTextView
