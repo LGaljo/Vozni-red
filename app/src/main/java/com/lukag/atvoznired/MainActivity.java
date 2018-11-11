@@ -4,14 +4,13 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Point;
 import android.support.constraint.ConstraintLayout;
-import android.support.constraint.Constraints;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
@@ -21,7 +20,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,10 +33,11 @@ public class MainActivity extends AppCompatActivity {
     private AutoCompleteTextView izstopnaPostajaView;
     private Calendar calendarView;
 
-    ImageView delete_vp;
-    ImageView delete_ip;
+    private ImageView delete_vp;
+    private ImageView delete_ip;
 
     private TextView koledar;
+    private View contextView;
 
     private RecyclerView recyclerView;
     private priljubljenePostajeAdapter pAdapter;
@@ -50,13 +49,21 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         koledar.setText(DataSourcee.dodajDanasnjiDan());
         favs = new sharedPrefsManager(this);
-
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Intent intent = getIntent();
+        String reason = intent.getStringExtra("reason");
+        contextView = findViewById(R.id.priljubljene_text);
+
+        if (reason != null && reason.equals("no_connection")) {
+            Snackbar.make(contextView, R.string.no_connection, Snackbar.LENGTH_LONG).show();
+        }
+
         calendarView = Calendar.getInstance();
 
         dodajAutoCompleteTextView();
@@ -117,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onClickListeners() {
+        // Izbrisi tekst v vnosu vstopne postaje
         delete_vp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Izbrisi tekst v vnosu izstopne postaje
         delete_ip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -131,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Odpri koledar
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -141,24 +151,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        // Gumb za shranitev priljubljene relacije
-        final ImageView star = (ImageView)findViewById(R.id.zvezda);
-        star.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String vstopnaPostaja = vstopnaPostajaView.getText().toString();
-                String izstopnaPostaja = izstopnaPostajaView.getText().toString();
-
-                if (vstopnaPostaja.equals(izstopnaPostaja) || vstopnaPostaja.equals("") || izstopnaPostaja.equals("")) {
-                    Toast.makeText(MainActivity.this, "Neveljaven vnos", Toast.LENGTH_SHORT).show();
-                } else {
-                    favs.dodajPriljubljeno(new Relacija("", vstopnaPostajaView.getText().toString(), "", izstopnaPostajaView.getText().toString(), null));
-                    pAdapter.notifyDataSetChanged();
-                }
-            }
-        });
-
-        // Gumb za prikaz
+        // Gumb za iskanje urnika
         Button button = (Button) findViewById(R.id.submit);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -178,10 +171,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Pokazi koledar
         koledar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(MainActivity.this, "To bo odprlo koledar", Toast.LENGTH_SHORT).show();
                 new DatePickerDialog(MainActivity.this, R.style.AppTheme, date, calendarView.get(Calendar.YEAR), calendarView.get(Calendar.MONTH), calendarView.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
@@ -203,10 +196,8 @@ public class MainActivity extends AppCompatActivity {
         String izstopnaID = DataSourcee.getIDfromMap(izstopnaPostaja);
         String date = koledar.getText().toString();
 
-        Log.d("Autocomplete", vstopnaPostaja + ": " + vstopnaID + " --> " + izstopnaPostaja + ": " + izstopnaID);
-
         if (vstopnaPostaja.equals(izstopnaPostaja) || vstopnaPostaja.equals("") || izstopnaPostaja.equals("")) {
-            Toast.makeText(MainActivity.this, "Neveljaven vnos", Toast.LENGTH_LONG).show();
+            Snackbar.make(contextView, R.string.invalid_search, Snackbar.LENGTH_LONG).show();
         } else {
             ArrayList<String> prenos = new ArrayList<>();
             prenos.add(vstopnaID);

@@ -35,6 +35,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.lukag.atvoznired.MainActivity.EXTRA_MESSAGE;
+
 public class DisplayMessageActivity extends AppCompatActivity {
     private Relacija relacija;
     private RecyclerView recyclerView;
@@ -49,7 +51,7 @@ public class DisplayMessageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_display_message);
 
         Intent intent = getIntent();
-        ArrayList<String> prenos = intent.getStringArrayListExtra(MainActivity.EXTRA_MESSAGE);
+        ArrayList<String> prenos = intent.getStringArrayListExtra(EXTRA_MESSAGE);
 
         relacija = new Relacija();
         relacija.setFromID(prenos.get(0));
@@ -157,6 +159,15 @@ public class DisplayMessageActivity extends AppCompatActivity {
 
             JSONArray schedule = resp.getJSONArray("schedule");
 
+            if (schedule.length() == 0) {
+                // Med postajama ni povezave
+                returnToMainActivity();
+                this.finish();
+            } else {
+                relativeLayout.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
+            }
+
             for (int i = 0; i < schedule.length(); i++) {
                 Pot novaPot = new Pot();
                 novaPot.setID(Integer.parseInt(schedule.getJSONObject(i).getString("ID")));
@@ -234,5 +245,12 @@ public class DisplayMessageActivity extends AppCompatActivity {
         duration.setLayoutParams(lpDuration);
         length.setLayoutParams(lpLength);
         cost.setLayoutParams(lpCost);
+    }
+
+    private void returnToMainActivity() {
+        ArrayList<String> prenos = new ArrayList<>();
+        Intent intent = new Intent(DisplayMessageActivity.this, MainActivity.class);
+        intent.putExtra("reason", "no_connection");
+        startActivity(intent);
     }
 }

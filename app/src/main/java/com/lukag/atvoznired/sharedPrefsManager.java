@@ -2,8 +2,6 @@ package com.lukag.atvoznired;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,13 +82,12 @@ public class sharedPrefsManager {
      * Shrani priljubljeno lokacijo v Arraylist
      * @param nova - Nova relacija za dodati
      */
-    public void dodajPriljubljeno(Relacija nova) {
+    public boolean dodajPriljubljeno(Relacija nova) {
         if (!aliObstaja(nova)) {
             priljubljeneRelacije.add(nova);
-        } else {
-            Toast toast = Toast.makeText(context, "Lokacija že obstaja med priljubljenimi", Toast.LENGTH_SHORT);
-            toast.show();
+            return true;
         }
+        return false;
     }
 
     private static Relacija parseRelacija(String relacija) {
