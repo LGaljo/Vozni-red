@@ -3,19 +3,20 @@ package com.lukag.atvoznired;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -38,6 +39,9 @@ public class DisplayMessageActivity extends AppCompatActivity {
     private Relacija relacija;
     private RecyclerView recyclerView;
     private ScheduleAdapter sAdapter;
+    sharedPrefsManager favs;
+    private ProgressBar progressBar;
+    RelativeLayout relativeLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +58,11 @@ public class DisplayMessageActivity extends AppCompatActivity {
         relacija.setToName(prenos.get(3));
         relacija.initUrnik();
 
+        progressBar = (ProgressBar) findViewById(R.id.wait_animation);
+        relativeLayout = (RelativeLayout)findViewById(R.id.schedule_heading) ;
+        progressBar.setVisibility(View.VISIBLE);
+        relativeLayout.setVisibility(View.GONE);
+
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_pogled_urnik);
 
         sAdapter = new ScheduleAdapter(relacija.getUrnik(), this);
@@ -66,7 +75,32 @@ public class DisplayMessageActivity extends AppCompatActivity {
         setMarginsToHeading(this);
         POSTiT(relacija, prenos.get(4));
         sAdapter.notifyDataSetChanged();
+
+        FloatingActionButton fab = findViewById(R.id.fabfav);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (favs.dodajPriljubljeno(relacija)) {
+                    Snackbar.make(view, R.string.fav_saved, Snackbar.LENGTH_LONG).show();
+                } else {
+                    Snackbar.make(view, R.string.fav_already_saved, Snackbar.LENGTH_LONG).show();
+                }
+            }
+        });
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        favs.shraniPriljubljene();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        favs = new sharedPrefsManager(this);
+    }
+
 
     /**
      * Metoda od serverja zahteva podatke o voznem redu
@@ -148,7 +182,7 @@ public class DisplayMessageActivity extends AppCompatActivity {
 
         Integer allMargins = 0;
         Integer displayWidth = 0;
-        Integer contentWidth = DataSourcee.dpToPx(4*60+50+5);
+        Integer contentWidth = DataSourcee.dpToPx(3*60+65+50);
         Integer layoutPadding = DataSourcee.dpToPx(32);
         Integer margins[] = new Integer[4];
 

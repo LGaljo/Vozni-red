@@ -10,4 +10,5 @@
     <string name="koledar">Calendar</string>
     <string name="izberi_dan">Choose date:</string>
     <string name="menjaj">Invert</string>
+    <string name="priljubljene">Favourites:</string>
 </resources>

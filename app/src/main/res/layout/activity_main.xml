@@ -12,7 +12,7 @@
         android:layout_width="0dp"
         android:layout_height="45dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/bg_round_top"
         android:dropDownWidth="match_parent"
@@ -101,7 +101,7 @@
         android:id="@+id/recycler_view_pogled_priljubljenih"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="45dp"
         android:background="@drawable/bg_round_top"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -109,27 +109,15 @@
         app:layout_constraintTop_toBottomOf="@+id/submit" />
 
     <ImageView
-        android:id="@+id/zvezda"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:layout_marginStart="72dp"
-        android:layout_marginTop="20dp"
-        android:contentDescription="@string/zvezda"
-        android:foreground="?android:attr/selectableItemBackground"
-        app:layout_constraintStart_toEndOf="@+id/textCalendar"
-        app:layout_constraintTop_toBottomOf="@+id/izstopna_text"
-        app:srcCompat="@drawable/ic_star" />
-
-    <ImageView
         android:id="@+id/swap"
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="26dp"
         android:contentDescription="@string/zamenjaj"
         android:foreground="?android:attr/selectableItemBackground"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/vstopna_text"
         app:srcCompat="@drawable/ic_swap" />
 
     <ImageView
@@ -147,20 +135,21 @@
         android:id="@+id/delete_vp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="26dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:foreground="?android:attr/selectableItemBackground"
         app:layout_constraintEnd_toEndOf="@+id/vstopna_text"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/vstopna_text"
         app:srcCompat="@drawable/ic_close" />
 
     <TextView
         android:id="@+id/priljubljene_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
+        android:layout_marginBottom="8dp"
         android:paddingStart="16dp"
-        android:text="Priljubljene:"
+        android:paddingEnd="16dp"
+        android:text="@string/priljubljene"
         android:textColor="@android:color/white"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/recycler_view_pogled_priljubljenih"
