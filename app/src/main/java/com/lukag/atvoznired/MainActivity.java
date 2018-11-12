@@ -21,6 +21,10 @@ import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.jude.swipbackhelper.SwipeBackHelper;
+import com.jude.swipbackhelper.SwipeBackLayout;
+import com.jude.swipbackhelper.SwipeBackPage;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -66,6 +70,10 @@ public class MainActivity extends AppCompatActivity {
 
         calendarView = Calendar.getInstance();
 
+        SwipeBackHelper.onCreate(this);
+        SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false);
+        SwipeBackHelper.getCurrentPage(this).setDisallowInterceptTouchEvent(true);
+
         dodajAutoCompleteTextView();
         findViews();
 
@@ -84,9 +92,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        SwipeBackHelper.onPostCreate(this);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         favs.shraniPriljubljene();
+        SwipeBackHelper.onDestroy(this);
     }
 
     private void updateLabel() {

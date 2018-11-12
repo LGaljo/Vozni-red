@@ -6,7 +6,7 @@
     android:theme="@style/AppTheme"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.lukag.atvoznired.DisplayMessageActivity">
+    tools:context="com.lukag.atvoznired.MainActivity">
 
     <ProgressBar
         android:id="@+id/wait_animation"
