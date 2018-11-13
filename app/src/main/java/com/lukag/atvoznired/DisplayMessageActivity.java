@@ -1,8 +1,6 @@
 package com.lukag.atvoznired;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Point;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -11,12 +9,9 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -40,12 +35,16 @@ import java.util.Map;
 import static com.lukag.atvoznired.MainActivity.EXTRA_MESSAGE;
 
 public class DisplayMessageActivity extends AppCompatActivity {
-    private Relacija relacija;
-    private RecyclerView recyclerView;
+    private Relacija iskanaRelacija;
+
+    private favoritesManagement favs;
+
     private ScheduleAdapter sAdapter;
-    sharedPrefsManager favs;
+
+    private RecyclerView recyclerView;
     private ProgressBar progressBar;
-    RelativeLayout relativeLayout;
+    private RelativeLayout relativeLayout;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,42 +56,47 @@ public class DisplayMessageActivity extends AppCompatActivity {
         Intent intent = getIntent();
         ArrayList<String> prenos = intent.getStringArrayListExtra(EXTRA_MESSAGE);
 
-        relacija = new Relacija();
-        relacija.setFromID(prenos.get(0));
-        relacija.setFromName(prenos.get(1));
-        relacija.setToID(prenos.get(2));
-        relacija.setToName(prenos.get(3));
-        relacija.initUrnik();
+        setFindViews();
 
-        progressBar = (ProgressBar) findViewById(R.id.wait_animation);
-        relativeLayout = (RelativeLayout)findViewById(R.id.schedule_heading) ;
-        progressBar.setVisibility(View.VISIBLE);
-        relativeLayout.setVisibility(View.GONE);
+        iskanaRelacija = new Relacija(prenos.get(0), prenos.get(1), prenos.get(2), prenos.get(3), null);
+        iskanaRelacija.initUrnik();
+        POSTiT(iskanaRelacija, prenos.get(4));
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view_pogled_urnik);
-
-        sAdapter = new ScheduleAdapter(relacija.getUrnik(), this);
+        sAdapter = new ScheduleAdapter(iskanaRelacija.getUrnik(), this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         recyclerView.setAdapter(sAdapter);
 
-        setMarginsToHeading(this);
-        POSTiT(relacija, prenos.get(4));
+        setMarginsToHeading();
         sAdapter.notifyDataSetChanged();
 
-        FloatingActionButton fab = findViewById(R.id.fabfav);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (favs.dodajPriljubljeno(relacija)) {
+                if (favs.dodajPriljubljeno(iskanaRelacija)) {
                     Snackbar.make(view, R.string.fav_saved, Snackbar.LENGTH_LONG).show();
                 } else {
                     Snackbar.make(view, R.string.fav_already_saved, Snackbar.LENGTH_LONG).show();
                 }
             }
         });
+    }
+
+    /**
+     * V display message activity layoutu poisce iskane objekte
+     */
+    private void setFindViews() {
+        progressBar = (ProgressBar) findViewById(R.id.wait_animation);
+        progressBar.setVisibility(View.VISIBLE);
+
+        relativeLayout = (RelativeLayout)findViewById(R.id.schedule_heading) ;
+        relativeLayout.setVisibility(View.GONE);
+
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view_pogled_urnik);
+
+        fab = findViewById(R.id.fabfav);
     }
 
     @Override
@@ -111,7 +115,7 @@ public class DisplayMessageActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        favs = new sharedPrefsManager(this);
+        favs = new favoritesManagement(this);
     }
 
     @Override
@@ -202,70 +206,38 @@ public class DisplayMessageActivity extends AppCompatActivity {
                 novaPot.setLength(schedule.getJSONObject(i).getString("KM_POT"));
                 novaPot.setDuration(schedule.getJSONObject(i).getString("CAS_FORMATED"));
                 novaPot.setCost(schedule.getJSONObject(i).getString("VZCL_CEN"));
-                novaPot.setStatus(schedule.getJSONObject(i).getString("STATUS").equals("pending"));
-                relacija.urnikAdd(novaPot);
+                String statuss = schedule.getJSONObject(i).getString("STATUS");
+                novaPot.setStatus(statuss.equals("pending"));
+                iskanaRelacija.urnikAdd(novaPot);
+                Log.d("JSON parse", iskanaRelacija.getFromName() + " -> " + iskanaRelacija.getToName() + " : " + statuss);
             }
         } catch (JSONException e) {
             Log.e("getResponse", "Napaka v pri parsanju JSON datoteke");
         }
     }
 
-    private void setMarginsToHeading(Context context) {
+    /**
+     * Metoda nastavi obrobe tekstovnih polj glave urnika
+     */
+    private void setMarginsToHeading() {
         TextView start = (TextView)findViewById(R.id.starth);
         TextView end = (TextView)findViewById(R.id.endh);
         TextView length = (TextView)findViewById(R.id.lengthh);
         TextView duration = (TextView)findViewById(R.id.durationh);
         TextView cost = (TextView)findViewById(R.id.costh);
 
-        Integer allMargins = 0;
-        Integer displayWidth = 0;
-        Integer contentWidth = DataSourcee.dpToPx(3*60+65+50);
-        Integer layoutPadding = DataSourcee.dpToPx(32);
-        Integer margins[] = new Integer[4];
-
-        try {
-            WindowManager wm = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
-            Display display = wm.getDefaultDisplay();
-            DisplayMetrics displaymatrics = new DisplayMetrics();
-            display.getMetrics(displaymatrics);
-
-            try{
-                Point size = new Point();
-                display.getSize(size);
-                displayWidth = size.x;
-            }catch(Exception e)
-            {
-                e.printStackTrace();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        allMargins = displayWidth - (contentWidth + layoutPadding);
-        if (allMargins < 0) {
-            margins[0] = 0;
-            margins[1] = 0;
-            margins[2] = 0;
-            margins[3] = 0;
-        } else {
-            margins[0] = allMargins / 10;
-            margins[1] = 0;
-            margins[2] = allMargins / 10;
-            margins[3] = 0;
-        }
-
-        //Log.d("Margins", "allmargins: "+allMargins+" display: "+displayWidth+" content: "+contentWidth);
+        Integer allMargins = DataSourcee.calcMargins(this);
 
         RelativeLayout.LayoutParams lpStart =   (RelativeLayout.LayoutParams)start.getLayoutParams();
         RelativeLayout.LayoutParams lpEnd =     (RelativeLayout.LayoutParams)end.getLayoutParams();
         RelativeLayout.LayoutParams lpDuration =(RelativeLayout.LayoutParams)duration.getLayoutParams();
         RelativeLayout.LayoutParams lpLength =  (RelativeLayout.LayoutParams)length.getLayoutParams();
         RelativeLayout.LayoutParams lpCost =    (RelativeLayout.LayoutParams)cost.getLayoutParams();
-        lpStart.setMargins      (margins[0],0, margins[2],0);
-        lpEnd.setMargins        (margins[0],0, margins[2],0);
-        lpDuration.setMargins   (margins[0],0, margins[2],0);
-        lpLength.setMargins     (margins[0],0, margins[2],0);
-        lpCost.setMargins       (margins[0],0, margins[2],0);
+        lpStart.setMargins      (allMargins,0, allMargins,0);
+        lpEnd.setMargins        (allMargins,0, allMargins,0);
+        lpDuration.setMargins   (allMargins,0, allMargins,0);
+        lpLength.setMargins     (allMargins,0, allMargins,0);
+        lpCost.setMargins       (allMargins,0, allMargins,0);
         start.setLayoutParams(lpStart);
         end.setLayoutParams(lpEnd);
         duration.setLayoutParams(lpDuration);
@@ -273,6 +245,10 @@ public class DisplayMessageActivity extends AppCompatActivity {
         cost.setLayoutParams(lpCost);
     }
 
+    /**
+     * Metoda omogoča, da se v primeru, da iz strežnika ne dobim odgovora,
+     * vrnem na glavni zaslon in izpisem opozorilo, da med postajama ni povezave
+     */
     private void returnToMainActivity() {
         ArrayList<String> prenos = new ArrayList<>();
         Intent intent = new Intent(DisplayMessageActivity.this, MainActivity.class);

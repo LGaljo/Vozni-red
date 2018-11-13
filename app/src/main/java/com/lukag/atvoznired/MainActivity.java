@@ -22,23 +22,24 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jude.swipbackhelper.SwipeBackHelper;
-import com.jude.swipbackhelper.SwipeBackLayout;
-import com.jude.swipbackhelper.SwipeBackPage;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String EXTRA_MESSAGE = "com.lukag.atvoznired";
 
     private AutoCompleteTextView vstopnaPostajaView;
     private AutoCompleteTextView izstopnaPostajaView;
     private Calendar calendarView;
 
+    private Button submit;
+
     private ImageView delete_vp;
     private ImageView delete_ip;
+    private ImageView swap;
 
     private TextView koledar;
     private View contextView;
@@ -46,13 +47,14 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private priljubljenePostajeAdapter pAdapter;
 
-    sharedPrefsManager favs;
+    private favoritesManagement favs;
+    private DatePickerDialog.OnDateSetListener date;
 
     @Override
     protected void onStart() {
         super.onStart();
         koledar.setText(DataSourcee.dodajDanasnjiDan());
-        favs = new sharedPrefsManager(this);
+        favs = new favoritesManagement(this);
     }
 
     @Override
@@ -68,27 +70,26 @@ public class MainActivity extends AppCompatActivity {
             Snackbar.make(contextView, R.string.no_connection, Snackbar.LENGTH_LONG).show();
         }
 
-        calendarView = Calendar.getInstance();
-
         SwipeBackHelper.onCreate(this);
         SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false);
         SwipeBackHelper.getCurrentPage(this).setDisallowInterceptTouchEvent(true);
 
-        dodajAutoCompleteTextView();
         findViews();
+        dodajAutoCompleteTextView();
+        obNastavitviDatuma();
 
+        // Prepreci odpiranje tipkovnice ob zagonu
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        favs = new sharedPrefsManager(this);
+        favs = new favoritesManagement(this);
         DataSourcee.nastaviZadnjiIskani(this, vstopnaPostajaView, izstopnaPostajaView, koledar);
 
-        pAdapter = new priljubljenePostajeAdapter(sharedPrefsManager.priljubljeneRelacije, this, vstopnaPostajaView, izstopnaPostajaView, favs);
+        // Pripravi RecyclerView za prikaz priljubljenih relacij
+        pAdapter = new priljubljenePostajeAdapter(favoritesManagement.priljubljeneRelacije, this, vstopnaPostajaView, izstopnaPostajaView, favs);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         recyclerView.setAdapter(pAdapter);
-
-        onClickListeners();
     }
 
     @Override
@@ -104,20 +105,13 @@ public class MainActivity extends AppCompatActivity {
         SwipeBackHelper.onDestroy(this);
     }
 
-    private void updateLabel() {
-        String format = "dd.MM.yyyy";
-        SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.GERMAN);
-
-        koledar.setText(sdf.format(calendarView.getTime()));
-    }
-
+    /**
+     * Metoda pripravi AutoCompleteTextView za uporabo
+     */
     private void dodajAutoCompleteTextView() {
         DataSourcee.init(this);
 
-        vstopnaPostajaView = (AutoCompleteTextView) findViewById(R.id.vstopna_text);
-        izstopnaPostajaView = (AutoCompleteTextView) findViewById(R.id.izstopna_text);
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String> (this, R.layout.autocomplete_list_item, DataSourcee.samoPostaje);
+        ArrayAdapter<String> adapter = new ArrayAdapter<> (this, R.layout.autocomplete_list_item, DataSourcee.samoPostaje);
         vstopnaPostajaView.setDropDownBackgroundDrawable(this.getResources().getDrawable(R.drawable.autocomplete_dropdown));
         izstopnaPostajaView.setDropDownBackgroundDrawable(this.getResources().getDrawable(R.drawable.autocomplete_dropdown));
 
@@ -128,83 +122,106 @@ public class MainActivity extends AppCompatActivity {
 
         ConstraintLayout.LayoutParams lp = (ConstraintLayout.LayoutParams) vstopnaPostajaView.getLayoutParams();
 
+        vstopnaPostajaView.setDropDownWidth(screenWidth() - (lp.leftMargin + lp.rightMargin));
+        izstopnaPostajaView.setDropDownWidth(screenWidth() - (lp.leftMargin + lp.rightMargin));
+    }
+
+    /**
+     * Metoda vrne sirino zaslona
+     */
+    private Integer screenWidth() {
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
 
-        Integer screenWidth = size.x;
-
-        vstopnaPostajaView.setDropDownWidth(screenWidth - (lp.leftMargin + lp.rightMargin));
-        izstopnaPostajaView.setDropDownWidth(screenWidth - (lp.leftMargin + lp.rightMargin));
+        return size.x;
     }
 
-    private void onClickListeners() {
-        // Izbrisi tekst v vnosu vstopne postaje
-        delete_vp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    /**
+     * Metoda usmerja odzive na klike v tem pogledu
+     * @param v - View
+     */
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.delete_vp:
+                // Izbrisi tekst v vnosu vstopne postaje
                 vstopnaPostajaView.setText("", false);
-            }
-        });
-
-        // Izbrisi tekst v vnosu izstopne postaje
-        delete_ip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                break;
+            case R.id.delete_ip:
+                // Izbrisi tekst v vnosu izstopne postaje
                 izstopnaPostajaView.setText("", false);
-            }
-        });
+                break;
+            case R.id.submit:
+                // Gumb za iskanje urnika
+                DataSourcee.shraniZadnjiIskani(MainActivity.this, vstopnaPostajaView, izstopnaPostajaView, koledar.getText().toString());
+                preveriParametre();
+                break;
+            case R.id.swap:
+                // Gumb za zamenjavo postajalisc
+                String tmp = izstopnaPostajaView.getText().toString();
+                izstopnaPostajaView.setText(vstopnaPostajaView.getText(), false);
+                vstopnaPostajaView.setText(tmp, false);
+                DataSourcee.shraniZadnjiIskani(MainActivity.this, vstopnaPostajaView, izstopnaPostajaView, koledar.getText().toString());
+                break;
+            case R.id.textCalendar:
+                // Pokazi koledar
+                new DatePickerDialog(MainActivity.this, date, calendarView.get(Calendar.YEAR), calendarView.get(Calendar.MONTH), calendarView.get(Calendar.DAY_OF_MONTH)).show();
+                break;
+            default:
+                break;
 
-        // Odpri koledar
-        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+        }
+    }
+
+    /**
+     * Metoda pripravi koledar
+     */
+    private void obNastavitviDatuma() {
+        calendarView = Calendar.getInstance();
+
+        date = new DatePickerDialog.OnDateSetListener() {
+            String format = "dd.MM.yyyy";
+            SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.GERMAN);
+
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 calendarView.set(Calendar.YEAR, year);
                 calendarView.set(Calendar.MONTH, month);
                 calendarView.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                updateLabel();
+                koledar.setText(sdf.format(calendarView.getTime()));
             }
         };
-
-        // Gumb za iskanje urnika
-        Button button = (Button) findViewById(R.id.submit);
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                DataSourcee.shraniZadnjiIskani(MainActivity.this, vstopnaPostajaView, izstopnaPostajaView, koledar.getText().toString());
-                submit();
-            }
-        });
-
-        // Gumb za zamenjavo postajalisc
-        final ImageView invert = (ImageView)findViewById(R.id.swap);
-        invert.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                String tmp = izstopnaPostajaView.getText().toString();
-                izstopnaPostajaView.setText(vstopnaPostajaView.getText(), false);
-                vstopnaPostajaView.setText(tmp, false);
-                DataSourcee.shraniZadnjiIskani(MainActivity.this, vstopnaPostajaView, izstopnaPostajaView, koledar.getText().toString());
-            }
-        });
-
-        // Pokazi koledar
-        koledar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new DatePickerDialog(MainActivity.this, date, calendarView.get(Calendar.YEAR), calendarView.get(Calendar.MONTH), calendarView.get(Calendar.DAY_OF_MONTH)).show();
-            }
-        });
     }
 
+    /**
+     * V display message activity layoutu poisce iskane objekte
+     */
     private void findViews() {
         vstopnaPostajaView = (AutoCompleteTextView) findViewById(R.id.vstopna_text);
         izstopnaPostajaView = (AutoCompleteTextView) findViewById(R.id.izstopna_text);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_pogled_priljubljenih);
         koledar = (TextView) findViewById(R.id.textCalendar);
+        submit = (Button) findViewById(R.id.submit);
         delete_vp = (ImageView) findViewById(R.id.delete_vp);
         delete_ip = (ImageView) findViewById(R.id.delete_ip);
+        swap = (ImageView) findViewById(R.id.swap);
+
+        koledar.setOnClickListener(this);
+        submit.setOnClickListener(this);
+        delete_vp.setOnClickListener(this);
+        delete_ip.setOnClickListener(this);
+        swap.setOnClickListener(this);
     }
 
-    private void submit() {
+    /**
+     * Metoda preveri pravilnost vnosa podatkov in
+     * sestavi ArrayList za prenos podatkov
+     * @return
+     */
+    private void preveriParametre() {
+        ArrayList<String> prenos = new ArrayList<>();
+
         String vstopnaPostaja = vstopnaPostajaView.getText().toString();
         String izstopnaPostaja = izstopnaPostajaView.getText().toString();
         String vstopnaID = DataSourcee.getIDfromMap(vstopnaPostaja);
@@ -214,15 +231,22 @@ public class MainActivity extends AppCompatActivity {
         if (vstopnaPostaja.equals(izstopnaPostaja) || vstopnaPostaja.equals("") || izstopnaPostaja.equals("")) {
             Snackbar.make(contextView, R.string.invalid_search, Snackbar.LENGTH_LONG).show();
         } else {
-            ArrayList<String> prenos = new ArrayList<>();
             prenos.add(vstopnaID);
             prenos.add(vstopnaPostaja);
             prenos.add(izstopnaID);
             prenos.add(izstopnaPostaja);
             prenos.add(date);
-            Intent intent = new Intent(MainActivity.this, DisplayMessageActivity.class);
-            intent.putStringArrayListExtra(EXTRA_MESSAGE, prenos);
-            startActivity(intent);
+            submit(prenos);
         }
+    }
+
+    /**
+     * Metoda preide v nov Intent -> DisplayMessageActivity
+     * @param prenos - arraylist potrebnih parametrov za klic post zahteve
+     */
+    private void submit(ArrayList<String> prenos) {
+        Intent intent = new Intent(MainActivity.this, DisplayMessageActivity.class);
+        intent.putStringArrayListExtra(EXTRA_MESSAGE, prenos);
+        startActivity(intent);
     }
 }

@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -21,7 +20,7 @@ public class priljubljenePostajeAdapter extends RecyclerView.Adapter<priljubljen
     private Context context;
     private AutoCompleteTextView vstopnaPostajaView;
     private AutoCompleteTextView izstopnaPostajaView;
-    private sharedPrefsManager spm;
+    private favoritesManagement spm;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView priljubljenaPostaja;
@@ -70,7 +69,7 @@ public class priljubljenePostajeAdapter extends RecyclerView.Adapter<priljubljen
         }
     }
 
-    public priljubljenePostajeAdapter(List<Relacija> priljubljeneList, Context context, AutoCompleteTextView vp, AutoCompleteTextView ip, sharedPrefsManager spm) {
+    public priljubljenePostajeAdapter(List<Relacija> priljubljeneList, Context context, AutoCompleteTextView vp, AutoCompleteTextView ip, favoritesManagement spm) {
         this.priljubljeneList = priljubljeneList;
         this.context = context;
         this.vstopnaPostajaView = vp;

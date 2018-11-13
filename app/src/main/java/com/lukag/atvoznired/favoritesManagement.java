@@ -6,13 +6,19 @@ import android.content.SharedPreferences;
 import java.util.ArrayList;
 import java.util.List;
 
-public class sharedPrefsManager {
+public class favoritesManagement {
     private Context context;
     private SharedPreferences shramba;
     private int size;
     public static List<Relacija> priljubljeneRelacije;
 
-    sharedPrefsManager(Context context) {
+    /**
+     * Shrani kontekst MainActivitya za odprtje sharedPreferenca
+     * Dobi število priljubljenih v sharedPreferencu
+     * Prenos priljubljenih iz sharedPreferenca v ArrayList
+     * @param context - kontekst MainActivity
+     */
+    favoritesManagement(Context context) {
         this.context = context;
         shramba = this.context.getSharedPreferences("priljubljenePostaje", Context.MODE_PRIVATE);
         priljubljeneRelacije = new ArrayList<>();
@@ -21,6 +27,10 @@ public class sharedPrefsManager {
         pridobiPriljubljene();
     }
 
+    /**
+     * Metoda izbriše shrambo priljubljenih lokacij in
+     * nastavi število priljubljenih na nič
+     */
     private void izbrisiPriljubljene() {
         SharedPreferences.Editor urejevalnik = this.shramba.edit();
         urejevalnik.clear();
@@ -28,6 +38,11 @@ public class sharedPrefsManager {
         urejevalnik.apply();
     }
 
+    /**
+     * Metoda preveri ali je podana relacija v seznamu priljubljeni
+     * @param relacija - objekt relacije
+     * @return true - če je relacija že med priljubljenimi, drugače vrne false
+     */
     private Boolean aliObstaja(Relacija relacija) {
         for (int i = 0; i < priljubljeneRelacije.size(); i++) {
             if (priljubljeneRelacije.get(i).getFromName().equals(relacija.getFromName()) && priljubljeneRelacije.get(i).getToName().equals(relacija.getToName())) {
@@ -90,6 +105,11 @@ public class sharedPrefsManager {
         return false;
     }
 
+    /**
+     * Prejmeš kodiran string in vrneš relacijo
+     * @param relacija - relacija kot "postaja1:postaja2"
+     * @return - vrneš objekt relacije
+     */
     private static Relacija parseRelacija(String relacija) {
         Relacija rel = new Relacija();
         String relis[] = relacija.split(":");

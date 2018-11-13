@@ -1,16 +1,10 @@
 package com.lukag.atvoznired;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Point;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -31,6 +25,24 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.MyView
             duration = (TextView) view.findViewById(R.id.duration);
             length = (TextView) view.findViewById(R.id.length);
             cost = (TextView) view.findViewById(R.id.cost);
+
+            Integer margins = DataSourcee.calcMargins(context);
+
+            RelativeLayout.LayoutParams lpStart =   (RelativeLayout.LayoutParams)start.getLayoutParams();
+            RelativeLayout.LayoutParams lpEnd =     (RelativeLayout.LayoutParams)end.getLayoutParams();
+            RelativeLayout.LayoutParams lpDuration =(RelativeLayout.LayoutParams)duration.getLayoutParams();
+            RelativeLayout.LayoutParams lpLength =  (RelativeLayout.LayoutParams)length.getLayoutParams();
+            RelativeLayout.LayoutParams lpCost =    (RelativeLayout.LayoutParams)cost.getLayoutParams();
+            lpStart.setMargins      (margins,0, margins,0);
+            lpEnd.setMargins        (margins,0, margins,0);
+            lpDuration.setMargins   (margins,0, margins,0);
+            lpLength.setMargins     (margins,0, margins,0);
+            lpCost.setMargins       (margins,0, margins,0);
+            start.setLayoutParams(lpStart);
+            end.setLayoutParams(lpEnd);
+            duration.setLayoutParams(lpDuration);
+            length.setLayoutParams(lpLength);
+            cost.setLayoutParams(lpCost);
         }
     }
 
@@ -47,47 +59,6 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.MyView
         return new MyViewHolder(itemView);
     }
 
-    public Integer[] getMarginsForRecyclerView(MyViewHolder holder) {
-        Integer allMargins = 0;
-        Integer displayWidth = 0;
-        Integer contentWidth = DataSourcee.dpToPx(3*60+65+50);
-        Integer layoutPadding = DataSourcee.dpToPx(32);
-        Integer margins[] = new Integer[4];
-
-        try {
-            WindowManager wm = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
-            Display display = wm.getDefaultDisplay();
-            DisplayMetrics displaymatrics = new DisplayMetrics();
-            display.getMetrics(displaymatrics);
-
-            try{
-                Point size = new Point();
-                display.getSize(size);
-                displayWidth = size.x;
-            }catch(Exception e)
-            {
-                e.printStackTrace();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        allMargins = displayWidth - (contentWidth + layoutPadding);
-        if (allMargins < 0) {
-            margins[0] = 0;
-            margins[1] = 0;
-            margins[2] = 0;
-            margins[3] = 0;
-        } else {
-            margins[0] = allMargins / 10;
-            margins[1] = 0;
-            margins[2] = allMargins / 10;
-            margins[3] = 0;
-        }
-
-        return margins;
-    }
-
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Pot pot = scheduleList.get(position);
@@ -99,24 +70,6 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.MyView
         if (!pot.getStatus()) {
             holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.over));
         }
-
-        Integer margins[] = getMarginsForRecyclerView(holder);
-
-        RelativeLayout.LayoutParams lpStart =   (RelativeLayout.LayoutParams)holder.start.getLayoutParams();
-        RelativeLayout.LayoutParams lpEnd =     (RelativeLayout.LayoutParams)holder.end.getLayoutParams();
-        RelativeLayout.LayoutParams lpDuration =(RelativeLayout.LayoutParams)holder.duration.getLayoutParams();
-        RelativeLayout.LayoutParams lpLength =  (RelativeLayout.LayoutParams)holder.length.getLayoutParams();
-        RelativeLayout.LayoutParams lpCost =    (RelativeLayout.LayoutParams)holder.cost.getLayoutParams();
-        lpStart.setMargins      (margins[0],0, margins[2],0);
-        lpEnd.setMargins        (margins[0],0, margins[2],0);
-        lpDuration.setMargins   (margins[0],0, margins[2],0);
-        lpLength.setMargins     (margins[0],0, margins[2],0);
-        lpCost.setMargins       (margins[0],0, margins[2],0);
-        holder.start.setLayoutParams(lpStart);
-        holder.end.setLayoutParams(lpEnd);
-        holder.duration.setLayoutParams(lpDuration);
-        holder.length.setLayoutParams(lpLength);
-        holder.cost.setLayoutParams(lpCost);
     }
 
     @Override
