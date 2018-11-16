@@ -69,6 +69,8 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.MyView
         holder.cost.setText(pot.getCost() + " €");
         if (!pot.getStatus()) {
             holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.over));
+        } else {
+            holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.pending));
         }
     }
 

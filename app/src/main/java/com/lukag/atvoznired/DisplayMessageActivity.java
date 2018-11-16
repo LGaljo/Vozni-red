@@ -207,7 +207,7 @@ public class DisplayMessageActivity extends AppCompatActivity {
                 novaPot.setDuration(schedule.getJSONObject(i).getString("CAS_FORMATED"));
                 novaPot.setCost(schedule.getJSONObject(i).getString("VZCL_CEN"));
                 String statuss = schedule.getJSONObject(i).getString("STATUS");
-                novaPot.setStatus(statuss.equals("pending"));
+                novaPot.setStatus(!statuss.equalsIgnoreCase("over"));
                 iskanaRelacija.urnikAdd(novaPot);
                 Log.d("JSON parse", iskanaRelacija.getFromName() + " -> " + iskanaRelacija.getToName() + " : " + statuss);
             }
