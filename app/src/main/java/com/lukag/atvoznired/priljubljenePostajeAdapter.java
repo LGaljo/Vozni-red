@@ -25,10 +25,12 @@ public class priljubljenePostajeAdapter extends RecyclerView.Adapter<priljubljen
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView priljubljenaPostaja;
+        public TextView priljubljenaPostajaNextRide;
 
         public MyViewHolder(final View view) {
             super(view);
             priljubljenaPostaja = (TextView) view.findViewById(R.id.priljubljena_postaja);
+            priljubljenaPostajaNextRide = (TextView) view.findViewById(R.id.priljubljena_postaja_next_ride);
 
             // Prikazi izbrano relacijo
             view.setOnClickListener(new View.OnClickListener() {
@@ -90,7 +92,7 @@ public class priljubljenePostajeAdapter extends RecyclerView.Adapter<priljubljen
     public void onBindViewHolder(priljubljenePostajeAdapter.MyViewHolder holder, int position) {
         Relacija rel = priljubljeneList.get(position);
         holder.priljubljenaPostaja.setText(rel.getFromName() + " - " + rel.getToName());
-        holder.priljubljenaPostaja.append(appendNextRide(rel));
+        holder.priljubljenaPostajaNextRide.setText(appendNextRide(rel));
     }
 
     private String appendNextRide(Relacija rel) {
@@ -98,10 +100,10 @@ public class priljubljenePostajeAdapter extends RecyclerView.Adapter<priljubljen
         if (rel.getNextRide() == null || rel.getNextRide().equals("")) {
             return "";
         } else if (rel.getNextRide().equals("tomorrow")) {
-            return "\n" + context.getResources().getString(R.string.next_ride)+ " " +
+            return "\n" + context.getResources().getString(R.string.next_ride)+ ": " +
                     context.getResources().getString(R.string.tomorrow);
         } else {
-            return  "\n" + context.getResources().getString(R.string.next_ride)+ " " + rel.getNextRide();
+            return  "\n" + context.getResources().getString(R.string.next_ride)+ ": " + rel.getNextRide();
         }
     }
 
