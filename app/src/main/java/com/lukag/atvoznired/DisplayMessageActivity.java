@@ -153,6 +153,7 @@ public class DisplayMessageActivity extends AppCompatActivity {
                             sAdapter.notifyDataSetChanged();
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            returnToMainActivity("Napaka!");
                         }
                     }
                 },
@@ -191,7 +192,7 @@ public class DisplayMessageActivity extends AppCompatActivity {
 
             if (schedule.length() == 0) {
                 // Med postajama ni povezave
-                returnToMainActivity();
+                returnToMainActivity("no_connection");
                 this.finish();
             } else {
                 relativeLayout.setVisibility(View.VISIBLE);
@@ -249,10 +250,10 @@ public class DisplayMessageActivity extends AppCompatActivity {
      * Metoda omogoča, da se v primeru, da iz strežnika ne dobim odgovora,
      * vrnem na glavni zaslon in izpisem opozorilo, da med postajama ni povezave
      */
-    private void returnToMainActivity() {
+    private void returnToMainActivity(String reason) {
         ArrayList<String> prenos = new ArrayList<>();
         Intent intent = new Intent(DisplayMessageActivity.this, MainActivity.class);
-        intent.putExtra("reason", "no_connection");
+        intent.putExtra("reason", reason);
         startActivity(intent);
     }
 }

@@ -14,5 +14,6 @@
     <string name="fav_saved">Shranjeno med priljubljene</string>
     <string name="fav_already_saved">Relacija je že med priljubljenimi</string>
     <string name="no_connection">Med postajama ni povezave</string>
+    <string name="error">Napaka!</string>
     <string name="invalid_search">Neveljavno iskanje</string>
 </resources>
