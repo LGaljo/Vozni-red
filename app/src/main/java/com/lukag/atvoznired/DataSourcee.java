@@ -8,9 +8,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
-import android.widget.Adapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -206,7 +204,7 @@ public class DataSourcee {
                 public void getResponse(String response) {
                     try {
                         JSONObject POSTreply = new JSONObject(response);
-                        iskana.setUrnik(parseJSONResponse(POSTreply).getUrnik());
+                        iskana.setUrnik(parseJSONResponse(iskana, POSTreply).getUrnik());
 
                         Integer ind = 0;
                         Boolean found = false;
@@ -219,13 +217,13 @@ public class DataSourcee {
                             }
                             ind++;
                         }
-                        Log.d("Čas", found + " " + iskana.getUrnik().get(ind).getStart());
+                        //Log.d("Čas", found + " " + iskana.getUrnik().get(ind).getStart());
 
                         String nextRide;
                         if (found) {
                              nextRide = iskana.getUrnik().get(ind).getStart();
                         } else {
-                            nextRide = "tommorow";
+                            nextRide = "tomorrow";
                         }
                         iskana.setNextRide(nextRide);
 
@@ -239,7 +237,7 @@ public class DataSourcee {
                             f++;
                         }
 
-                        Log.d("","");
+                        //Log.d("","");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -252,16 +250,17 @@ public class DataSourcee {
      * Parsaj odgovor iz strežnika
      * @param resp JSONObject - odgovor strežnika
      */
-    public static Relacija parseJSONResponse(JSONObject resp) {
-        Relacija iskanaRelacija = new Relacija();
-        iskanaRelacija.initUrnik();
-
+    public static Relacija parseJSONResponse(Relacija iskanaRelacija, JSONObject resp) {
         try {
             String status = resp.get("status").toString();
             String message = resp.get("message").toString();
             Log.d("Status","Strežnik je vrnil " + status + ": " + message);
 
             JSONArray schedule = resp.getJSONArray("schedule");
+
+            if (schedule.length() == 0) {
+                return iskanaRelacija;
+            }
 
             for (int i = 0; i < schedule.length(); i++) {
                 Pot novaPot = new Pot();
@@ -272,9 +271,9 @@ public class DataSourcee {
                 novaPot.setDuration(schedule.getJSONObject(i).getString("CAS_FORMATED"));
                 novaPot.setCost(schedule.getJSONObject(i).getString("VZCL_CEN"));
                 String statuss = schedule.getJSONObject(i).getString("STATUS");
-                novaPot.setStatus(statuss.equals("pending"));
+                novaPot.setStatus(!statuss.equalsIgnoreCase("over"));
                 iskanaRelacija.urnikAdd(novaPot);
-                //Log.d("JSON parse", iskanaRelacija.getFromName() + " -> " + iskanaRelacija.getToName() + " : " + statuss);
+                Log.d("JSON parse", iskanaRelacija.getFromName() + " -> " + iskanaRelacija.getToName() + " : " + statuss);
             }
         } catch (JSONException e) {
             Log.e("getResponse", "Napaka v pri parsanju JSON datoteke");

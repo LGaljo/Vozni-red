@@ -12,7 +12,8 @@ public class Relacija {
     private String nextRide;
 
     Relacija() {
-
+        this.urnik = new ArrayList<>();
+        this.nextRide = "";
     }
 
     public Relacija(String fromID, String fromName, String toID, String toName, List<Pot> urnik) {
@@ -21,14 +22,13 @@ public class Relacija {
         this.toID = toID;
         this.toName = toName;
         this.urnik = urnik;
-    }
-
-    public void initUrnik() {
-        this.urnik = new ArrayList<>();
         this.nextRide = "";
     }
 
     public void urnikAdd(Pot novaPot) {
+        if (this.urnik == null) {
+            this.urnik = new ArrayList<>();
+        }
         this.urnik.add(novaPot);
     }
 

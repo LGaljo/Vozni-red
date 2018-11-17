@@ -58,8 +58,7 @@ public class DisplayMessageActivity extends AppCompatActivity {
 
         setFindViews();
 
-        iskanaRelacija = new Relacija(prenos.get(0), prenos.get(1), prenos.get(2), prenos.get(3), null);
-        iskanaRelacija.initUrnik();
+        iskanaRelacija = new Relacija(prenos.get(0), prenos.get(1), prenos.get(2), prenos.get(3), new ArrayList<Pot>());
         POSTiT(iskanaRelacija, prenos.get(4));
 
         sAdapter = new ScheduleAdapter(iskanaRelacija.getUrnik(), this);
@@ -108,7 +107,9 @@ public class DisplayMessageActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        favs.shraniPriljubljene();
+        if (favs != null) {
+            favs.shraniPriljubljene();
+        }
         SwipeBackHelper.onDestroy(this);
     }
 
@@ -140,80 +141,41 @@ public class DisplayMessageActivity extends AppCompatActivity {
      * @param date Datum potovanja
      */
     public void POSTiT(final Relacija relacija, final String date) {
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "https://www.alpetour.si/wp-admin/admin-ajax.php";
+        VolleyTool vt = new VolleyTool(this);
 
-        StringRequest POSTrequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject POSTreply = new JSONObject(response);
-                            parseJSONResponse(POSTreply);
-                            sAdapter.notifyDataSetChanged();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            returnToMainActivity("Napaka!");
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("ERROR", "error => " + error.toString());
-                    }
-                }
-        ) {
+        //Log.d("Relacija", "Kličem relacijo " + rel.toString());
+        vt.addParam("action", "showRoutes");
+        vt.addParam("fromID", relacija.getFromID());
+        vt.addParam("toID", relacija.getToID());
+        vt.addParam("date", date);
+        vt.addParam("general", "false");
+
+        vt.executeRequest(Request.Method.POST, new VolleyTool.VolleyCallback() {
+
             @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<>();
-                params.put("action", "showRoutes");
-                params.put("fromID", relacija.getFromID());
-                params.put("toID",relacija.getToID());
-                params.put("date", date);
-                params.put("general", "false");
-                return params;
+            public void getResponse(String response) {
+                try {
+                    JSONObject POSTreply = new JSONObject(response);
+                    iskanaRelacija = DataSourcee.parseJSONResponse(iskanaRelacija, POSTreply);
+                    checkUrnik();
+                    relativeLayout.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.GONE);
+                    sAdapter.notifyDataSetChanged();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    returnToMainActivity("Napaka!");
+                }
             }
-        };
-        queue.add(POSTrequest);
+        });
     }
 
-    /**
-     * Parsaj odgovor iz strežnika
-     * @param resp JSONObject - odgovor strežnika
-     */
-    public void parseJSONResponse(JSONObject resp) {
-        try {
-            String status = resp.get("status").toString();
-            String message = resp.get("message").toString();
-            Log.d("Status","Strežnik je vrnil " + status + ": " + message);
-
-            JSONArray schedule = resp.getJSONArray("schedule");
-
-            if (schedule.length() == 0) {
-                // Med postajama ni povezave
-                returnToMainActivity("no_connection");
-                this.finish();
-            } else {
-                relativeLayout.setVisibility(View.VISIBLE);
-                progressBar.setVisibility(View.GONE);
-            }
-
-            for (int i = 0; i < schedule.length(); i++) {
-                Pot novaPot = new Pot();
-                novaPot.setID(Integer.parseInt(schedule.getJSONObject(i).getString("ID")));
-                novaPot.setStart(schedule.getJSONObject(i).getString("ODHOD_FORMATED"));
-                novaPot.setEnd(schedule.getJSONObject(i).getString("PRIHOD_FORMATED"));
-                novaPot.setLength(schedule.getJSONObject(i).getString("KM_POT"));
-                novaPot.setDuration(schedule.getJSONObject(i).getString("CAS_FORMATED"));
-                novaPot.setCost(schedule.getJSONObject(i).getString("VZCL_CEN"));
-                String statuss = schedule.getJSONObject(i).getString("STATUS");
-                novaPot.setStatus(!statuss.equalsIgnoreCase("over"));
-                iskanaRelacija.urnikAdd(novaPot);
-                Log.d("JSON parse", iskanaRelacija.getFromName() + " -> " + iskanaRelacija.getToName() + " : " + statuss);
-            }
-        } catch (JSONException e) {
-            Log.e("getResponse", "Napaka v pri parsanju JSON datoteke");
+    private void checkUrnik() {
+        if (iskanaRelacija.getUrnik().size() == 0) {
+            Log.d("POST", "Urnik je prazen");
+            returnToMainActivity("no_connection");
+            this.finish();
+        } else {
+            Log.d("POST", "Velikost urnika " + iskanaRelacija.getUrnik().size());
         }
     }
 
