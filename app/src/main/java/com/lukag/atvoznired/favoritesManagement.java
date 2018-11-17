@@ -76,8 +76,12 @@ public class favoritesManagement {
 
         for (int i = 0; i < this.size; i++) {
             Relacija rela = parseRelacija(this.shramba.getString(Integer.toString(i), ""));
+            rela.setFromID(DataSourcee.getIDfromMap(rela.getFromName()));
+            rela.setToID(DataSourcee.getIDfromMap(rela.getToName()));
             priljubljeneRelacije.add(rela);
         }
+
+        MainActivity.sourcesFound = false;
     }
 
     /**

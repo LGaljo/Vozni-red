@@ -9,6 +9,7 @@ public class Relacija {
     private String toID;
     private String toName;
     private List<Pot> urnik;
+    private String nextRide;
 
     Relacija() {
 
@@ -24,6 +25,7 @@ public class Relacija {
 
     public void initUrnik() {
         this.urnik = new ArrayList<>();
+        this.nextRide = "";
     }
 
     public void urnikAdd(Pot novaPot) {
@@ -68,5 +70,13 @@ public class Relacija {
 
     public void setUrnik(List<Pot> urnik) {
         this.urnik = urnik;
+    }
+
+    public String getNextRide() {
+        return nextRide;
+    }
+
+    public void setNextRide(String nextRide) {
+        this.nextRide = nextRide;
     }
 }

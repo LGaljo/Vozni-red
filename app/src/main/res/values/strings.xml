@@ -16,4 +16,6 @@
     <string name="no_connection">Med postajama ni povezave</string>
     <string name="error">Napaka!</string>
     <string name="invalid_search">Neveljavno iskanje</string>
+    <string name="next_ride">naslednja vožnja</string>
+    <string name="tomorrow">jutri</string>
 </resources>

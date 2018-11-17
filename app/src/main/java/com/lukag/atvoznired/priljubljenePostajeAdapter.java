@@ -3,6 +3,7 @@ package com.lukag.atvoznired;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,6 +90,19 @@ public class priljubljenePostajeAdapter extends RecyclerView.Adapter<priljubljen
     public void onBindViewHolder(priljubljenePostajeAdapter.MyViewHolder holder, int position) {
         Relacija rel = priljubljeneList.get(position);
         holder.priljubljenaPostaja.setText(rel.getFromName() + " - " + rel.getToName());
+        holder.priljubljenaPostaja.append(appendNextRide(rel));
+    }
+
+    private String appendNextRide(Relacija rel) {
+        Log.d("Adapter", "cas '" + rel.getNextRide() + "'");
+        if (rel.getNextRide() == null || rel.getNextRide().equals("")) {
+            return "";
+        } else if (rel.getNextRide().equals("tomorrow")) {
+            return "\n" + context.getResources().getString(R.string.next_ride)+ " " +
+                    context.getResources().getString(R.string.tomorrow);
+        } else {
+            return  "\n" + context.getResources().getString(R.string.next_ride)+ " " + rel.getNextRide();
+        }
     }
 
     @Override

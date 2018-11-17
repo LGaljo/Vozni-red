@@ -17,4 +17,6 @@
     <string name="invalid_search">Invalid search</string>
     <string name="fav_saved">Saved to favourites</string>
     <string name="error">Error!</string>
+    <string name="next_ride">next ride</string>
+    <string name="tomorrow">tomorrow</string>
 </resources>

@@ -47,14 +47,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private RecyclerView recyclerView;
     private priljubljenePostajeAdapter pAdapter;
 
+    private Runnable runs;
+
     private favoritesManagement favs;
     private DatePickerDialog.OnDateSetListener date;
+    public static Boolean sourcesFound = true;
 
     @Override
     protected void onStart() {
         super.onStart();
         koledar.setText(DataSourcee.dodajDanasnjiDan());
-        favs = new favoritesManagement(this);
     }
 
     @Override
@@ -68,6 +70,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (reason != null && reason.equals("no_connection")) {
             Snackbar.make(contextView, R.string.no_connection, Snackbar.LENGTH_LONG).show();
+        } else if (reason != null) {
+            Snackbar.make(contextView, R.string.error, Snackbar.LENGTH_LONG).show();
         }
 
         SwipeBackHelper.onCreate(this);
@@ -90,6 +94,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         recyclerView.setAdapter(pAdapter);
+        checkForNewRides();
+        recyclerView.post(runs);
     }
 
     @Override
@@ -170,7 +176,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             default:
                 break;
-
         }
     }
 
@@ -217,7 +222,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * Metoda preveri pravilnost vnosa podatkov in
      * sestavi ArrayList za prenos podatkov
-     * @return
      */
     private void preveriParametre() {
         ArrayList<String> prenos = new ArrayList<>();
@@ -248,5 +252,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Intent intent = new Intent(MainActivity.this, DisplayMessageActivity.class);
         intent.putStringArrayListExtra(EXTRA_MESSAGE, prenos);
         startActivity(intent);
+    }
+
+    private void checkForNewRides() {
+        runs = new Runnable() {
+            public void run() {
+                // a potentially time consuming task
+                while (sourcesFound) {
+                    // wait
+                }
+                DataSourcee.findNextRides(MainActivity.this, pAdapter);
+            }
+        };
     }
 }

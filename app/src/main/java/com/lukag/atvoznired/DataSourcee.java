@@ -5,19 +5,27 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Point;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
+import android.widget.Adapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -175,4 +183,131 @@ public class DataSourcee {
         return allMargins;
     }
 
+    public static void findNextRides(Context context, final priljubljenePostajeAdapter pAdapter) {
+        for (final int i[] = {0}; i[0] < favoritesManagement.priljubljeneRelacije.size(); i[0]++) {
+            final Relacija iskana = favoritesManagement.priljubljeneRelacije.get(i[0]);
+
+            final String fromID = favoritesManagement.priljubljeneRelacije.get(i[0]).getFromID();
+            final String toID = favoritesManagement.priljubljeneRelacije.get(i[0]).getToID();
+            final String fromName = favoritesManagement.priljubljeneRelacije.get(i[0]).getFromName();
+            final String toName = favoritesManagement.priljubljeneRelacije.get(i[0]).getToName();
+            VolleyTool vt = new VolleyTool(context);
+
+            //Log.d("Relacija", "Kličem relacijo " + rel.toString());
+            vt.addParam("action", "showRoutes");
+            vt.addParam("fromID", fromID);
+            vt.addParam("toID", toID);
+            vt.addParam("date", dodajDanasnjiDan());
+            vt.addParam("general", "false");
+
+            vt.executeRequest(Request.Method.POST, new VolleyTool.VolleyCallback() {
+
+                @Override
+                public void getResponse(String response) {
+                    try {
+                        JSONObject POSTreply = new JSONObject(response);
+                        iskana.setUrnik(parseJSONResponse(POSTreply).getUrnik());
+
+                        Integer ind = 0;
+                        Boolean found = false;
+                        for (Pot pot : iskana.getUrnik()) {
+                            Date time2 = newTime(pot.getStart());
+                            //Log.d("COMPARE", time1.toString() + " " + time2.toString());
+                            if (primerjajCas(time2)) {
+                                found = true;
+                                break;
+                            }
+                            ind++;
+                        }
+                        Log.d("Čas", found + " " + iskana.getUrnik().get(ind).getStart());
+
+                        String nextRide;
+                        if (found) {
+                             nextRide = iskana.getUrnik().get(ind).getStart();
+                        } else {
+                            nextRide = "tommorow";
+                        }
+                        iskana.setNextRide(nextRide);
+
+                        int f = 0;
+                        for (Relacija rel_3 : favoritesManagement.priljubljeneRelacije) {
+                            if (rel_3.getToName().equals(iskana.getToName()) && rel_3.getFromName().equals(iskana.getFromName())) {
+                                favoritesManagement.priljubljeneRelacije.set(f, iskana);
+                                pAdapter.notifyDataSetChanged();
+                                break;
+                            }
+                            f++;
+                        }
+
+                        Log.d("","");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+    }
+
+    /**
+     * Parsaj odgovor iz strežnika
+     * @param resp JSONObject - odgovor strežnika
+     */
+    public static Relacija parseJSONResponse(JSONObject resp) {
+        Relacija iskanaRelacija = new Relacija();
+        iskanaRelacija.initUrnik();
+
+        try {
+            String status = resp.get("status").toString();
+            String message = resp.get("message").toString();
+            Log.d("Status","Strežnik je vrnil " + status + ": " + message);
+
+            JSONArray schedule = resp.getJSONArray("schedule");
+
+            for (int i = 0; i < schedule.length(); i++) {
+                Pot novaPot = new Pot();
+                novaPot.setID(Integer.parseInt(schedule.getJSONObject(i).getString("ID")));
+                novaPot.setStart(schedule.getJSONObject(i).getString("ODHOD_FORMATED"));
+                novaPot.setEnd(schedule.getJSONObject(i).getString("PRIHOD_FORMATED"));
+                novaPot.setLength(schedule.getJSONObject(i).getString("KM_POT"));
+                novaPot.setDuration(schedule.getJSONObject(i).getString("CAS_FORMATED"));
+                novaPot.setCost(schedule.getJSONObject(i).getString("VZCL_CEN"));
+                String statuss = schedule.getJSONObject(i).getString("STATUS");
+                novaPot.setStatus(statuss.equals("pending"));
+                iskanaRelacija.urnikAdd(novaPot);
+                //Log.d("JSON parse", iskanaRelacija.getFromName() + " -> " + iskanaRelacija.getToName() + " : " + statuss);
+            }
+        } catch (JSONException e) {
+            Log.e("getResponse", "Napaka v pri parsanju JSON datoteke");
+        }
+
+        return iskanaRelacija;
+    }
+
+    public static Date newTime(String timeStr) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN);
+        Date time = new Date();
+
+        try {
+            time = sdf.parse(dodajDanasnjiDan() + " " + timeStr);
+            Calendar calendar = GregorianCalendar.getInstance();
+            calendar.setTime(time);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return time;
+    }
+
+    public static Boolean primerjajCas(Date time2) {
+        Date time1 = trenutniCas();
+        if (time1.before(time2)) {
+            return true;
+        }
+        return false;
+    }
+
+    public static Date trenutniCas() {
+        Date time = Calendar.getInstance().getTime();
+        return time;
+    }
 }
