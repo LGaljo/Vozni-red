@@ -219,11 +219,17 @@ public class DataSourcee {
                         }
                         //Log.d("Čas", found + " " + iskana.getUrnik().get(ind).getStart());
 
-                        String nextRide;
+                        String[] nextRide = new String[3];
                         if (found) {
-                             nextRide = iskana.getUrnik().get(ind).getStart();
+                             nextRide[0] = iskana.getUrnik().get(ind).getStart();
+                             if (iskana.getUrnik().size() >= 2 + ind) {
+                                 nextRide[1] = iskana.getUrnik().get(ind + 1).getStart();
+                             }
+                              if (iskana.getUrnik().size() >= 3 + ind) {
+                                  nextRide[2] = iskana.getUrnik().get(ind + 2).getStart();
+                             }
                         } else {
-                            nextRide = "tomorrow";
+                            nextRide[0] = "tomorrow";
                         }
                         iskana.setNextRide(nextRide);
 
@@ -237,7 +243,6 @@ public class DataSourcee {
                             f++;
                         }
 
-                        //Log.d("","");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

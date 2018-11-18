@@ -9,11 +9,11 @@ public class Relacija {
     private String toID;
     private String toName;
     private List<Pot> urnik;
-    private String nextRide;
+    private String[] nextRide;
 
     Relacija() {
         this.urnik = new ArrayList<>();
-        this.nextRide = "";
+        this.nextRide = new String[3];
     }
 
     public Relacija(String fromID, String fromName, String toID, String toName, List<Pot> urnik) {
@@ -22,7 +22,7 @@ public class Relacija {
         this.toID = toID;
         this.toName = toName;
         this.urnik = urnik;
-        this.nextRide = "";
+        this.nextRide = new String[3];
     }
 
     public void urnikAdd(Pot novaPot) {
@@ -72,11 +72,11 @@ public class Relacija {
         this.urnik = urnik;
     }
 
-    public String getNextRide() {
+    public String[] getNextRide() {
         return nextRide;
     }
 
-    public void setNextRide(String nextRide) {
+    public void setNextRide(String[] nextRide) {
         this.nextRide = nextRide;
     }
 }

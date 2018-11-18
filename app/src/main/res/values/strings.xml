@@ -18,4 +18,6 @@
     <string name="invalid_search">Neveljavno iskanje</string>
     <string name="next_ride">naslednja vožnja</string>
     <string name="tomorrow">jutri</string>
+    <string name="next_ride_dvojina">naslednji vožnji</string>
+    <string name="next_ride_mnozina">naslednje vožnje</string>
 </resources>

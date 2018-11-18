@@ -96,14 +96,48 @@ public class priljubljenePostajeAdapter extends RecyclerView.Adapter<priljubljen
     }
 
     private String appendNextRide(Relacija rel) {
-        Log.d("Adapter", "cas '" + rel.getNextRide() + "'");
-        if (rel.getNextRide() == null || rel.getNextRide().equals("")) {
+        Log.d("Adapter", "cas '" + rel.getNextRide()[0] + "'");
+        if (rel.getNextRide() == null || rel.getNextRide()[0] == null || rel.getNextRide()[0].equals("")) {
             return "";
-        } else if (rel.getNextRide().equals("tomorrow")) {
+        } else if (rel.getNextRide()[0].equals("tomorrow")) {
             return "\n" + context.getResources().getString(R.string.next_ride)+ ": " +
                     context.getResources().getString(R.string.tomorrow);
         } else {
-            return  "\n" + context.getResources().getString(R.string.next_ride)+ ": " + rel.getNextRide();
+            StringBuilder sb = new StringBuilder();
+            sb.append("\n");
+
+            // Najprej dobimo število voženje in jih preštejemo
+            Boolean first = true;
+            Integer num = 0;
+            StringBuilder sb2 = new StringBuilder();
+            for (String str : rel.getNextRide()) {
+                if (str != null) {
+                    if (!first) {
+                        sb2.append(", ");
+                    }
+                    first = false;
+                    num++;
+                    sb2.append(str);
+                }
+            }
+
+            // Vemo koliko voženj imamo
+            switch (num) {
+                case 1:
+                    sb.append(context.getResources().getString(R.string.next_ride));
+                    break;
+                case 2:
+                    sb.append(context.getResources().getString(R.string.next_ride_dvojina));
+                    break;
+                case 3:
+                    sb.append(context.getResources().getString(R.string.next_ride_mnozina));
+                    break;
+                default:
+                    break;
+            }
+            sb.append(": ");
+            sb.append(sb2);
+            return  sb.toString();
         }
     }
 
