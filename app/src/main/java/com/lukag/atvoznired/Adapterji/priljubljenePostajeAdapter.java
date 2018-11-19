@@ -15,6 +15,7 @@ import com.lukag.atvoznired.DisplayMessageActivity;
 import com.lukag.atvoznired.R;
 import com.lukag.atvoznired.Objekti.Relacija;
 import com.lukag.atvoznired.UpravljanjeSPodatki.UpravljanjeSPriljubljenimi;
+import com.lukag.atvoznired.UpravljanjeSPodatki.UpravljanjeZZadnjimiIskanimi;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +51,7 @@ public class priljubljenePostajeAdapter extends RecyclerView.Adapter<priljubljen
                     vstopnaPostajaView.setText(priljubljeneList.get(getAdapterPosition()).getFromName(), false);
                     izstopnaPostajaView.setText(priljubljeneList.get(getAdapterPosition()).getToName(), false);
 
-                    DataSourcee.shraniZadnjiIskani(context, vstopnaPostajaView, izstopnaPostajaView, DataSourcee.dodajDanasnjiDan());
+                    UpravljanjeZZadnjimiIskanimi.shraniZadnjiIskani(context, vstopnaPostajaView, izstopnaPostajaView, DataSourcee.dodajDanasnjiDan());
 
                     ArrayList<String> prenos = new ArrayList<>();
                     prenos.add(vstopnaID);
@@ -69,9 +70,7 @@ public class priljubljenePostajeAdapter extends RecyclerView.Adapter<priljubljen
             view.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    //spm.odstraniPriljubljeno(new Relacija(vstopnaPostajaView.getText().toString(), "", izstopnaPostajaView.getText().toString(), "", null));
                     UpravljanjeSPriljubljenimi.odstraniPriljubljeno(priljubljeneList.get(getAdapterPosition()));
-                    //priljubljeneList.remove(getAdapterPosition());
                     notifyItemRemoved(getAdapterPosition());
                     notifyItemRangeChanged(getAdapterPosition(), priljubljeneList.size());
                     return false;
