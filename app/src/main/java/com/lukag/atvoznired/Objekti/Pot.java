@@ -1,4 +1,4 @@
-package com.lukag.atvoznired;
+package com.lukag.atvoznired.Objekti;
 
 public class Pot {
     private Integer ID;
@@ -9,7 +9,7 @@ public class Pot {
     private String cost;
     private Boolean status;
 
-    Pot() {
+    public Pot() {
     }
 
     public Pot(Integer ID, String start, String end, String duration, String length, String cost, Boolean status) {

@@ -1,7 +1,10 @@
-package com.lukag.atvoznired;
+package com.lukag.atvoznired.UpravljanjeSPodatki;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
+import com.lukag.atvoznired.MainActivity;
+import com.lukag.atvoznired.Objekti.Relacija;
 
 import java.util.ArrayList;
 import java.util.List;

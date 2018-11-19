@@ -1,4 +1,4 @@
-package com.lukag.atvoznired;
+package com.lukag.atvoznired.Objekti;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ public class Relacija {
     private List<Pot> urnik;
     private String[] nextRide;
 
-    Relacija() {
+    public Relacija() {
         this.urnik = new ArrayList<>();
         this.nextRide = new String[3];
     }

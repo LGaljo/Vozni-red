@@ -1,4 +1,4 @@
-package com.lukag.atvoznired;
+package com.lukag.atvoznired.Adapterji;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
+
+import com.lukag.atvoznired.UpravljanjeSPodatki.DataSourcee;
+import com.lukag.atvoznired.DisplayMessageActivity;
+import com.lukag.atvoznired.R;
+import com.lukag.atvoznired.Objekti.Relacija;
+import com.lukag.atvoznired.UpravljanjeSPodatki.UpravljanjeSPriljubljenimi;
 
 import java.util.ArrayList;
 import java.util.List;

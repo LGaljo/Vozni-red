@@ -1,17 +1,17 @@
-package com.lukag.atvoznired;
+package com.lukag.atvoznired.UpravljanjeSPodatki;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Point;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
-import android.widget.AutoCompleteTextView;
-import android.widget.TextView;
 
 import com.android.volley.Request;
+import com.lukag.atvoznired.Adapterji.priljubljenePostajeAdapter;
+import com.lukag.atvoznired.Objekti.Pot;
+import com.lukag.atvoznired.Objekti.Relacija;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -72,41 +72,6 @@ public class DataSourcee {
             return null;
         }
         return v_json;
-    }
-
-    /**
-     * Metoda iz sharedPreferenca dobi postaji in datum ter nastavi vrednosti v prave objekte
-     * @param context - kontekst razreda iz katerega je klicana metoda
-     * @param vp - AutoCompleteTextView za vstopno postajo
-     * @param ip - AutoCompleteTextView za izstopo postajo
-     * @param dateView - TextView za tekst koledarja
-     */
-    public static void nastaviZadnjiIskani(Context context, AutoCompleteTextView vp, AutoCompleteTextView ip, TextView dateView) {
-        SharedPreferences priljubljene = context.getSharedPreferences("zadnjiIskaniPostaji", Context.MODE_PRIVATE);
-        String fromID = priljubljene.getString("fromID", "");
-        String toID = priljubljene.getString("toID", "");
-        String date = priljubljene.getString("date", "");
-
-        vp.setText(fromID, false);
-        ip.setText(toID, false);
-        dateView.setText(date);
-    }
-
-    /**
-     * Metoda iz objektov pridobi vrednosti in jih shrani v sharedPreference
-     * @param context - kontekst razreda iz katerega je klicana metoda
-     * @param vp - AutoCompleteTextView za vstopno postajo
-     * @param ip - AutoCompleteTextView za izstopo postajo
-     * @param date - TextView za tekst koledarja
-     */
-    public static void shraniZadnjiIskani(Context context, AutoCompleteTextView vp, AutoCompleteTextView ip, String date) {
-        SharedPreferences priljubljene = context.getSharedPreferences("zadnjiIskaniPostaji", Context.MODE_PRIVATE);
-        SharedPreferences.Editor urejevalnik = priljubljene.edit();
-        urejevalnik.putString("fromID", vp.getText().toString());
-        urejevalnik.putString("toID", ip.getText().toString());
-        urejevalnik.putString("date", date);
-
-        urejevalnik.apply();
     }
 
     /**
@@ -181,6 +146,11 @@ public class DataSourcee {
         return allMargins;
     }
 
+    /**
+     * Metoda poišče naslednje tri vožnje za vsako priljubljeno relacijo
+     * @param context kontekst razreda
+     * @param pAdapter adapter za priljubljene postaje
+     */
     public static void findNextRides(Context context, final priljubljenePostajeAdapter pAdapter) {
         for (final int i[] = {0}; i[0] < UpravljanjeSPriljubljenimi.priljubljeneRelacije.size(); i[0]++) {
             final Relacija iskana = UpravljanjeSPriljubljenimi.priljubljeneRelacije.get(i[0]);
@@ -287,6 +257,11 @@ public class DataSourcee {
         return iskanaRelacija;
     }
 
+    /**
+     * Iz String vrne objekt Date
+     * @param timeStr String časa oblike dd.MM.yyyy HH:mm
+     * @return objekt Date
+     */
     public static Date newTime(String timeStr) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN);
         Date time = new Date();
@@ -302,16 +277,13 @@ public class DataSourcee {
         return time;
     }
 
+    /**
+     * Primerja dva časa
+     * @param time2 čas, ki ga želiš primerjati s trenutnim
+     * @return vrne true, če je time2 pred časom time1
+     */
     public static Boolean primerjajCas(Date time2) {
-        Date time1 = trenutniCas();
-        if (time1.before(time2)) {
-            return true;
-        }
-        return false;
-    }
-
-    public static Date trenutniCas() {
-        Date time = Calendar.getInstance().getTime();
-        return time;
+        Date time1 = Calendar.getInstance().getTime();
+        return time1.before(time2);
     }
 }

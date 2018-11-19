@@ -1,4 +1,4 @@
-package com.lukag.atvoznired;
+package com.lukag.atvoznired.Adapterji;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -7,6 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.lukag.atvoznired.UpravljanjeSPodatki.DataSourcee;
+import com.lukag.atvoznired.Objekti.Pot;
+import com.lukag.atvoznired.R;
 
 import java.util.List;
 

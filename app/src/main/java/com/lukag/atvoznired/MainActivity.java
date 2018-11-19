@@ -22,6 +22,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jude.swipbackhelper.SwipeBackHelper;
+import com.lukag.atvoznired.Adapterji.priljubljenePostajeAdapter;
+import com.lukag.atvoznired.UpravljanjeSPodatki.DataSourcee;
+import com.lukag.atvoznired.UpravljanjeSPodatki.UpravljanjeSPriljubljenimi;
+import com.lukag.atvoznired.UpravljanjeSPodatki.UpravljanjeZZadnjimiIskanimi;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -80,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         favs = UpravljanjeSPriljubljenimi.getInstance();
         favs.setContext(this);
-        DataSourcee.nastaviZadnjiIskani(this, vstopnaPostajaView, izstopnaPostajaView, koledar);
+        UpravljanjeZZadnjimiIskanimi.nastaviZadnjiIskani(this, vstopnaPostajaView, izstopnaPostajaView, koledar);
 
         // Pripravi RecyclerView za prikaz priljubljenih relacij
         pAdapter = new priljubljenePostajeAdapter(UpravljanjeSPriljubljenimi.priljubljeneRelacije, this, vstopnaPostajaView, izstopnaPostajaView, favs, koledar);
@@ -137,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.submit:
                 // Gumb za iskanje urnika
-                DataSourcee.shraniZadnjiIskani(MainActivity.this, vstopnaPostajaView, izstopnaPostajaView, koledar.getText().toString());
+                UpravljanjeZZadnjimiIskanimi.shraniZadnjiIskani(MainActivity.this, vstopnaPostajaView, izstopnaPostajaView, koledar.getText().toString());
                 preveriParametre();
                 break;
             case R.id.swap:
@@ -145,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String tmp = izstopnaPostajaView.getText().toString();
                 izstopnaPostajaView.setText(vstopnaPostajaView.getText(), false);
                 vstopnaPostajaView.setText(tmp, false);
-                DataSourcee.shraniZadnjiIskani(MainActivity.this, vstopnaPostajaView, izstopnaPostajaView, koledar.getText().toString());
+                UpravljanjeZZadnjimiIskanimi.shraniZadnjiIskani(MainActivity.this, vstopnaPostajaView, izstopnaPostajaView, koledar.getText().toString());
                 break;
             case R.id.textCalendar:
                 // Pokazi koledar
