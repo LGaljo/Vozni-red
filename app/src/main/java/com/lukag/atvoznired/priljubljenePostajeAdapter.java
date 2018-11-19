@@ -21,7 +21,7 @@ public class priljubljenePostajeAdapter extends RecyclerView.Adapter<priljubljen
     private Context context;
     private AutoCompleteTextView vstopnaPostajaView;
     private AutoCompleteTextView izstopnaPostajaView;
-    private favoritesManagement spm;
+    private UpravljanjeSPriljubljenimi spm;
     private TextView koledar;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -63,8 +63,9 @@ public class priljubljenePostajeAdapter extends RecyclerView.Adapter<priljubljen
             view.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    spm.odstraniPriljubljeno(new Relacija(vstopnaPostajaView.getText().toString(), "", izstopnaPostajaView.getText().toString(), "", null));
-                    priljubljeneList.remove(getAdapterPosition());
+                    //spm.odstraniPriljubljeno(new Relacija(vstopnaPostajaView.getText().toString(), "", izstopnaPostajaView.getText().toString(), "", null));
+                    UpravljanjeSPriljubljenimi.odstraniPriljubljeno(priljubljeneList.get(getAdapterPosition()));
+                    //priljubljeneList.remove(getAdapterPosition());
                     notifyItemRemoved(getAdapterPosition());
                     notifyItemRangeChanged(getAdapterPosition(), priljubljeneList.size());
                     return false;

@@ -41,23 +41,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ImageView delete_ip;
     private ImageView swap;
 
-    private TextView koledar;
+    public TextView koledar;
     private View contextView;
 
     private RecyclerView recyclerView;
     private priljubljenePostajeAdapter pAdapter;
 
-    private Runnable runs;
+    public static Runnable runs;
 
-    private favoritesManagement favs;
+    private UpravljanjeSPriljubljenimi favs;
     private DatePickerDialog.OnDateSetListener date;
     public static Boolean sourcesFound = true;
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        koledar.setText(DataSourcee.dodajDanasnjiDan());
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +78,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // Prepreci odpiranje tipkovnice ob zagonu
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        favs = new favoritesManagement(this);
+        favs = UpravljanjeSPriljubljenimi.getInstance();
+        favs.setContext(this);
         DataSourcee.nastaviZadnjiIskani(this, vstopnaPostajaView, izstopnaPostajaView, koledar);
 
         // Pripravi RecyclerView za prikaz priljubljenih relacij
@@ -102,6 +97,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         SwipeBackHelper.onPostCreate(this);
+        pAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        koledar.setText(DataSourcee.dodajDanasnjiDan());
+        pAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -111,36 +114,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         SwipeBackHelper.onDestroy(this);
     }
 
-    /**
-     * Metoda pripravi AutoCompleteTextView za uporabo
-     */
-    private void dodajAutoCompleteTextView() {
-        DataSourcee.init(this);
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<> (this, R.layout.autocomplete_list_item, DataSourcee.samoPostaje);
-        vstopnaPostajaView.setDropDownBackgroundDrawable(this.getResources().getDrawable(R.drawable.autocomplete_dropdown));
-        izstopnaPostajaView.setDropDownBackgroundDrawable(this.getResources().getDrawable(R.drawable.autocomplete_dropdown));
-
-        vstopnaPostajaView.setThreshold(2);
-        vstopnaPostajaView.setAdapter(adapter);
-        izstopnaPostajaView.setThreshold(2);
-        izstopnaPostajaView.setAdapter(adapter);
-
-        ConstraintLayout.LayoutParams lp = (ConstraintLayout.LayoutParams) vstopnaPostajaView.getLayoutParams();
-
-        vstopnaPostajaView.setDropDownWidth(screenWidth() - (lp.leftMargin + lp.rightMargin));
-        izstopnaPostajaView.setDropDownWidth(screenWidth() - (lp.leftMargin + lp.rightMargin));
-    }
-
-    /**
-     * Metoda vrne sirino zaslona
-     */
-    private Integer screenWidth() {
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-
-        return size.x;
+    @Override
+    protected void onResume() {
+        super.onResume();
+        pAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -177,6 +154,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             default:
                 break;
         }
+    }
+
+    /**
+     * Metoda pripravi AutoCompleteTextView za uporabo
+     */
+    private void dodajAutoCompleteTextView() {
+        DataSourcee.init(this);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<> (this, R.layout.autocomplete_list_item, DataSourcee.samoPostaje);
+        vstopnaPostajaView.setDropDownBackgroundDrawable(this.getResources().getDrawable(R.drawable.autocomplete_dropdown));
+        izstopnaPostajaView.setDropDownBackgroundDrawable(this.getResources().getDrawable(R.drawable.autocomplete_dropdown));
+
+        vstopnaPostajaView.setThreshold(2);
+        vstopnaPostajaView.setAdapter(adapter);
+        izstopnaPostajaView.setThreshold(2);
+        izstopnaPostajaView.setAdapter(adapter);
+
+        ConstraintLayout.LayoutParams lp = (ConstraintLayout.LayoutParams) vstopnaPostajaView.getLayoutParams();
+
+        vstopnaPostajaView.setDropDownWidth(screenWidth() - (lp.leftMargin + lp.rightMargin));
+        izstopnaPostajaView.setDropDownWidth(screenWidth() - (lp.leftMargin + lp.rightMargin));
+    }
+
+    /**
+     * Metoda vrne sirino zaslona
+     */
+    private Integer screenWidth() {
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+
+        return size.x;
     }
 
     /**

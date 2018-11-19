@@ -6,26 +6,33 @@ import android.content.SharedPreferences;
 import java.util.ArrayList;
 import java.util.List;
 
-public class favoritesManagement {
+public class UpravljanjeSPriljubljenimi {
+
+    private static UpravljanjeSPriljubljenimi upravljanjeSPriljubljenimi;
+
     private Context context;
     private SharedPreferences shramba;
     private int size;
     public static List<Relacija> priljubljeneRelacije;
 
-    /**
-     * Shrani kontekst MainActivitya za odprtje sharedPreferenca
-     * Dobi število priljubljenih v sharedPreferencu
-     * Prenos priljubljenih iz sharedPreferenca v ArrayList
-     * @param context - kontekst MainActivity
-     */
-    favoritesManagement(Context context) {
-        this.context = context;
-        shramba = this.context.getSharedPreferences("priljubljenePostaje", Context.MODE_PRIVATE);
-        priljubljeneRelacije = new ArrayList<>();
-        //izbrisiPriljubljene();
-        size = shramba.getInt("number", 0);
-        pridobiPriljubljene();
+    private UpravljanjeSPriljubljenimi() {
     }
+
+    public static UpravljanjeSPriljubljenimi getInstance() {
+        if (upravljanjeSPriljubljenimi == null) {
+            upravljanjeSPriljubljenimi = new UpravljanjeSPriljubljenimi();
+        }
+
+        return upravljanjeSPriljubljenimi;
+   }
+
+   public void setContext(Context context) {
+       this.context = context;
+       shramba = this.context.getSharedPreferences("priljubljenePostaje", Context.MODE_PRIVATE);
+       size = shramba.getInt("number", 0);
+       priljubljeneRelacije = new ArrayList<>();
+       pridobiPriljubljene();
+   }
 
     /**
      * Metoda izbriše shrambo priljubljenih lokacij in
@@ -88,10 +95,11 @@ public class favoritesManagement {
      * Odstrani priljubljeno lokacijo iz Arraylista
      * @param relacija - Relacija za dodati
      */
-    public void odstraniPriljubljeno(Relacija relacija) {
+    public static void odstraniPriljubljeno(Relacija relacija) {
         for (int i = 0; i < priljubljeneRelacije.size(); i++) {
             if (priljubljeneRelacije.get(i).getFromName().equals(relacija.getFromName()) && priljubljeneRelacije.get(i).getToName().equals(relacija.getToName())) {
                 priljubljeneRelacije.remove(i);
+                MainActivity.runs.run();
                 break;
             }
         }
@@ -104,6 +112,7 @@ public class favoritesManagement {
     public boolean dodajPriljubljeno(Relacija nova) {
         if (!aliObstaja(nova)) {
             priljubljeneRelacije.add(nova);
+            MainActivity.runs.run();
             return true;
         }
         return false;

@@ -17,27 +17,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.jude.swipbackhelper.SwipeBackHelper;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.lukag.atvoznired.MainActivity.EXTRA_MESSAGE;
 
 public class DisplayMessageActivity extends AppCompatActivity {
     private Relacija iskanaRelacija;
-
-    private favoritesManagement favs;
 
     private ScheduleAdapter sAdapter;
 
@@ -45,6 +35,8 @@ public class DisplayMessageActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private RelativeLayout relativeLayout;
     private FloatingActionButton fab;
+
+    private UpravljanjeSPriljubljenimi favs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +47,8 @@ public class DisplayMessageActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         ArrayList<String> prenos = intent.getStringArrayListExtra(EXTRA_MESSAGE);
+
+        favs = UpravljanjeSPriljubljenimi.getInstance();
 
         setFindViews();
 
@@ -111,12 +105,6 @@ public class DisplayMessageActivity extends AppCompatActivity {
             favs.shraniPriljubljene();
         }
         SwipeBackHelper.onDestroy(this);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        favs = new favoritesManagement(this);
     }
 
     @Override

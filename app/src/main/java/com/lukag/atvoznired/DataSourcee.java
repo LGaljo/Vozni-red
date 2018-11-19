@@ -182,13 +182,13 @@ public class DataSourcee {
     }
 
     public static void findNextRides(Context context, final priljubljenePostajeAdapter pAdapter) {
-        for (final int i[] = {0}; i[0] < favoritesManagement.priljubljeneRelacije.size(); i[0]++) {
-            final Relacija iskana = favoritesManagement.priljubljeneRelacije.get(i[0]);
+        for (final int i[] = {0}; i[0] < UpravljanjeSPriljubljenimi.priljubljeneRelacije.size(); i[0]++) {
+            final Relacija iskana = UpravljanjeSPriljubljenimi.priljubljeneRelacije.get(i[0]);
 
-            final String fromID = favoritesManagement.priljubljeneRelacije.get(i[0]).getFromID();
-            final String toID = favoritesManagement.priljubljeneRelacije.get(i[0]).getToID();
-            final String fromName = favoritesManagement.priljubljeneRelacije.get(i[0]).getFromName();
-            final String toName = favoritesManagement.priljubljeneRelacije.get(i[0]).getToName();
+            final String fromID = UpravljanjeSPriljubljenimi.priljubljeneRelacije.get(i[0]).getFromID();
+            final String toID = UpravljanjeSPriljubljenimi.priljubljeneRelacije.get(i[0]).getToID();
+            final String fromName = UpravljanjeSPriljubljenimi.priljubljeneRelacije.get(i[0]).getFromName();
+            final String toName = UpravljanjeSPriljubljenimi.priljubljeneRelacije.get(i[0]).getToName();
             VolleyTool vt = new VolleyTool(context);
 
             //Log.d("Relacija", "Kličem relacijo " + rel.toString());
@@ -234,9 +234,9 @@ public class DataSourcee {
                         iskana.setNextRide(nextRide);
 
                         int f = 0;
-                        for (Relacija rel_3 : favoritesManagement.priljubljeneRelacije) {
+                        for (Relacija rel_3 : UpravljanjeSPriljubljenimi.priljubljeneRelacije) {
                             if (rel_3.getToName().equals(iskana.getToName()) && rel_3.getFromName().equals(iskana.getFromName())) {
-                                favoritesManagement.priljubljeneRelacije.set(f, iskana);
+                                UpravljanjeSPriljubljenimi.priljubljeneRelacije.set(f, iskana);
                                 pAdapter.notifyDataSetChanged();
                                 break;
                             }
