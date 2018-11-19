@@ -22,6 +22,7 @@ public class priljubljenePostajeAdapter extends RecyclerView.Adapter<priljubljen
     private AutoCompleteTextView vstopnaPostajaView;
     private AutoCompleteTextView izstopnaPostajaView;
     private favoritesManagement spm;
+    private TextView koledar;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView priljubljenaPostaja;
@@ -50,7 +51,7 @@ public class priljubljenePostajeAdapter extends RecyclerView.Adapter<priljubljen
                     prenos.add(vstopnaPostaja);
                     prenos.add(izstopnaID);
                     prenos.add(izstopnaPostaja);
-                    prenos.add(DataSourcee.dodajDanasnjiDan());
+                    prenos.add(koledar.getText().toString());
                     Intent intent = new Intent(view.getContext(), DisplayMessageActivity.class);
                     intent.putStringArrayListExtra(EXTRA_MESSAGE, prenos);
                     view.getContext().startActivity(intent);
@@ -72,12 +73,13 @@ public class priljubljenePostajeAdapter extends RecyclerView.Adapter<priljubljen
         }
     }
 
-    public priljubljenePostajeAdapter(List<Relacija> priljubljeneList, Context context, AutoCompleteTextView vp, AutoCompleteTextView ip, favoritesManagement spm) {
+    public priljubljenePostajeAdapter(List<Relacija> priljubljeneList, Context context, AutoCompleteTextView vp, AutoCompleteTextView ip, UpravljanjeSPriljubljenimi spm, TextView koledar) {
         this.priljubljeneList = priljubljeneList;
         this.context = context;
         this.vstopnaPostajaView = vp;
         this.izstopnaPostajaView = ip;
         this.spm = spm;
+        this.koledar = koledar;
     }
 
     @Override
