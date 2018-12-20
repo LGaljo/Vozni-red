@@ -3,6 +3,7 @@ package com.lukag.atvoznired.UpravljanjeSPodatki;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Point;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private View contextView;
 
     private RecyclerView recyclerView;
+    private SwipeRefreshLayout swipeContainer;
     private priljubljenePostajeAdapter pAdapter;
 
     public static Runnable runs;
@@ -65,6 +67,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Intent intent = getIntent();
         String reason = intent.getStringExtra("reason");
         contextView = findViewById(R.id.priljubljene_text);
+
+        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
 
         if (reason != null && reason.equals("no_connection")) {
             Snackbar.make(contextView, R.string.no_connection, Snackbar.LENGTH_LONG).show();
@@ -95,6 +99,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recyclerView.setAdapter(pAdapter);
         checkForNewRides();
         recyclerView.post(runs);
+
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Your code to refresh the list here.
+                // Make sure you call swipeContainer.setRefreshing(false)
+                // once the network request has completed successfully.
+                runs.run();
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
     }
 
     @Override
@@ -275,6 +294,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     // wait
                 }
                 DataSourcee.findNextRides(MainActivity.this, pAdapter);
+                swipeContainer.setRefreshing(false);
             }
         };
     }

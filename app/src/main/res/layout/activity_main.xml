@@ -98,16 +98,21 @@
         app:layout_constraintTop_toBottomOf="@+id/izstopna_text"
         app:layout_constraintWidth_percent=".35" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_pogled_priljubljenih"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="45dp"
-        android:background="@drawable/bg_round_top"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/submit" />
+    <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swipeContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@+id/submit">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view_pogled_priljubljenih"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/bg_round_top" />
+    </android.support.v4.widget.SwipeRefreshLayout>
+
 
     <ImageView
         android:id="@+id/swap"
@@ -147,14 +152,13 @@
         android:id="@+id/priljubljene_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:paddingStart="16dp"
+        android:paddingStart="8dp"
         android:paddingEnd="16dp"
+        android:paddingBottom="2dp"
         android:text="@string/priljubljene"
         android:textColor="@android:color/white"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/recycler_view_pogled_priljubljenih"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/swipeContainer"
         app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
