@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -15,6 +15,14 @@
 
     <style name="MainTheme" parent="AppTheme">
         <item name="android:windowIsTranslucent">false</item>
+    </style>
+
+    <style name="ToolbarTitle">
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="ToolbarSubTitle">
+        <item name="android:textSize">14sp</item>
     </style>
 
 </resources>

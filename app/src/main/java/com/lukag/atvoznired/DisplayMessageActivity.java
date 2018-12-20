@@ -9,6 +9,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,6 +42,7 @@ public class DisplayMessageActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private RelativeLayout relativeLayout;
     private FloatingActionButton fab;
+    private Toolbar toolbar;
 
     private UpravljanjeSPriljubljenimi favs;
 
@@ -60,6 +62,13 @@ public class DisplayMessageActivity extends AppCompatActivity {
 
         iskanaRelacija = new Relacija(prenos.get(0), prenos.get(1), prenos.get(2), prenos.get(3), new ArrayList<Pot>());
         POSTiT(iskanaRelacija, prenos.get(4));
+
+        toolbar.setTitle(iskanaRelacija.getFromName() + " - " + iskanaRelacija.getToName());
+        toolbar.setSubtitle(prenos.get(4));
+        toolbar.setTitleTextAppearance(getApplicationContext(), R.style.ToolbarTitle);
+        toolbar.setSubtitleTextAppearance(getApplicationContext(), R.style.ToolbarSubTitle);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+        setSupportActionBar(toolbar);
 
         sAdapter = new ScheduleAdapter(iskanaRelacija.getUrnik(), this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -87,6 +96,8 @@ public class DisplayMessageActivity extends AppCompatActivity {
      * V display message activity layoutu poisce iskane objekte
      */
     private void setFindViews() {
+        toolbar = (Toolbar) findViewById(R.id.VozniRedToolbar);
+
         progressBar = (ProgressBar) findViewById(R.id.wait_animation);
         progressBar.setVisibility(View.VISIBLE);
 
