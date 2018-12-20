@@ -104,7 +104,6 @@ public class priljubljenePostajeAdapter extends RecyclerView.Adapter<priljubljen
     }
 
     private String appendNextRide(Relacija rel) {
-        Log.d("Adapter", "cas '" + rel.getNextRide()[0] + "'");
         if (rel.getNextRide() == null || rel.getNextRide()[0] == null || rel.getNextRide()[0].equals("")) {
             return "";
         } else if (rel.getNextRide()[0].equals("tomorrow")) {

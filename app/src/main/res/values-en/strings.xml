@@ -21,4 +21,17 @@
     <string name="tomorrow">tomorrow</string>
     <string name="next_ride_dvojina">next rides</string>
     <string name="next_ride_mnozina">next rides</string>
+    <string name="application_info">Application info</string>
+    <string name="delete_textedit_field">Delete TextEdit field</string>
+    <string name="alpetour_vozni_red">Alpetour schedule</string>
+    <string name="verzija">Version:</string>
+    <string name="summary">Alpetour Schedule is open source application for displaying schedules of transportation company Arriva (former Alpetour).</string>
+    <string name="razvijalec">Developer</string>
+    <string name="owner">- Luka Galjot (maintainer)</string>
+    <string name="knjiznice">Libraries</string>
+    <string name="swipebackhelper_by_jude95">- SwipeBackHelper by Jude95</string>
+    <string name="license">Licence: Apache License, version 2.0</string>
+    <string name="about">About</string>
+    <string name="sporoci_napako">Report bug</string>
+    <string name="send_to">Write mail to luka.galjot(at)gmail.com</string>
 </resources>

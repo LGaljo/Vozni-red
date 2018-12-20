@@ -162,7 +162,6 @@ public class DataSourcee {
             final String toName = UpravljanjeSPriljubljenimi.priljubljeneRelacije.get(i[0]).getToName();
             VolleyTool vt = new VolleyTool(context);
 
-            //Log.d("Relacija", "Kličem relacijo " + rel.toString());
             vt.addParam("action", "showRoutes");
             vt.addParam("fromID", fromID);
             vt.addParam("toID", toID);
@@ -181,14 +180,12 @@ public class DataSourcee {
                         Boolean found = false;
                         for (Pot pot : iskana.getUrnik()) {
                             Date time2 = newTime(pot.getStart());
-                            //Log.d("COMPARE", time1.toString() + " " + time2.toString());
                             if (primerjajCas(time2)) {
                                 found = true;
                                 break;
                             }
                             ind++;
                         }
-                        //Log.d("Čas", found + " " + iskana.getUrnik().get(ind).getStart());
 
                         String[] nextRide = new String[3];
                         if (found) {
@@ -230,7 +227,6 @@ public class DataSourcee {
         try {
             String status = resp.get("status").toString();
             String message = resp.get("message").toString();
-            Log.d("Status","Strežnik je vrnil " + status + ": " + message);
 
             JSONArray schedule = resp.getJSONArray("schedule");
 
@@ -249,7 +245,6 @@ public class DataSourcee {
                 String statuss = schedule.getJSONObject(i).getString("STATUS");
                 novaPot.setStatus(!statuss.equalsIgnoreCase("over"));
                 iskanaRelacija.urnikAdd(novaPot);
-                Log.d("JSON parse", iskanaRelacija.getFromName() + " -> " + iskanaRelacija.getToName() + " : " + statuss);
             }
         } catch (JSONException e) {
             Log.e("getResponse", "Napaka v pri parsanju JSON datoteke");

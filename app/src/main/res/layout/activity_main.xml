@@ -132,9 +132,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="22dp"
         android:layout_marginEnd="16dp"
+        android:contentDescription="@string/delete_textedit_field"
+        android:foreground="?android:attr/selectableItemBackground"
         app:layout_constraintEnd_toEndOf="@+id/izstopna_text"
         app:layout_constraintTop_toBottomOf="@+id/delete_vp"
-        android:foreground="?android:attr/selectableItemBackground"
         app:srcCompat="@drawable/ic_close" />
 
     <ImageView
@@ -143,10 +144,23 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
+        android:contentDescription="@string/delete_textedit_field"
         android:foreground="?android:attr/selectableItemBackground"
         app:layout_constraintEnd_toEndOf="@+id/vstopna_text"
         app:layout_constraintTop_toTopOf="@+id/vstopna_text"
         app:srcCompat="@drawable/ic_close" />
+
+    <ImageView
+        android:id="@+id/app_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:contentDescription="@string/application_info"
+        android:foreground="?android:attr/selectableItemBackground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_info" />
 
     <TextView
         android:id="@+id/priljubljene_text"

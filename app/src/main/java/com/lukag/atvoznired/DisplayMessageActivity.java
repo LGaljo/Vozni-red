@@ -148,7 +148,6 @@ public class DisplayMessageActivity extends AppCompatActivity {
     public void POSTiT(final Relacija relacija, final String date) {
         VolleyTool vt = new VolleyTool(this);
 
-        //Log.d("Relacija", "Kličem relacijo " + rel.toString());
         vt.addParam("action", "showRoutes");
         vt.addParam("fromID", relacija.getFromID());
         vt.addParam("toID", relacija.getToID());
@@ -176,11 +175,8 @@ public class DisplayMessageActivity extends AppCompatActivity {
 
     private void checkUrnik() {
         if (iskanaRelacija.getUrnik().size() == 0) {
-            Log.d("POST", "Urnik je prazen");
             returnToMainActivity("no_connection");
             this.finish();
-        } else {
-            Log.d("POST", "Velikost urnika " + iskanaRelacija.getUrnik().size());
         }
     }
 
@@ -218,7 +214,6 @@ public class DisplayMessageActivity extends AppCompatActivity {
      * vrnem na glavni zaslon in izpisem opozorilo, da med postajama ni povezave
      */
     private void returnToMainActivity(String reason) {
-        ArrayList<String> prenos = new ArrayList<>();
         Intent intent = new Intent(DisplayMessageActivity.this, MainActivity.class);
         intent.putExtra("reason", reason);
         startActivity(intent);

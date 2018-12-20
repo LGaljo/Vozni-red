@@ -20,4 +20,18 @@
     <string name="tomorrow">jutri</string>
     <string name="next_ride_dvojina">naslednji vožnji</string>
     <string name="next_ride_mnozina">naslednje vožnje</string>
+    <string name="application_info">Application info</string>
+    <string name="delete_textedit_field">Delete TextEdit field</string>
+    <string name="alpetour_vozni_red">Alpetour vozni red</string>
+    <string name="verzija">Verzija:</string>
+    <string name="summary">Alpetour vozni red je odprtokodna aplikacija za prikaz urnika podjetja Arriva (bivši Alpetour).</string>
+    <string name="razvijalec">Razvijalec</string>
+    <string name="owner">- Luka Galjot (skrbnik)</string>
+    <string name="knjiznice">Knjižnice</string>
+    <string name="swipebackhelper_by_jude95">- SwipeBackHelper by Jude95</string>
+    <string name="license">Licenca: Apache License, verzija 2.0</string>
+    <string name="about">O aplikaciji</string>
+    <string name="logo">logo</string>
+    <string name="sporoci_napako">Sporoči napako</string>
+    <string name="send_to">Piši na mail luka.galjot(at)gmail.com</string>
 </resources>

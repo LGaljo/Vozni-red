@@ -8,4 +8,5 @@
     <color name="over">#f1f1f1</color>
     <color name="pending">#ffffff</color>
     <color name="nextRide">#616161</color>
+    <color name="infoPage">#d7ccc8</color>
 </resources>

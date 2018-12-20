@@ -12,6 +12,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ImageView delete_vp;
     private ImageView delete_ip;
     private ImageView swap;
+    private ImageView info;
 
     public TextView koledar;
     private View contextView;
@@ -170,6 +172,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 vstopnaPostajaView.setText(tmp, false);
                 UpravljanjeZZadnjimiIskanimi.shraniZadnjiIskani(MainActivity.this, vstopnaPostajaView, izstopnaPostajaView, koledar.getText().toString());
                 break;
+            case R.id.app_info:
+                // Gumb za prikaz informacij o aplikaciji
+                goToAppInfo();
+                break;
             case R.id.textCalendar:
                 // Pokazi koledar
                 new DatePickerDialog(MainActivity.this, date, calendarView.get(Calendar.YEAR), calendarView.get(Calendar.MONTH), calendarView.get(Calendar.DAY_OF_MONTH)).show();
@@ -243,12 +249,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         delete_vp = (ImageView) findViewById(R.id.delete_vp);
         delete_ip = (ImageView) findViewById(R.id.delete_ip);
         swap = (ImageView) findViewById(R.id.swap);
+        info = (ImageView) findViewById(R.id.app_info);
 
         koledar.setOnClickListener(this);
         submit.setOnClickListener(this);
         delete_vp.setOnClickListener(this);
         delete_ip.setOnClickListener(this);
         swap.setOnClickListener(this);
+        info.setOnClickListener(this);
     }
 
     /**
@@ -284,6 +292,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Intent intent = new Intent(MainActivity.this, DisplayMessageActivity.class);
         intent.putStringArrayListExtra(EXTRA_MESSAGE, prenos);
         startActivity(intent);
+    }
+
+    private void goToAppInfo() {
+        Intent apinfointent = new Intent(MainActivity.this, DisplayAppInfo.class);
+        startActivity(apinfointent);
     }
 
     private void checkForNewRides() {
