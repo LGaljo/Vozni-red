@@ -2,7 +2,7 @@
 Android aplikacija za iskanje voznih redov v podjetju Arriva (Alpetour) 
 
 ## Knjižnjice
-Uporablja za poizvedbe uporablja knjižnjico Volley  
+Za poizvedbe uporablja knjižnjico Volley  
 
 ## Različni uporabljeni objekti
 Za UI design aplikacije uporablja:  
