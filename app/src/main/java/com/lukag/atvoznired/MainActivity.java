@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.jude.swipbackhelper.SwipeBackHelper;
 import com.lukag.atvoznired.Adapterji.priljubljenePostajeAdapter;
+import com.lukag.atvoznired.Objekti.Postaje;
 import com.lukag.atvoznired.UpravljanjeSPodatki.DataSourcee;
 import com.lukag.atvoznired.UpravljanjeSPodatki.UpravljanjeSPriljubljenimi;
 import com.lukag.atvoznired.UpravljanjeSPodatki.UpravljanjeZZadnjimiIskanimi;
@@ -39,9 +40,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private AutoCompleteTextView vstopnaPostajaView;
     private AutoCompleteTextView izstopnaPostajaView;
+    public ArrayAdapter<String> adapter;
     private Calendar calendarView;
 
     private Button submit;
+    public Postaje postaje;
 
     private ImageView delete_vp;
     private ImageView delete_ip;
@@ -49,6 +52,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ImageView info;
 
     public TextView koledar;
+    public String datum;
+
     private View contextView;
 
     private RecyclerView recyclerView;
@@ -56,10 +61,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private priljubljenePostajeAdapter pAdapter;
 
     public static Runnable runs;
+    public static Boolean sourcesFound = true;
 
     private UpravljanjeSPriljubljenimi favs;
     private DatePickerDialog.OnDateSetListener date;
-    public static Boolean sourcesFound = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,14 +75,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String reason = intent.getStringExtra("reason");
         contextView = findViewById(R.id.priljubljene_text);
 
-        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+        postaje = new Postaje(this, adapter);
+        postaje.dodajPostaje();
 
         if (reason != null && reason.equals("no_connection")) {
             Snackbar.make(contextView, R.string.no_connection, Snackbar.LENGTH_LONG).show();
         } else if (reason != null) {
             Snackbar.make(contextView, R.string.error, Snackbar.LENGTH_LONG).show();
         }
-
         SwipeBackHelper.onCreate(this);
         SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false);
         SwipeBackHelper.getCurrentPage(this).setDisallowInterceptTouchEvent(true);
@@ -100,14 +105,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         recyclerView.setAdapter(pAdapter);
         checkForNewRides();
+
         recyclerView.post(runs);
 
+        manageSwipeContainer();
+    }
+
+    private void manageSwipeContainer() {
+        swipeContainer = findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                // Your code to refresh the list here.
-                // Make sure you call swipeContainer.setRefreshing(false)
-                // once the network request has completed successfully.
                 runs.run();
             }
         });
@@ -116,6 +124,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+
     }
 
     @Override
@@ -128,7 +137,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStart() {
         super.onStart();
-        koledar.setText(DataSourcee.dodajDanasnjiDan());
+        koledar.setText(DataSourcee.pridobiCas("dd.MM.yyyy"));
+        datum = DataSourcee.pridobiCas("yyyy-MM-dd");
         pAdapter.notifyDataSetChanged();
     }
 
@@ -189,9 +199,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * Metoda pripravi AutoCompleteTextView za uporabo
      */
     private void dodajAutoCompleteTextView() {
-        DataSourcee.init(this);
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<> (this, R.layout.autocomplete_list_item, DataSourcee.samoPostaje);
+        Log.d("String arr", Integer.toString(postaje.seznamImenPostaj.length));
+        adapter = new ArrayAdapter<> (this, R.layout.autocomplete_list_item, postaje.seznamImenPostaj);
         vstopnaPostajaView.setDropDownBackgroundDrawable(this.getResources().getDrawable(R.drawable.autocomplete_dropdown));
         izstopnaPostajaView.setDropDownBackgroundDrawable(this.getResources().getDrawable(R.drawable.autocomplete_dropdown));
 
@@ -225,14 +234,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         date = new DatePickerDialog.OnDateSetListener() {
             String format = "dd.MM.yyyy";
-            SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.GERMAN);
+            String formatApi = "yyyy-MM-dd";
+            SimpleDateFormat textBoxFormat = new SimpleDateFormat(format, Locale.GERMAN);
+            SimpleDateFormat ApiFormat = new SimpleDateFormat(formatApi, Locale.GERMAN);
 
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 calendarView.set(Calendar.YEAR, year);
                 calendarView.set(Calendar.MONTH, month);
                 calendarView.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                koledar.setText(sdf.format(calendarView.getTime()));
+                koledar.setText(textBoxFormat.format(calendarView.getTime()));
+                datum = ApiFormat.format(calendarView.getTime());
             }
         };
     }
@@ -268,9 +280,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         String vstopnaPostaja = vstopnaPostajaView.getText().toString();
         String izstopnaPostaja = izstopnaPostajaView.getText().toString();
-        String vstopnaID = DataSourcee.getIDfromMap(vstopnaPostaja);
-        String izstopnaID = DataSourcee.getIDfromMap(izstopnaPostaja);
-        String date = koledar.getText().toString();
+        String vstopnaID = Postaje.seznamPostaj.get(vstopnaPostaja);
+        String izstopnaID = Postaje.seznamPostaj.get(izstopnaPostaja);
 
         if (vstopnaPostaja.equals(izstopnaPostaja) || vstopnaPostaja.equals("") || izstopnaPostaja.equals("")) {
             Snackbar.make(contextView, R.string.invalid_search, Snackbar.LENGTH_LONG).show();
@@ -279,17 +290,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             prenos.add(vstopnaPostaja);
             prenos.add(izstopnaID);
             prenos.add(izstopnaPostaja);
-            prenos.add(date);
+            prenos.add(datum);
             submit(prenos);
         }
     }
 
     /**
-     * Metoda preide v nov Intent -> DisplayMessageActivity
+     * Metoda preide v nov Intent -> Display_Schedule_Activity
      * @param prenos - arraylist potrebnih parametrov za klic post zahteve
      */
     private void submit(ArrayList<String> prenos) {
-        Intent intent = new Intent(MainActivity.this, DisplayMessageActivity.class);
+        Intent intent = new Intent(MainActivity.this, Display_Schedule_Activity.class);
         intent.putStringArrayListExtra(EXTRA_MESSAGE, prenos);
         startActivity(intent);
     }
@@ -300,6 +311,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void checkForNewRides() {
+        // TODO: Disable for now
+        /*
         runs = new Runnable() {
             public void run() {
                 // a potentially time consuming task
@@ -310,5 +323,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 swipeContainer.setRefreshing(false);
             }
         };
+        */
     }
 }

@@ -3,6 +3,8 @@
     package="com.lukag.atvoznired">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application
         android:allowBackup="true"
@@ -20,7 +22,11 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".DisplayMessageActivity"
+        <activity android:name=".Display_Schedule_Activity"
+            android:parentActivityName=".MainActivity" >
+        </activity>
+
+        <activity android:name=".DisplayRideInfo"
             android:parentActivityName=".MainActivity" >
         </activity>
 

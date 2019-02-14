@@ -3,7 +3,8 @@ package com.lukag.atvoznired.UpravljanjeSPodatki;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Point;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -20,23 +21,27 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.Locale;
 
 public class DataSourcee {
-    private static HashMap<String, String> postaje = new HashMap<String, String>();
-    public static String[] samoPostaje = null;
+    //private static HashMap<String, String> postaje = new HashMap<>();
+    //public static String[] samoPostaje = null;
 
     /**
      * Metoda napolni HashMap in String Array s podatki o postajah
      * @param context - kontekst razreda iz katerega je klicana metoda
      */
+    /*
     public static void init(Context context) {
+
         String job = postajeFromAsset(context);
         try {
             JSONArray arr = new JSONArray(job);
@@ -52,11 +57,13 @@ public class DataSourcee {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
+*/
 
     /**
-     *  Metoda, ki mi iz JSON datoteke prebere vse postaje
-     *  Vrne mi string v katerem je postaja
+     * Metoda, ki mi iz JSON datoteke prebere vse postaje
+     * Vrne mi string v katerem je postaja
      */
     public static String postajeFromAsset(Context con) {
         String v_json = null;
@@ -80,12 +87,15 @@ public class DataSourcee {
      * @param id - id postaje
      * @return - ime postaje
      */
+    /*
     public static String getIDfromMap(String id) {
         return postaje.get(id);
     }
+*/
 
     /**
      * Metoda vrne današnji datum
+     *
      * @return - datum v obliki teksta
      */
     public static String dodajDanasnjiDan() {
@@ -96,8 +106,44 @@ public class DataSourcee {
         return today.format(c.getTime());
     }
 
+    public static String pridobiCas(String type) {
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat format = new SimpleDateFormat(type, Locale.GERMAN);
+        return format.format(calendar.getTime());
+    }
+
+
+    public static String md5(String string) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("MD5");
+            digest.update(string.getBytes(), 0, string.length());
+            return new BigInteger(1, digest.digest()).toString(16);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String getMacAddr(Context context) {
+        try {
+            WifiManager wifiMan = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            WifiInfo wifiInf = wifiMan.getConnectionInfo();
+            return wifiInf.getMacAddress();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public static String getPhoneInfo(Context context) {
+        // Dont return IMEI codes
+        return "";
+    }
+
     /**
      * Funkcija za pretvorbo "pixel" v "density independent pixel"
+     *
      * @param px - vrednost piklsov
      * @return - vrednost density independent pixel
      */
@@ -107,6 +153,7 @@ public class DataSourcee {
 
     /**
      * Funkcija za pretvorbo "density independent pixel" v "pixel"
+     *
      * @param dp - vrednost density independent pixel
      * @return - vrednost piklsov
      */
@@ -120,21 +167,20 @@ public class DataSourcee {
     public static Integer calcMargins(Context context) {
         Integer allMargins = 0;
         Integer displayWidth = 0;
-        Integer contentWidth = DataSourcee.dpToPx(3*60+65+50);
+        Integer contentWidth = DataSourcee.dpToPx(4 * 50 + 60 + 65);
         Integer layoutPadding = DataSourcee.dpToPx(32);
 
         try {
-            WindowManager wm = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
+            WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
             Display display = wm.getDefaultDisplay();
             DisplayMetrics displaymatrics = new DisplayMetrics();
             display.getMetrics(displaymatrics);
 
-            try{
+            try {
                 Point size = new Point();
                 display.getSize(size);
                 displayWidth = size.x;
-            }catch(Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         } catch (Exception e) {
@@ -142,14 +188,15 @@ public class DataSourcee {
         }
 
         allMargins = displayWidth - (contentWidth + layoutPadding);
-        allMargins /= 10;
+        allMargins /= 12;
 
         return allMargins;
     }
 
     /**
      * Metoda poišče naslednje tri vožnje za vsako priljubljeno relacijo
-     * @param context kontekst razreda
+     *
+     * @param context  kontekst razreda
      * @param pAdapter adapter za priljubljene postaje
      */
     public static void findNextRides(Context context, final priljubljenePostajeAdapter pAdapter) {
@@ -160,7 +207,7 @@ public class DataSourcee {
             final String toID = UpravljanjeSPriljubljenimi.priljubljeneRelacije.get(i[0]).getToID();
             final String fromName = UpravljanjeSPriljubljenimi.priljubljeneRelacije.get(i[0]).getFromName();
             final String toName = UpravljanjeSPriljubljenimi.priljubljeneRelacije.get(i[0]).getToName();
-            VolleyTool vt = new VolleyTool(context);
+            VolleyTool vt = new VolleyTool(context, "https://www.alpetour.si/wp-admin/admin-ajax.php");
 
             vt.addParam("action", "showRoutes");
             vt.addParam("fromID", fromID);
@@ -173,13 +220,13 @@ public class DataSourcee {
                 @Override
                 public void getResponse(String response) {
                     try {
-                        JSONObject POSTreply = new JSONObject(response);
+                        JSONArray POSTreply = new JSONArray(response);
                         iskana.setUrnik(parseJSONResponse(iskana, POSTreply).getUrnik());
 
                         Integer ind = 0;
                         Boolean found = false;
                         for (Pot pot : iskana.getUrnik()) {
-                            Date time2 = newTime(pot.getStart());
+                            Date time2 = newTime(pot.getRod_iodh());
                             if (primerjajCas(time2)) {
                                 found = true;
                                 break;
@@ -189,13 +236,13 @@ public class DataSourcee {
 
                         String[] nextRide = new String[3];
                         if (found) {
-                             nextRide[0] = iskana.getUrnik().get(ind).getStart();
-                             if (iskana.getUrnik().size() >= 2 + ind) {
-                                 nextRide[1] = iskana.getUrnik().get(ind + 1).getStart();
-                             }
-                              if (iskana.getUrnik().size() >= 3 + ind) {
-                                  nextRide[2] = iskana.getUrnik().get(ind + 2).getStart();
-                             }
+                            nextRide[0] = iskana.getUrnik().get(ind).getRod_iodh();
+                            if (iskana.getUrnik().size() >= 2 + ind) {
+                                nextRide[1] = iskana.getUrnik().get(ind + 1).getRod_iodh();
+                            }
+                            if (iskana.getUrnik().size() >= 3 + ind) {
+                                nextRide[2] = iskana.getUrnik().get(ind + 2).getRod_iodh();
+                            }
                         } else {
                             nextRide[0] = "tomorrow";
                         }
@@ -221,14 +268,20 @@ public class DataSourcee {
 
     /**
      * Parsaj odgovor iz strežnika
+     *
      * @param resp JSONObject - odgovor strežnika
      */
-    public static Relacija parseJSONResponse(Relacija iskanaRelacija, JSONObject resp) {
+    public static Relacija parseJSONResponse(Relacija iskanaRelacija, JSONArray resp) {
         try {
-            String status = resp.get("status").toString();
-            String message = resp.get("message").toString();
+            JSONObject responseObj = resp.getJSONObject(0);
+            int napakaID = responseObj.getInt("Error");
 
-            JSONArray schedule = resp.getJSONArray("schedule");
+            if (napakaID != 0) {
+                String napakaMessage = responseObj.getString("ErrorMsg");
+                Log.e("API", napakaMessage);
+            }
+
+            JSONArray schedule = responseObj.getJSONArray("Departures");
 
             if (schedule.length() == 0) {
                 return iskanaRelacija;
@@ -236,14 +289,27 @@ public class DataSourcee {
 
             for (int i = 0; i < schedule.length(); i++) {
                 Pot novaPot = new Pot();
-                novaPot.setID(Integer.parseInt(schedule.getJSONObject(i).getString("ID")));
-                novaPot.setStart(schedule.getJSONObject(i).getString("ODHOD_FORMATED"));
-                novaPot.setEnd(schedule.getJSONObject(i).getString("PRIHOD_FORMATED"));
-                novaPot.setLength(schedule.getJSONObject(i).getString("KM_POT"));
-                novaPot.setDuration(schedule.getJSONObject(i).getString("CAS_FORMATED"));
-                novaPot.setCost(schedule.getJSONObject(i).getString("VZCL_CEN"));
-                String statuss = schedule.getJSONObject(i).getString("STATUS");
-                novaPot.setStatus(!statuss.equalsIgnoreCase("over"));
+                JSONObject obj = schedule.getJSONObject(i);
+
+                novaPot.setID(i);
+                novaPot.setSpod_sif(obj.getInt("SPOD_SIF"));
+                novaPot.setReg_isif(obj.getString("REG_ISIF"));
+                novaPot.setRpr_sif(obj.getString("RPR_SIF"));
+                novaPot.setRpr_naz(obj.getString("RPR_NAZ"));
+                novaPot.setOvr_sif(obj.getString("OVR_SIF"));
+                novaPot.setRod_iodh(obj.getString("ROD_IODH"));
+                novaPot.setRod_ipri(obj.getString("ROD_IPRI"));
+                novaPot.setRod_cas(obj.getInt("ROD_CAS"));
+                novaPot.setRod_per(obj.getString("ROD_PER"));
+                novaPot.setRod_km(obj.getInt("ROD_KM"));
+                novaPot.setRod_opo(obj.getString("ROD_OPO"));
+                novaPot.setVzcl_cen(obj.getInt("VZCL_CEN"));
+                novaPot.setVvln_zl(obj.getInt("VVLN_ZL"));
+                novaPot.setRod_zapz(obj.getString("ROD_ZAPZ"));
+                novaPot.setRod_zapk(obj.getString("ROD_ZAPK"));
+                // TODO: Nastavi status poteka glede na trenutni čas
+                novaPot.setStatus(true);
+
                 iskanaRelacija.urnikAdd(novaPot);
             }
         } catch (JSONException e) {
@@ -255,6 +321,7 @@ public class DataSourcee {
 
     /**
      * Iz String vrne objekt Date
+     *
      * @param timeStr String časa oblike dd.MM.yyyy HH:mm
      * @return objekt Date
      */
@@ -275,6 +342,7 @@ public class DataSourcee {
 
     /**
      * Primerja dva časa
+     *
      * @param time2 čas, ki ga želiš primerjati s trenutnim
      * @return vrne true, če je time2 pred časom time1
      */

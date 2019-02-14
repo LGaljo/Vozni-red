@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.lukag.atvoznired.MainActivity;
+import com.lukag.atvoznired.Objekti.Postaje;
 import com.lukag.atvoznired.Objekti.Relacija;
 
 import java.util.ArrayList;
@@ -86,8 +87,8 @@ public class UpravljanjeSPriljubljenimi {
 
         for (int i = 0; i < this.size; i++) {
             Relacija rela = parseRelacija(this.shramba.getString(Integer.toString(i), ""));
-            rela.setFromID(DataSourcee.getIDfromMap(rela.getFromName()));
-            rela.setToID(DataSourcee.getIDfromMap(rela.getToName()));
+            rela.setFromID(Postaje.seznamPostaj.get(rela.getFromName()));
+            rela.setToID(Postaje.seznamPostaj.get(rela.getToName()));
             priljubljeneRelacije.add(rela);
         }
 

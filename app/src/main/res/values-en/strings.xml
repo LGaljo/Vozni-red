@@ -34,4 +34,11 @@
     <string name="about">About</string>
     <string name="sporoci_napako">Report bug</string>
     <string name="send_to">Write mail to luka.galjot(at)gmail.com</string>
+    <string name="logo">logo</string>
+    <string name="vstop2">Entry</string>
+    <string name="izstop2">Exit</string>
+    <string name="razdalja">Distance</string>
+    <string name="trajanje">Time</string>
+    <string name="cena">Cost</string>
+    <string name="peron">Platform</string>
 </resources>

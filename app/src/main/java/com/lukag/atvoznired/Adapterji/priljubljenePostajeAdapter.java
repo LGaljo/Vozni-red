@@ -3,15 +3,15 @@ package com.lukag.atvoznired.Adapterji;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 
+import com.lukag.atvoznired.Objekti.Postaje;
 import com.lukag.atvoznired.UpravljanjeSPodatki.DataSourcee;
-import com.lukag.atvoznired.DisplayMessageActivity;
+import com.lukag.atvoznired.Display_Schedule_Activity;
 import com.lukag.atvoznired.R;
 import com.lukag.atvoznired.Objekti.Relacija;
 import com.lukag.atvoznired.UpravljanjeSPodatki.UpravljanjeSPriljubljenimi;
@@ -46,8 +46,8 @@ public class priljubljenePostajeAdapter extends RecyclerView.Adapter<priljubljen
                 public void onClick(View v) {
                     String vstopnaPostaja = priljubljeneList.get(getAdapterPosition()).getFromName();
                     String izstopnaPostaja = priljubljeneList.get(getAdapterPosition()).getToName();
-                    String vstopnaID = DataSourcee.getIDfromMap(vstopnaPostaja);
-                    String izstopnaID = DataSourcee.getIDfromMap(izstopnaPostaja);
+                    String vstopnaID = Postaje.seznamPostaj.get(vstopnaPostaja);
+                    String izstopnaID = Postaje.seznamPostaj.get(izstopnaPostaja);
                     vstopnaPostajaView.setText(priljubljeneList.get(getAdapterPosition()).getFromName(), false);
                     izstopnaPostajaView.setText(priljubljeneList.get(getAdapterPosition()).getToName(), false);
 
@@ -59,7 +59,7 @@ public class priljubljenePostajeAdapter extends RecyclerView.Adapter<priljubljen
                     prenos.add(izstopnaID);
                     prenos.add(izstopnaPostaja);
                     prenos.add(koledar.getText().toString());
-                    Intent intent = new Intent(view.getContext(), DisplayMessageActivity.class);
+                    Intent intent = new Intent(view.getContext(), Display_Schedule_Activity.class);
                     intent.putStringArrayListExtra(EXTRA_MESSAGE, prenos);
                     view.getContext().startActivity(intent);
 

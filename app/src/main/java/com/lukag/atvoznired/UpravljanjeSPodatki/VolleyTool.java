@@ -17,14 +17,15 @@ import java.util.Map;
 public class VolleyTool {
 
     final String contentType = "application/json; charset=utf-8";
-    String JsonURL = "https://www.alpetour.si/wp-admin/admin-ajax.php";
-    Context context;
+    private String url;
+    private Context context;
     private RequestQueue requestQueue;
 
     private Map<String, String> header;
     private Map<String, String> params;
 
-    public VolleyTool(Context context) {
+    public VolleyTool(Context context, String url) {
+        this.url = url;
         this.context = context;
         this.requestQueue = Volley.newRequestQueue(context);
         this.header = new HashMap<>();
@@ -41,7 +42,7 @@ public class VolleyTool {
 
     public void executeRequest(int method, final VolleyCallback callback) {
 
-        StringRequest stringRequest = new StringRequest(method, JsonURL, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(method, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 callback.getResponse(response);
@@ -50,6 +51,7 @@ public class VolleyTool {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("Volley", "Napaka pri pridobivanju podatkov");
+                callback.getResponse("Error");
             }
         }) {
             @Override
