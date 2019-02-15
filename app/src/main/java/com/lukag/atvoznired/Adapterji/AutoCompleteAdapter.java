@@ -85,6 +85,8 @@ public class AutoCompleteAdapter extends ArrayAdapter<String> implements Filtera
         }
     }
 
+    // To je custom filter, s katerim lahko prosto filtram seznam
+    // Omogoča primerjanje besede z šumniki in enako besedo brez šumnikov
     @NonNull
     @Override
     public Filter getFilter() {
@@ -97,7 +99,10 @@ public class AutoCompleteAdapter extends ArrayAdapter<String> implements Filtera
 
                     suggestions.clear();
                     for (String str : seznamImenPostaj) {
-                        if (str.toLowerCase().startsWith(constraint.toString().toLowerCase())) {
+                        // Odstrani šumnike za uporabnike, ki jih ne uporabljajo
+                        String str1 = DataSourcee.odstraniSumnike(str.toLowerCase());
+                        String str2 = DataSourcee.odstraniSumnike(constraint.toString().toLowerCase());
+                        if (str1.startsWith(str2)) {
                             suggestions.add(str);
                         }
                     }

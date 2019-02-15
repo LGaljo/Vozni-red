@@ -290,6 +290,14 @@ public class DataSourcee {
         return time;
     }
 
+    public static String odstraniSumnike(String string) {
+        string = string.replaceAll("[š]", "s");
+        string = string.replaceAll("[č]", "c");
+        string = string.replaceAll("[ć]", "c");
+        string = string.replaceAll("[ž]", "z");
+        return string;
+    }
+
     /**
      * Primerja dva časa
      *
