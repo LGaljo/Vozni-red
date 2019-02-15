@@ -59,7 +59,7 @@ public class DataSourcee {
         }
 
     }
-*/
+    */
 
     /**
      * Metoda, ki mi iz JSON datoteke prebere vse postaje
@@ -303,7 +303,7 @@ public class DataSourcee {
                 novaPot.setRod_per(obj.getString("ROD_PER"));
                 novaPot.setRod_km(obj.getInt("ROD_KM"));
                 novaPot.setRod_opo(obj.getString("ROD_OPO"));
-                novaPot.setVzcl_cen(obj.getInt("VZCL_CEN"));
+                novaPot.setVzcl_cen(obj.getDouble("VZCL_CEN"));
                 novaPot.setVvln_zl(obj.getInt("VVLN_ZL"));
                 novaPot.setRod_zapz(obj.getString("ROD_ZAPZ"));
                 novaPot.setRod_zapk(obj.getString("ROD_ZAPK"));

@@ -18,7 +18,6 @@ public class VolleyTool {
 
     final String contentType = "application/json; charset=utf-8";
     private String url;
-    private Context context;
     private RequestQueue requestQueue;
 
     private Map<String, String> header;
@@ -26,7 +25,6 @@ public class VolleyTool {
 
     public VolleyTool(Context context, String url) {
         this.url = url;
-        this.context = context;
         this.requestQueue = Volley.newRequestQueue(context);
         this.header = new HashMap<>();
         this.params = new HashMap<>();

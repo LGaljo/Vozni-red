@@ -102,7 +102,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.MyView
         holder.end.setText(pot.getRod_ipri());
         holder.duration.setText(String.format(Locale.GERMAN, "%d min", pot.getRod_cas()));
         holder.length.setText(String.format(Locale.GERMAN, "%d km", pot.getRod_km()));
-        holder.cost.setText(String.format(Locale.GERMAN, "%d €", pot.getVzcl_cen()));
+        holder.cost.setText(String.format(Locale.GERMAN, "%.1f €", pot.getVzcl_cen()));
         if (!pot.getRod_per().equals("")) {
             holder.peron.setText(pot.getRod_per());
         } else {

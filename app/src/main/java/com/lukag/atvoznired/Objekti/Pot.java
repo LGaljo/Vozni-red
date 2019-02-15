@@ -23,11 +23,11 @@ public class Pot {
 
     private int vvln_zl; // idk what is that
 
-    private int vzcl_cen; // cena potovanja
+    private double vzcl_cen; // cena potovanja
 
     private boolean status;
 
-    public Pot(Integer ID, String ovr_sif, String reg_isif, int rod_cas, String rod_iodh, String rod_ipri, int rod_km, String rod_opo, String rod_per, String rod_zapk, String rod_zapz, String rpr_naz, String rpr_sif, int spod_sif, int vvln_zl, int vzcl_cen, boolean status) {
+    public Pot(Integer ID, String ovr_sif, String reg_isif, int rod_cas, String rod_iodh, String rod_ipri, int rod_km, String rod_opo, String rod_per, String rod_zapk, String rod_zapz, String rpr_naz, String rpr_sif, int spod_sif, int vvln_zl, long vzcl_cen, boolean status) {
         this.ID = ID;
         this.ovr_sif = ovr_sif;
         this.reg_isif = reg_isif;
@@ -170,11 +170,11 @@ public class Pot {
         this.vvln_zl = vvln_zl;
     }
 
-    public int getVzcl_cen() {
+    public double getVzcl_cen() {
         return vzcl_cen;
     }
 
-    public void setVzcl_cen(int vzcl_cen) {
+    public void setVzcl_cen(double vzcl_cen) {
         this.vzcl_cen = vzcl_cen;
     }
 
