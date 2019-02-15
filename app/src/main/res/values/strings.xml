@@ -40,4 +40,6 @@
     <string name="trajanje">Čas</string>
     <string name="cena">Cena</string>
     <string name="peron">Peron</string>
+    <string name="navigation_menu_title">Vozni red</string>
+    <string name="settings">Nastavitve</string>
 </resources>

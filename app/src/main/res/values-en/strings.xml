@@ -41,4 +41,6 @@
     <string name="trajanje">Time</string>
     <string name="cena">Cost</string>
     <string name="peron">Platform</string>
+    <string name="navigation_menu_title">Vozni red</string>
+    <string name="settings">Settings</string>
 </resources>

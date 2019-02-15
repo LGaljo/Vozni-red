@@ -1,178 +1,188 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:theme="@style/MainTheme"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#252525"
-    tools:context="com.lukag.atvoznired.MainActivity">
+    android:fitsSystemWindows="true">
 
-    <AutoCompleteTextView
-        android:id="@+id/vstopna_text"
-        android:layout_width="0dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/bg_round_top"
-        android:dropDownWidth="match_parent"
-        android:ems="10"
-        android:freezesText="true"
-        android:gravity="center_vertical"
-        android:hint="@string/vstop_hint"
-        android:inputType="text"
-        android:paddingStart="50dp"
-        android:paddingEnd="16dp"
-        android:singleLine="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="spread_inside" />
-
-    <AutoCompleteTextView
-        android:id="@+id/izstopna_text"
-        android:layout_width="0dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/bg_round_bottom"
-        android:dropDownWidth="match_parent"
-        android:ems="10"
-        android:freezesText="true"
-        android:gravity="center_vertical"
-        android:hint="@string/izstop_hint"
-        android:inputType="text"
-        android:paddingStart="50dp"
-        android:paddingEnd="16dp"
-        android:singleLine="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/vstopna_text" />
-
-    <Button
-        android:id="@+id/submit"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_row="6"
-        android:layout_column="0"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/bg_round"
-        android:foreground="?android:attr/selectableItemBackground"
-        android:gravity="center"
-        android:text="@string/button_send"
-        android:textColor="@android:color/white"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textCalendar"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintTop_creator="1" />
-
-    <TextView
-        android:id="@+id/textCalendar"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="16dp"
-        android:drawableStart="@drawable/ic_date"
-        android:drawablePadding="2dp"
-        android:ems="10"
-        android:foreground="?android:attr/selectableItemBackground"
-        android:freezesText="true"
-        android:gravity="center"
-        android:hint="@string/koledar"
-        android:textColor="@android:color/white"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/izstopna_text"
-        app:layout_constraintWidth_percent=".35" />
-
-    <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/swipeContainer"
+    <!-- Layout to contain contents of main body of screen (drawer will slide over this) -->
+    <android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:theme="@style/MainTheme"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        app:layout_constraintTop_toBottomOf="@+id/submit">
+        android:layout_height="match_parent"
+        android:background="#252525"
+        tools:context="com.lukag.atvoznired.MainActivity">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view_pogled_priljubljenih"
+        <AutoCompleteTextView
+            android:id="@+id/vstopna_text"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/bg_round_top"
+            android:dropDownWidth="match_parent"
+            android:ems="10"
+            android:freezesText="true"
+            android:gravity="center_vertical"
+            android:hint="@string/vstop_hint"
+            android:inputType="text"
+            android:paddingStart="50dp"
+            android:paddingEnd="16dp"
+            android:singleLine="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="spread_inside" />
+
+        <AutoCompleteTextView
+            android:id="@+id/izstopna_text"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/bg_round_bottom"
+            android:dropDownWidth="match_parent"
+            android:ems="10"
+            android:freezesText="true"
+            android:gravity="center_vertical"
+            android:hint="@string/izstop_hint"
+            android:inputType="text"
+            android:paddingStart="50dp"
+            android:paddingEnd="16dp"
+            android:singleLine="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/vstopna_text" />
+
+        <Button
+            android:id="@+id/submit"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_row="6"
+            android:layout_column="0"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/bg_round"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:gravity="center"
+            android:text="@string/button_send"
+            android:textColor="@android:color/white"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textCalendar"
+            tools:layout_constraintLeft_creator="1"
+            tools:layout_constraintRight_creator="1"
+            tools:layout_constraintTop_creator="1" />
+
+        <TextView
+            android:id="@+id/textCalendar"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
+            android:drawableStart="@drawable/ic_date"
+            android:drawablePadding="2dp"
+            android:ems="10"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:freezesText="true"
+            android:gravity="center"
+            android:hint="@string/koledar"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/izstopna_text"
+            app:layout_constraintWidth_percent=".35" />
+
+        <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/swipeContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:background="@drawable/bg_round_top" />
-    </android.support.v4.widget.SwipeRefreshLayout>
+            app:layout_constraintTop_toBottomOf="@+id/submit">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view_pogled_priljubljenih"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/bg_round_top" />
+        </android.support.v4.widget.SwipeRefreshLayout>
 
 
-    <ImageView
-        android:id="@+id/swap"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="26dp"
-        android:contentDescription="@string/zamenjaj"
-        android:foreground="?android:attr/selectableItemBackground"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/vstopna_text"
-        app:srcCompat="@drawable/ic_swap" />
+        <ImageView
+            android:id="@+id/swap"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="26dp"
+            android:contentDescription="@string/zamenjaj"
+            android:foreground="?android:attr/selectableItemBackground"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/vstopna_text"
+            app:srcCompat="@drawable/ic_swap" />
 
-    <ImageView
-        android:id="@+id/delete_ip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="22dp"
-        android:layout_marginEnd="16dp"
-        android:contentDescription="@string/delete_textedit_field"
-        android:foreground="?android:attr/selectableItemBackground"
-        app:layout_constraintEnd_toEndOf="@+id/izstopna_text"
-        app:layout_constraintTop_toBottomOf="@+id/delete_vp"
-        app:srcCompat="@drawable/ic_close" />
+        <ImageView
+            android:id="@+id/delete_ip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:layout_marginEnd="16dp"
+            android:contentDescription="@string/delete_textedit_field"
+            android:foreground="?android:attr/selectableItemBackground"
+            app:layout_constraintEnd_toEndOf="@+id/izstopna_text"
+            app:layout_constraintTop_toBottomOf="@+id/delete_vp"
+            app:srcCompat="@drawable/ic_close" />
 
-    <ImageView
-        android:id="@+id/delete_vp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:contentDescription="@string/delete_textedit_field"
-        android:foreground="?android:attr/selectableItemBackground"
-        app:layout_constraintEnd_toEndOf="@+id/vstopna_text"
-        app:layout_constraintTop_toTopOf="@+id/vstopna_text"
-        app:srcCompat="@drawable/ic_close" />
+        <ImageView
+            android:id="@+id/delete_vp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:contentDescription="@string/delete_textedit_field"
+            android:foreground="?android:attr/selectableItemBackground"
+            app:layout_constraintEnd_toEndOf="@+id/vstopna_text"
+            app:layout_constraintTop_toTopOf="@+id/vstopna_text"
+            app:srcCompat="@drawable/ic_close" />
 
-    <ImageView
-        android:id="@+id/app_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:contentDescription="@string/application_info"
-        android:foreground="?android:attr/selectableItemBackground"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_info" />
+        <TextView
+            android:id="@+id/priljubljene_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingStart="8dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="2dp"
+            android:text="@string/priljubljene"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/swipeContainer"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/priljubljene_text"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:paddingStart="8dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="2dp"
-        android:text="@string/priljubljene"
-        android:textColor="@android:color/white"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/swipeContainer"
-        app:layout_constraintStart_toStartOf="parent" />
+    </android.support.constraint.ConstraintLayout>
 
-</android.support.constraint.ConstraintLayout>
+<!-- Container for contents of drawer - use NavigationView to make configuration easier -->
+<android.support.design.widget.NavigationView
+    android:id="@+id/nav_view"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_gravity="start"
+    android:fitsSystemWindows="true"
+    app:menu="@menu/navigation_menu"
+    app:headerLayout="@layout/navigation_menu_header" />
+
+</android.support.v4.widget.DrawerLayout>

@@ -3,8 +3,11 @@ package com.lukag.atvoznired;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Point;
+import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +16,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Display;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
@@ -48,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ImageView delete_vp;
     private ImageView delete_ip;
     private ImageView swap;
-    private ImageView info;
+    private DrawerLayout mDrawerLayout;
 
     public TextView koledar;
     public String datum;
@@ -86,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViews();
         dodajAutoCompleteTextView();
         obNastavitviDatuma();
+        handleNavigationMenu();
 
         // Prepreci odpiranje tipkovnice ob zagonu
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -120,7 +125,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+    }
 
+    private void handleNavigationMenu() {
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                        int id = menuItem.getItemId();
+                        switch (id) {
+                            case R.id.nav_info:
+                                goToAppInfo();
+                                break;
+                            case R.id.nav_settings:
+                                goToSettings();
+                                break;
+                            default:
+                                break;
+                        }
+                        menuItem.setChecked(false);
+                        // close drawer when item is tapped
+                        mDrawerLayout.closeDrawers();
+                        return true;
+                    }
+                });
     }
 
     @Override
@@ -177,10 +208,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 izstopnaPostajaView.setText(vstopnaPostajaView.getText(), false);
                 vstopnaPostajaView.setText(tmp, false);
                 UpravljanjeZZadnjimiIskanimi.shraniZadnjiIskani(MainActivity.this, vstopnaPostajaView, izstopnaPostajaView, koledar.getText().toString());
-                break;
-            case R.id.app_info:
-                // Gumb za prikaz informacij o aplikaciji
-                goToAppInfo();
                 break;
             case R.id.textCalendar:
                 // Pokazi koledar
@@ -256,14 +283,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         delete_vp = (ImageView) findViewById(R.id.delete_vp);
         delete_ip = (ImageView) findViewById(R.id.delete_ip);
         swap = (ImageView) findViewById(R.id.swap);
-        info = (ImageView) findViewById(R.id.app_info);
 
         koledar.setOnClickListener(this);
         submit.setOnClickListener(this);
         delete_vp.setOnClickListener(this);
         delete_ip.setOnClickListener(this);
         swap.setOnClickListener(this);
-        info.setOnClickListener(this);
     }
 
     /**
@@ -303,6 +328,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void goToAppInfo() {
         Intent apinfointent = new Intent(MainActivity.this, DisplayAppInfo.class);
         startActivity(apinfointent);
+    }
+
+     private void goToSettings() {
+        Intent gotosettings = new Intent(MainActivity.this, Display_Settings.class);
+        startActivity(gotosettings);
     }
 
     private void checkForNewRides() {

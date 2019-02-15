@@ -34,5 +34,9 @@
             android:parentActivityName=".MainActivity" >
         </activity>
 
+        <activity android:name=".Display_Settings"
+            android:parentActivityName=".MainActivity" >
+        </activity>
+
     </application>
 </manifest>

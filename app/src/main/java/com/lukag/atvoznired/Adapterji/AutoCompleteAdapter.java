@@ -100,6 +100,7 @@ public class AutoCompleteAdapter extends ArrayAdapter<String> implements Filtera
                     suggestions.clear();
                     for (String str : seznamImenPostaj) {
                         // Odstrani šumnike za uporabnike, ki jih ne uporabljajo
+                        // TODO: V nastavitvah dodaj funkcionalnost, ki onemogoči to rešitev (izboljšaj performance z onemogočanjem)
                         String str1 = DataSourcee.odstraniSumnike(str.toLowerCase());
                         String str2 = DataSourcee.odstraniSumnike(constraint.toString().toLowerCase());
                         if (str1.startsWith(str2)) {
