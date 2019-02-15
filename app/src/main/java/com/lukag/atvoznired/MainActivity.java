@@ -12,7 +12,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
@@ -24,8 +23,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jude.swipbackhelper.SwipeBackHelper;
+import com.lukag.atvoznired.Adapterji.AutoCompleteAdapter;
 import com.lukag.atvoznired.Adapterji.priljubljenePostajeAdapter;
-import com.lukag.atvoznired.Objekti.Postaje;
+import com.lukag.atvoznired.Objekti.BuildConstants;
 import com.lukag.atvoznired.UpravljanjeSPodatki.DataSourcee;
 import com.lukag.atvoznired.UpravljanjeSPodatki.UpravljanjeSPriljubljenimi;
 import com.lukag.atvoznired.UpravljanjeSPodatki.UpravljanjeZZadnjimiIskanimi;
@@ -40,11 +40,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private AutoCompleteTextView vstopnaPostajaView;
     private AutoCompleteTextView izstopnaPostajaView;
-    public ArrayAdapter<String> adapter;
+    public static ArrayAdapter<String> adapter;
     private Calendar calendarView;
 
     private Button submit;
-    public Postaje postaje;
 
     private ImageView delete_vp;
     private ImageView delete_ip;
@@ -74,9 +73,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Intent intent = getIntent();
         String reason = intent.getStringExtra("reason");
         contextView = findViewById(R.id.priljubljene_text);
-
-        postaje = new Postaje(this, adapter);
-        postaje.dodajPostaje();
 
         if (reason != null && reason.equals("no_connection")) {
             Snackbar.make(contextView, R.string.no_connection, Snackbar.LENGTH_LONG).show();
@@ -199,15 +195,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * Metoda pripravi AutoCompleteTextView za uporabo
      */
     private void dodajAutoCompleteTextView() {
-        Log.d("String arr", Integer.toString(postaje.seznamImenPostaj.length));
-        adapter = new ArrayAdapter<> (this, R.layout.autocomplete_list_item, postaje.seznamImenPostaj);
+        AutoCompleteAdapter aca = new AutoCompleteAdapter(this, R.layout.autocomplete_list_item);
         vstopnaPostajaView.setDropDownBackgroundDrawable(this.getResources().getDrawable(R.drawable.autocomplete_dropdown));
         izstopnaPostajaView.setDropDownBackgroundDrawable(this.getResources().getDrawable(R.drawable.autocomplete_dropdown));
 
         vstopnaPostajaView.setThreshold(2);
-        vstopnaPostajaView.setAdapter(adapter);
+        vstopnaPostajaView.setAdapter(aca);
         izstopnaPostajaView.setThreshold(2);
-        izstopnaPostajaView.setAdapter(adapter);
+        izstopnaPostajaView.setAdapter(aca);
 
         ConstraintLayout.LayoutParams lp = (ConstraintLayout.LayoutParams) vstopnaPostajaView.getLayoutParams();
 
@@ -280,8 +275,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         String vstopnaPostaja = vstopnaPostajaView.getText().toString();
         String izstopnaPostaja = izstopnaPostajaView.getText().toString();
-        String vstopnaID = Postaje.seznamPostaj.get(vstopnaPostaja);
-        String izstopnaID = Postaje.seznamPostaj.get(izstopnaPostaja);
+        String vstopnaID = BuildConstants.seznamPostaj.get(vstopnaPostaja);
+        String izstopnaID = BuildConstants.seznamPostaj.get(izstopnaPostaja);
 
         if (vstopnaPostaja.equals(izstopnaPostaja) || vstopnaPostaja.equals("") || izstopnaPostaja.equals("")) {
             Snackbar.make(contextView, R.string.invalid_search, Snackbar.LENGTH_LONG).show();

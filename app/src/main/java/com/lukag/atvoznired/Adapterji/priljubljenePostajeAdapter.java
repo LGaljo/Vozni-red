@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 
-import com.lukag.atvoznired.Objekti.Postaje;
+import com.lukag.atvoznired.Objekti.BuildConstants;
 import com.lukag.atvoznired.UpravljanjeSPodatki.DataSourcee;
 import com.lukag.atvoznired.Display_Schedule_Activity;
 import com.lukag.atvoznired.R;
@@ -46,8 +46,8 @@ public class priljubljenePostajeAdapter extends RecyclerView.Adapter<priljubljen
                 public void onClick(View v) {
                     String vstopnaPostaja = priljubljeneList.get(getAdapterPosition()).getFromName();
                     String izstopnaPostaja = priljubljeneList.get(getAdapterPosition()).getToName();
-                    String vstopnaID = Postaje.seznamPostaj.get(vstopnaPostaja);
-                    String izstopnaID = Postaje.seznamPostaj.get(izstopnaPostaja);
+                    String vstopnaID = BuildConstants.seznamPostaj.get(vstopnaPostaja);
+                    String izstopnaID = BuildConstants.seznamPostaj.get(izstopnaPostaja);
                     vstopnaPostajaView.setText(priljubljeneList.get(getAdapterPosition()).getFromName(), false);
                     izstopnaPostajaView.setText(priljubljeneList.get(getAdapterPosition()).getToName(), false);
 

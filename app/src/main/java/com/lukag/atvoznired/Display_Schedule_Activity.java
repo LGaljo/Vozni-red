@@ -164,7 +164,6 @@ public class Display_Schedule_Activity extends AppCompatActivity {
         vt.addParam("JPOS_IJPPZ", relacija.getFromID());
         vt.addParam("JPOS_IJPPK", relacija.getToID());
         vt.addParam("VZVK_DAT", date); // datum oblike yyyy-MM-dd
-        vt.addParam("VZVK_DAT", "2019-02-14"); // datum oblike yyyy-MM-dd
         vt.addParam("ClientId", ClientId.toString()); // IMEI: <PHONE-ID> , MAC: <MAC-ADDRESS>
         vt.addParam("ClientIdType", DataSourcee.getPhoneInfo(this)); // IMEI
         vt.addParam("ClientLocationLatitude", "");
