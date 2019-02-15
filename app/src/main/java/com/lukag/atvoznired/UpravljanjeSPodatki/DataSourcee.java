@@ -15,6 +15,7 @@ import com.lukag.atvoznired.Adapterji.priljubljenePostajeAdapter;
 import com.lukag.atvoznired.Objekti.BuildConstants;
 import com.lukag.atvoznired.Objekti.Pot;
 import com.lukag.atvoznired.Objekti.Relacija;
+import com.lukag.atvoznired.Objekti.Voznja;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,6 +26,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -170,7 +172,7 @@ public class DataSourcee {
                 public void getResponse(String response) {
                     try {
                         JSONArray JSONresponse = new JSONArray(response);
-                        iskana.setUrnik(parseJSONResponse(iskana, JSONresponse).getUrnik());
+                        iskana.setUrnik(parseVozniRed(iskana, JSONresponse).getUrnik());
 
                         Integer ind = 0;
                         Boolean found = false;
@@ -220,14 +222,14 @@ public class DataSourcee {
      *
      * @param resp JSONObject - odgovor strežnika
      */
-    public static Relacija parseJSONResponse(Relacija iskanaRelacija, JSONArray resp) {
+    public static Relacija parseVozniRed(Relacija iskanaRelacija, JSONArray resp) {
         try {
             JSONObject responseObj = resp.getJSONObject(0);
             int napakaID = responseObj.getInt("Error");
 
             if (napakaID != 0) {
                 String napakaMessage = responseObj.getString("ErrorMsg");
-                Log.e("API", napakaMessage);
+                Log.e("API Napaka", napakaMessage);
             }
 
             JSONArray schedule = responseObj.getJSONArray("Departures");
@@ -266,6 +268,45 @@ public class DataSourcee {
         }
 
         return iskanaRelacija;
+    }
+
+    public static ArrayList<Voznja> parseVoznje(JSONArray response) {
+        ArrayList<Voznja> voznje = new ArrayList<>();
+
+        Log.d("API voznje", response.toString());
+
+        try {
+            JSONObject responseObj = response.getJSONObject(0);
+            int napakaID = responseObj.getInt("Error");
+
+            if (napakaID != 0) {
+                String napakaMessage = responseObj.getString("ErrorMsg");
+                Log.e("API Napaka", napakaMessage);
+            }
+
+            JSONArray seznamVozenj = responseObj.getJSONArray("DepartureStationList");
+
+            for (int i = 0; i < seznamVozenj.length(); i++) {
+                Voznja voznja = new Voznja();
+                JSONObject obj = seznamVozenj.getJSONObject(i);
+                Log.d("API voznje", obj.toString());
+
+                voznja.setROD_ZAP(obj.getInt("ROD_ZAP"));
+                voznja.setPOS_NAZ(obj.getString("POS_NAZ"));
+                voznja.setROD_IPRI(obj.getString("ROD_IPRI"));
+                voznja.setROD_POS(obj.getInt("ROD_POS"));
+                voznja.setROD_IODH(obj.getString("ROD_IODH"));
+                voznja.setROD_STOP(obj.getInt("ROD_STOP"));
+                voznja.setROD_LAT(obj.getDouble("ROD_LAT"));
+                voznja.setROD_LON(obj.getDouble("ROD_LON"));
+
+                voznje.add(voznja);
+            }
+        } catch (JSONException e) {
+            Log.e("getResponse", "Napaka v pri parsanju JSON datoteke");
+            e.printStackTrace();
+        }
+        return voznje;
     }
 
     /**

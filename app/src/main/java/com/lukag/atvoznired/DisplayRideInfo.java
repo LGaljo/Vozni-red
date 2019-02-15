@@ -4,15 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.jude.swipbackhelper.SwipeBackHelper;
 import com.lukag.atvoznired.Objekti.BuildConstants;
 import com.lukag.atvoznired.Objekti.Pot;
+import com.lukag.atvoznired.Objekti.Voznja;
 import com.lukag.atvoznired.UpravljanjeSPodatki.DataSourcee;
 import com.lukag.atvoznired.UpravljanjeSPodatki.VolleyTool;
 
@@ -32,19 +31,19 @@ public class DisplayRideInfo extends AppCompatActivity {
         setContentView(R.layout.activity_ride_info);
 
         text = (TextView) findViewById(R.id.text);
+        BuildConstants buildConstants = BuildConstants.getInstance();
 
         SwipeBackHelper.onCreate(this);
+        Intent intent = getIntent();
+        ArrayList<String> prenos = intent.getStringArrayListExtra(EXTRA_MESSAGE);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.VozniRedToolbar);
-        toolbar.setTitle(R.string.about);
+        toolbar.setTitle(buildConstants.relacija.getFromName() + " - " + buildConstants.relacija.getToName());
         toolbar.setTitleTextAppearance(getApplicationContext(), R.style.ToolbarTitle);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         setSupportActionBar(toolbar);
 
-        Intent intent = getIntent();
-        ArrayList<String> prenos = intent.getStringArrayListExtra(EXTRA_MESSAGE);
 
-        BuildConstants buildConstants = BuildConstants.getInstance();
         pridobiPodrobnostiOVoznji(buildConstants.relacija.getUrnik().get(Integer.parseInt(prenos.get(0))));
     }
 
@@ -52,11 +51,6 @@ public class DisplayRideInfo extends AppCompatActivity {
         String timestamp = DataSourcee.pridobiCas("yyyyMMddHHmmss");
         String token = DataSourcee.md5(BuildConstants.tokenKey + timestamp);
         String url = "https://prometWS.alpetour.si/WS_ArrivaSLO_TimeTable_TimeTableDepartureStationList.aspx";
-        StringBuilder ClientId = new StringBuilder();
-        ClientId.append("IMEI: ");
-        ClientId.append(DataSourcee.getPhoneInfo(this));
-        ClientId.append(" , MAC: ");
-        ClientId.append(DataSourcee.getMacAddr(this));
 
         VolleyTool vt = new VolleyTool(this, url);
 
@@ -76,7 +70,11 @@ public class DisplayRideInfo extends AppCompatActivity {
             public void getResponse(String response) {
                 try {
                     JSONArray JSONresponse = new JSONArray(response);
-                    text.append(response);
+                    ArrayList<Voznja> voznje = DataSourcee.parseVoznje(JSONresponse);
+
+                    for (Voznja v : voznje) {
+                        text.append(v.POS_NAZ + " " + v.ROD_IPRI + " - " + v.ROD_IODH + "\n");
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

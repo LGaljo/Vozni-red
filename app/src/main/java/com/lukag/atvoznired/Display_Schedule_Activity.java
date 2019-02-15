@@ -185,7 +185,7 @@ public class Display_Schedule_Activity extends AppCompatActivity {
 
                 try {
                     JSONArray JSONresponse = new JSONArray(response);
-                    iskanaRelacija.setUrnik(DataSourcee.parseJSONResponse(iskanaRelacija, JSONresponse).getUrnik());
+                    iskanaRelacija.setUrnik(DataSourcee.parseVozniRed(iskanaRelacija, JSONresponse).getUrnik());
                     checkUrnik();
                     relativeLayout.setVisibility(View.VISIBLE);
                     progressBar.setVisibility(View.GONE);
