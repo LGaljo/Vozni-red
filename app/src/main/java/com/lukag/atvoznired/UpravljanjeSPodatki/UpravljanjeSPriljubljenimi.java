@@ -116,7 +116,8 @@ public class UpravljanjeSPriljubljenimi {
     public boolean dodajPriljubljeno(Relacija nova) {
         if (!aliObstaja(nova)) {
             priljubljeneRelacije.add(nova);
-            MainActivity.runs.run();
+            // TODO: Disable for now
+            //MainActivity.runs.run();
             return true;
         }
         return false;

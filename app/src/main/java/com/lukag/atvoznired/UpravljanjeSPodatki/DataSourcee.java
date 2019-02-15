@@ -19,8 +19,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -32,80 +30,12 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 
 public class DataSourcee {
-    //private static HashMap<String, String> postaje = new HashMap<>();
-    //public static String[] samoPostaje = null;
 
     /**
-     * Metoda napolni HashMap in String Array s podatki o postajah
-     * @param context - kontekst razreda iz katerega je klicana metoda
-     */
-    /*
-    public static void init(Context context) {
-
-        String job = postajeFromAsset(context);
-        try {
-            JSONArray arr = new JSONArray(job);
-            samoPostaje = new String[arr.length()];
-            for (int i = 0; i < arr.length(); i++) {
-                JSONObject o = arr.getJSONObject(i);
-                String p = o.getString("postaja");
-                String in = o.getString("id");
-                postaje.put(p, in);
-                samoPostaje[i] = p;
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-    */
-
-    /**
-     * Metoda, ki mi iz JSON datoteke prebere vse postaje
-     * Vrne mi string v katerem je postaja
-     */
-    public static String postajeFromAsset(Context con) {
-        String v_json = null;
-
-        try {
-            InputStream is = con.getAssets().open("Postaje.json");
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            v_json = new String(buffer, "UTF-8");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            return null;
-        }
-        return v_json;
-    }
-
-    /**
-     * Metoda vrne String imena postaje iz podanega IDja
-     * @param id - id postaje
-     * @return - ime postaje
-     */
-    /*
-    public static String getIDfromMap(String id) {
-        return postaje.get(id);
-    }
-*/
-
-    /**
-     * Metoda vrne današnji datum
+     * Metoda vrne današnji datum v podani obliki
      *
      * @return - datum v obliki teksta
      */
-    public static String dodajDanasnjiDan() {
-        // Današnji datum
-        Calendar c = Calendar.getInstance();
-        SimpleDateFormat today = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMANY);
-
-        return today.format(c.getTime());
-    }
-
     public static String pridobiCas(String type) {
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat format = new SimpleDateFormat(type, Locale.GERMAN);
@@ -199,6 +129,7 @@ public class DataSourcee {
      * @param context  kontekst razreda
      * @param pAdapter adapter za priljubljene postaje
      */
+    // TODO: Pripravi na nov API klic
     public static void findNextRides(Context context, final priljubljenePostajeAdapter pAdapter) {
         for (final int i[] = {0}; i[0] < UpravljanjeSPriljubljenimi.priljubljeneRelacije.size(); i[0]++) {
             final Relacija iskana = UpravljanjeSPriljubljenimi.priljubljeneRelacije.get(i[0]);
@@ -212,7 +143,7 @@ public class DataSourcee {
             vt.addParam("action", "showRoutes");
             vt.addParam("fromID", fromID);
             vt.addParam("toID", toID);
-            vt.addParam("date", dodajDanasnjiDan());
+            vt.addParam("date", pridobiCas("yyyy-MM-dd"));
             vt.addParam("general", "false");
 
             vt.executeRequest(Request.Method.POST, new VolleyTool.VolleyCallback() {
@@ -330,7 +261,7 @@ public class DataSourcee {
         Date time = new Date();
 
         try {
-            time = sdf.parse(dodajDanasnjiDan() + " " + timeStr);
+            time = sdf.parse(pridobiCas("dd.MM.yyyy") + " " + timeStr);
             Calendar calendar = GregorianCalendar.getInstance();
             calendar.setTime(time);
         } catch (ParseException e) {

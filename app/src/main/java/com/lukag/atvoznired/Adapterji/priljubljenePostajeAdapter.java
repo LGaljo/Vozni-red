@@ -51,7 +51,7 @@ public class priljubljenePostajeAdapter extends RecyclerView.Adapter<priljubljen
                     vstopnaPostajaView.setText(priljubljeneList.get(getAdapterPosition()).getFromName(), false);
                     izstopnaPostajaView.setText(priljubljeneList.get(getAdapterPosition()).getToName(), false);
 
-                    UpravljanjeZZadnjimiIskanimi.shraniZadnjiIskani(context, vstopnaPostajaView, izstopnaPostajaView, DataSourcee.dodajDanasnjiDan());
+                    UpravljanjeZZadnjimiIskanimi.shraniZadnjiIskani(context, vstopnaPostajaView, izstopnaPostajaView, DataSourcee.pridobiCas("dd.MM.yyyy"));
 
                     ArrayList<String> prenos = new ArrayList<>();
                     prenos.add(vstopnaID);
