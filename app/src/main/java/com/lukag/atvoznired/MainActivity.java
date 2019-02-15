@@ -2,6 +2,7 @@ package com.lukag.atvoznired;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -11,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,6 +27,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jude.swipbackhelper.SwipeBackHelper;
 import com.lukag.atvoznired.Adapterji.AutoCompleteAdapter;
@@ -44,14 +47,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private AutoCompleteTextView vstopnaPostajaView;
     private AutoCompleteTextView izstopnaPostajaView;
-    public static ArrayAdapter<String> adapter;
     private Calendar calendarView;
 
-    private Button submit;
-
-    private ImageView delete_vp;
-    private ImageView delete_ip;
-    private ImageView swap;
     private DrawerLayout mDrawerLayout;
 
     public TextView koledar;
@@ -74,6 +71,70 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        PreferenceManager.setDefaultValues(this, R.xml.app_preferences, false);
+
+        // Preverjanje, če se smo se vrnili nazaj zaradi napake v programu
+        intentManager();
+
+        // Nastavi SwipeBackHelper knjižnico
+        SwipeBackHelper.onCreate(this);
+        SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false);
+        SwipeBackHelper.getCurrentPage(this).setDisallowInterceptTouchEvent(true);
+
+        // Poišče poglede in jih nastavi
+        findViews();
+
+        // Nastavi AutoCompleteTextView in mu pripne Custom Arrayadapter
+        dodajAutoCompleteTextView();
+
+        // Pripravi instanco koledarja za uporabo
+        obNastavitviDatuma();
+
+        // Nastavi layout in listener za klike
+        handleNavigationMenu();
+
+        // Prepreci odpiranje tipkovnice ob zagonu
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        // V vnosna polja nastavim zadnje iskane
+        UpravljanjeZZadnjimiIskanimi.nastaviZadnjiIskani(this, vstopnaPostajaView, izstopnaPostajaView, koledar);
+
+        // Pripravim recyclerview za uporabo in nastavim instanco za uporabo SharedPref
+        prikazPriljubljenihRecycler();
+
+        // Pripravim SwipeContainer in njegove barve
+        manageSwipeContainer();
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        SwipeBackHelper.onPostCreate(this);
+        pAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        koledar.setText(DataSourcee.pridobiCas("dd.MM.yyyy"));
+        datum = DataSourcee.pridobiCas("yyyy-MM-dd");
+        pAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        favs.shraniPriljubljene();
+        SwipeBackHelper.onDestroy(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        pAdapter.notifyDataSetChanged();
+    }
+
+    private void intentManager() {
         Intent intent = getIntent();
         String reason = intent.getStringExtra("reason");
         contextView = findViewById(R.id.priljubljene_text);
@@ -83,20 +144,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (reason != null) {
             Snackbar.make(contextView, R.string.error, Snackbar.LENGTH_LONG).show();
         }
-        SwipeBackHelper.onCreate(this);
-        SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false);
-        SwipeBackHelper.getCurrentPage(this).setDisallowInterceptTouchEvent(true);
+    }
 
-        findViews();
-        dodajAutoCompleteTextView();
-        obNastavitviDatuma();
-        handleNavigationMenu();
-
-        // Prepreci odpiranje tipkovnice ob zagonu
-        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+    private void prikazPriljubljenihRecycler() {
         favs = UpravljanjeSPriljubljenimi.getInstance();
         favs.setContext(this);
-        UpravljanjeZZadnjimiIskanimi.nastaviZadnjiIskani(this, vstopnaPostajaView, izstopnaPostajaView, koledar);
 
         // Pripravi RecyclerView za prikaz priljubljenih relacij
         pAdapter = new priljubljenePostajeAdapter(UpravljanjeSPriljubljenimi.priljubljeneRelacije, this, vstopnaPostajaView, izstopnaPostajaView, favs, koledar);
@@ -108,8 +160,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         checkForNewRides();
 
         recyclerView.post(runs);
-
-        manageSwipeContainer();
     }
 
     private void manageSwipeContainer() {
@@ -152,34 +202,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         return true;
                     }
                 });
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        SwipeBackHelper.onPostCreate(this);
-        pAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        koledar.setText(DataSourcee.pridobiCas("dd.MM.yyyy"));
-        datum = DataSourcee.pridobiCas("yyyy-MM-dd");
-        pAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        favs.shraniPriljubljene();
-        SwipeBackHelper.onDestroy(this);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        pAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -279,10 +301,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         izstopnaPostajaView = (AutoCompleteTextView) findViewById(R.id.izstopna_text);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_pogled_priljubljenih);
         koledar = (TextView) findViewById(R.id.textCalendar);
-        submit = (Button) findViewById(R.id.submit);
-        delete_vp = (ImageView) findViewById(R.id.delete_vp);
-        delete_ip = (ImageView) findViewById(R.id.delete_ip);
-        swap = (ImageView) findViewById(R.id.swap);
+        Button submit = (Button) findViewById(R.id.submit);
+        ImageView delete_vp = (ImageView) findViewById(R.id.delete_vp);
+        ImageView delete_ip = (ImageView) findViewById(R.id.delete_ip);
+        ImageView swap = (ImageView) findViewById(R.id.swap);
 
         koledar.setOnClickListener(this);
         submit.setOnClickListener(this);
@@ -326,12 +348,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void goToAppInfo() {
-        Intent apinfointent = new Intent(MainActivity.this, DisplayAppInfo.class);
+        Intent apinfointent = new Intent(this, DisplayAppInfo.class);
         startActivity(apinfointent);
     }
 
      private void goToSettings() {
-        Intent gotosettings = new Intent(MainActivity.this, Display_Settings.class);
+        Intent gotosettings = new Intent(this, SettingsActivity.class);
         startActivity(gotosettings);
     }
 

@@ -1,9 +1,11 @@
 package com.lukag.atvoznired.Adapterji;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,10 +14,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.lukag.atvoznired.Objekti.BuildConstants;
 import com.lukag.atvoznired.R;
+import com.lukag.atvoznired.SettingsActivity;
 import com.lukag.atvoznired.UpravljanjeSPodatki.DataSourcee;
 import com.lukag.atvoznired.UpravljanjeSPodatki.VolleyTool;
 
@@ -31,12 +35,15 @@ public class AutoCompleteAdapter extends ArrayAdapter<String> implements Filtera
     private ArrayList<String> seznamImenPostaj;
     private ArrayList<String> suggestions;
     private Context context;
+    private Boolean sumniki_pref;
+    private SharedPreferences sp;
 
     public AutoCompleteAdapter(@NonNull Context context, @LayoutRes int resource) {
         super(context, resource);
         this.seznamImenPostaj = new ArrayList<>();
         this.suggestions = new ArrayList<>();
         this.context = context;
+        this.sp = PreferenceManager.getDefaultSharedPreferences(context);
         pridobiSeznam();
     }
 
@@ -98,11 +105,20 @@ public class AutoCompleteAdapter extends ArrayAdapter<String> implements Filtera
                 if (constraint != null) {
 
                     suggestions.clear();
+                    sumniki_pref = sp.getBoolean (SettingsActivity.ISKANJE_S_SUMNIKI, false);
+
                     for (String str : seznamImenPostaj) {
                         // Odstrani šumnike za uporabnike, ki jih ne uporabljajo
-                        // TODO: V nastavitvah dodaj funkcionalnost, ki onemogoči to rešitev (izboljšaj performance z onemogočanjem)
-                        String str1 = DataSourcee.odstraniSumnike(str.toLowerCase());
-                        String str2 = DataSourcee.odstraniSumnike(constraint.toString().toLowerCase());
+                        String str1;
+                        String str2;
+                        if (sumniki_pref) {
+                            str1 = DataSourcee.odstraniSumnike(str.toLowerCase());
+                            str2 = DataSourcee.odstraniSumnike(constraint.toString().toLowerCase());
+                        } else {
+                            str1 = str.toLowerCase();
+                            str2 = constraint.toString().toLowerCase();
+                        }
+
                         if (str1.startsWith(str2)) {
                             suggestions.add(str);
                         }
