@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.lukag.atvoznired.DisplayRideInfo;
+import com.lukag.atvoznired.Objekti.BuildConstants;
 import com.lukag.atvoznired.Objekti.Relacija;
 import com.lukag.atvoznired.UpravljanjeSPodatki.DataSourcee;
 import com.lukag.atvoznired.Objekti.Pot;
@@ -67,14 +68,17 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.MyView
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    openRideInfo(relacija, scheduleList.get(item.getID()));
+                    openRideInfo(relacija, item.getID());
                     Log.d("RecyclerView", "OnClick " + item.getID());
                 }
             });
         }
 
-        private void openRideInfo(Relacija relacija, Pot pot) {
+        private void openRideInfo(Relacija relacija, int PotID) {
             ArrayList<String> prenos = new ArrayList<>();
+            prenos.add(Integer.toString(PotID));
+            BuildConstants buildConstants = BuildConstants.getInstance();
+            buildConstants.relacija = relacija;
             Intent intent = new Intent(context, DisplayRideInfo.class);
             intent.putStringArrayListExtra(EXTRA_MESSAGE, prenos);
             context.startActivity(intent);

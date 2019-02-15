@@ -160,6 +160,10 @@ public class Display_Schedule_Activity extends AppCompatActivity {
 
         VolleyTool vt = new VolleyTool(this, url);
 
+        if (relacija.getFromID() == null || relacija.getToID() == null) {
+            returnToMainActivity("Manjkajoč ID postaj");
+        }
+
         vt.addParam("cTimeStamp", timestamp);
         vt.addParam("cToken", token);
         vt.addParam("JPOS_IJPPZ", relacija.getFromID());

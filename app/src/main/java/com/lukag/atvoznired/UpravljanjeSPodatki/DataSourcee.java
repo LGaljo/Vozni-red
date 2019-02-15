@@ -137,7 +137,6 @@ public class DataSourcee {
             UpravljanjeSPriljubljenimi.pridobiPriljubljene();
         }
 
-
         for (final int i[] = {0}; i[0] < UpravljanjeSPriljubljenimi.priljubljeneRelacije.size(); i[0]++) {
             final Relacija iskana = UpravljanjeSPriljubljenimi.priljubljeneRelacije.get(i[0]);
 

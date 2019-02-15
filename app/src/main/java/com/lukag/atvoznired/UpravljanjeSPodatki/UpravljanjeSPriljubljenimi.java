@@ -2,13 +2,17 @@ package com.lukag.atvoznired.UpravljanjeSPodatki;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.lukag.atvoznired.MainActivity;
-import com.lukag.atvoznired.Objekti.BuildConstants;
+import com.lukag.atvoznired.Objekti.Pot;
 import com.lukag.atvoznired.Objekti.Relacija;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
-import java.util.List;
 
 public class UpravljanjeSPriljubljenimi {
 
@@ -17,7 +21,7 @@ public class UpravljanjeSPriljubljenimi {
     private Context context;
     private static SharedPreferences shramba;
     private static int size;
-    public static List<Relacija> priljubljeneRelacije;
+    public static ArrayList<Relacija> priljubljeneRelacije;
 
     private UpravljanjeSPriljubljenimi() {
     }
@@ -43,9 +47,8 @@ public class UpravljanjeSPriljubljenimi {
      * nastavi število priljubljenih na nič
      */
     private void izbrisiPriljubljene() {
-        SharedPreferences.Editor urejevalnik = this.shramba.edit();
+        SharedPreferences.Editor urejevalnik = shramba.edit();
         urejevalnik.clear();
-        urejevalnik.putInt("number", 0);
         urejevalnik.apply();
     }
 
@@ -67,29 +70,61 @@ public class UpravljanjeSPriljubljenimi {
      * Shrani priljubljene iz arraylista v shared preferences
      */
     public void shraniPriljubljene() {
-        SharedPreferences.Editor urejevalnik = this.shramba.edit();
-        izbrisiPriljubljene();
+        try {
+            SharedPreferences.Editor urejevalnik = shramba.edit();
+            izbrisiPriljubljene();
+            JSONObject jsonObj = createJson(priljubljeneRelacije);
+            urejevalnik.putString("seznam", jsonObj.toString());
+            Log.d("JSON", jsonObj.toString());
+            urejevalnik.apply();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public JSONObject createJson(ArrayList<Relacija> priljubljeneRelacije) throws JSONException {
+        JSONArray seznam = new JSONArray();
+        JSONObject out = new JSONObject();
+
         for (int i = 0; i < priljubljeneRelacije.size(); i++) {
-            urejevalnik.putString(Integer.toString(i), priljubljeneRelacije.get(i).getFromName() + ":" + priljubljeneRelacije.get(i).getToName());
-            this.size += 1;
-            // +1, ker je iterator za 1 manjši od števila relacij
-            urejevalnik.putInt("number", i + 1);
+            JSONObject enota = new JSONObject();
+            Relacija r = priljubljeneRelacije.get(i);
+
+            enota.put("fromN", r.getFromName());
+            enota.put("toN", r.getToName());
+            enota.put("fromID", r.getFromID());
+            enota.put("toID", r.getToID());
+
+            seznam.put(enota);
         }
 
-        urejevalnik.apply();
+        out.put("seznam", seznam);
+
+        return out;
     }
 
     /**
      * Shrani priljubljene iz shared preferences v arraylist
      */
     public static void pridobiPriljubljene() {
-        priljubljeneRelacije.clear();
+        try {
+            priljubljeneRelacije.clear();
+            String json = shramba.getString("seznam", "");
+            JSONObject jsonObject = new JSONObject(json);
+            JSONArray array = jsonObject.getJSONArray("seznam");
 
-        for (int i = 0; i < size; i++) {
-            Relacija rela = parseRelacija(shramba.getString(Integer.toString(i), ""));
-            rela.setFromID(BuildConstants.seznamPostaj.get(rela.getFromName()));
-            rela.setToID(BuildConstants.seznamPostaj.get(rela.getToName()));
-            priljubljeneRelacije.add(rela);
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject obj = array.getJSONObject(i);
+                String fN = obj.getString("fromN");
+                String tN = obj.getString("toN");
+                String fD = obj.getString("fromID");
+                String tD = obj.getString("toID");
+                Relacija nova = new Relacija(fD, fN, tD, tN, new ArrayList<Pot>());
+                priljubljeneRelacije.add(nova);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         MainActivity.sourcesFound = false;
@@ -120,20 +155,5 @@ public class UpravljanjeSPriljubljenimi {
             return true;
         }
         return false;
-    }
-
-    /**
-     * Prejmeš kodiran string in vrneš relacijo
-     * @param relacija - relacija kot "postaja1:postaja2"
-     * @return - vrneš objekt relacije
-     */
-    private static Relacija parseRelacija(String relacija) {
-        Relacija rel = new Relacija();
-        String relis[] = relacija.split(":");
-        if (relis.length == 2) {
-            rel.setFromName(relis[0]);
-            rel.setToName(relis[1]);
-        }
-        return rel;
     }
 }
