@@ -15,8 +15,8 @@ public class UpravljanjeSPriljubljenimi {
     private static UpravljanjeSPriljubljenimi upravljanjeSPriljubljenimi;
 
     private Context context;
-    private SharedPreferences shramba;
-    private int size;
+    private static SharedPreferences shramba;
+    private static int size;
     public static List<Relacija> priljubljeneRelacije;
 
     private UpravljanjeSPriljubljenimi() {
@@ -82,11 +82,11 @@ public class UpravljanjeSPriljubljenimi {
     /**
      * Shrani priljubljene iz shared preferences v arraylist
      */
-    public void pridobiPriljubljene() {
+    public static void pridobiPriljubljene() {
         priljubljeneRelacije.clear();
 
-        for (int i = 0; i < this.size; i++) {
-            Relacija rela = parseRelacija(this.shramba.getString(Integer.toString(i), ""));
+        for (int i = 0; i < size; i++) {
+            Relacija rela = parseRelacija(shramba.getString(Integer.toString(i), ""));
             rela.setFromID(BuildConstants.seznamPostaj.get(rela.getFromName()));
             rela.setToID(BuildConstants.seznamPostaj.get(rela.getToName()));
             priljubljeneRelacije.add(rela);
@@ -116,8 +116,7 @@ public class UpravljanjeSPriljubljenimi {
     public boolean dodajPriljubljeno(Relacija nova) {
         if (!aliObstaja(nova)) {
             priljubljeneRelacije.add(nova);
-            // TODO: Disable for now
-            //MainActivity.runs.run();
+            MainActivity.runs.run();
             return true;
         }
         return false;

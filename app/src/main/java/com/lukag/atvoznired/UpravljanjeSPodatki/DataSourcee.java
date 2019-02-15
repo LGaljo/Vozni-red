@@ -12,6 +12,7 @@ import android.view.WindowManager;
 
 import com.android.volley.Request;
 import com.lukag.atvoznired.Adapterji.priljubljenePostajeAdapter;
+import com.lukag.atvoznired.Objekti.BuildConstants;
 import com.lukag.atvoznired.Objekti.Pot;
 import com.lukag.atvoznired.Objekti.Relacija;
 
@@ -129,30 +130,48 @@ public class DataSourcee {
      * @param context  kontekst razreda
      * @param pAdapter adapter za priljubljene postaje
      */
-    // TODO: Pripravi na nov API klic
     public static void findNextRides(Context context, final priljubljenePostajeAdapter pAdapter) {
+        // Če se ob zagonu zgodi, da ne moreš dobiti idjev zaradi manjkajočega seznama,
+        // ga poskusi ustvariti še enkrat
+        if (UpravljanjeSPriljubljenimi.priljubljeneRelacije.isEmpty()) {
+            UpravljanjeSPriljubljenimi.pridobiPriljubljene();
+        }
+
+
         for (final int i[] = {0}; i[0] < UpravljanjeSPriljubljenimi.priljubljeneRelacije.size(); i[0]++) {
             final Relacija iskana = UpravljanjeSPriljubljenimi.priljubljeneRelacije.get(i[0]);
 
-            final String fromID = UpravljanjeSPriljubljenimi.priljubljeneRelacije.get(i[0]).getFromID();
-            final String toID = UpravljanjeSPriljubljenimi.priljubljeneRelacije.get(i[0]).getToID();
-            final String fromName = UpravljanjeSPriljubljenimi.priljubljeneRelacije.get(i[0]).getFromName();
-            final String toName = UpravljanjeSPriljubljenimi.priljubljeneRelacije.get(i[0]).getToName();
-            VolleyTool vt = new VolleyTool(context, "https://www.alpetour.si/wp-admin/admin-ajax.php");
+            String timestamp = DataSourcee.pridobiCas("yyyyMMddHHmmss");
+            String token = DataSourcee.md5(BuildConstants.tokenKey + timestamp);
+            String url = "https://prometWS.alpetour.si/WS_ArrivaSLO_TimeTable_TimeTableDepartures.aspx";
+            StringBuilder ClientId = new StringBuilder();
+            ClientId.append("IMEI: ");
+            ClientId.append(DataSourcee.getPhoneInfo(context));
+            ClientId.append(" , MAC: ");
+            ClientId.append(DataSourcee.getMacAddr(context));
+            Log.d("API", timestamp + " " + token + " " + ClientId.toString() + " " + DataSourcee.getPhoneInfo(context));
+            Log.d("API", iskana.getFromID() + " " + iskana.getToID() + " " + pridobiCas("yyyy-MM-dd"));
 
-            vt.addParam("action", "showRoutes");
-            vt.addParam("fromID", fromID);
-            vt.addParam("toID", toID);
-            vt.addParam("date", pridobiCas("yyyy-MM-dd"));
-            vt.addParam("general", "false");
+            VolleyTool vt = new VolleyTool(context, url);
+
+            vt.addParam("cTimeStamp", timestamp);
+            vt.addParam("cToken", token);
+            vt.addParam("JPOS_IJPPZ", iskana.getFromID());
+            vt.addParam("JPOS_IJPPK", iskana.getToID());
+            vt.addParam("VZVK_DAT", pridobiCas("yyyy-MM-dd"));
+            vt.addParam("ClientId", ClientId.toString());
+            vt.addParam("ClientIdType", DataSourcee.getPhoneInfo(context));
+            vt.addParam("ClientLocationLatitude", "");
+            vt.addParam("ClientLocationLongitude", "");
+            vt.addParam("json", "1");
 
             vt.executeRequest(Request.Method.POST, new VolleyTool.VolleyCallback() {
 
                 @Override
                 public void getResponse(String response) {
                     try {
-                        JSONArray POSTreply = new JSONArray(response);
-                        iskana.setUrnik(parseJSONResponse(iskana, POSTreply).getUrnik());
+                        JSONArray JSONresponse = new JSONArray(response);
+                        iskana.setUrnik(parseJSONResponse(iskana, JSONresponse).getUrnik());
 
                         Integer ind = 0;
                         Boolean found = false;

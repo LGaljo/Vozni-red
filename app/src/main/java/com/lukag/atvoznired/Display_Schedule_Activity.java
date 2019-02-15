@@ -149,6 +149,7 @@ public class Display_Schedule_Activity extends AppCompatActivity {
     public void POSTiT(final Relacija relacija, final String date) {
         String timestamp = DataSourcee.pridobiCas("yyyyMMddHHmmss");
         String token = DataSourcee.md5(BuildConstants.tokenKey + timestamp);
+        String url = "https://prometWS.alpetour.si/WS_ArrivaSLO_TimeTable_TimeTableDepartures.aspx";
         StringBuilder ClientId = new StringBuilder();
         ClientId.append("IMEI: ");
         ClientId.append(DataSourcee.getPhoneInfo(this));
@@ -157,7 +158,7 @@ public class Display_Schedule_Activity extends AppCompatActivity {
         Log.d("API", timestamp + " " + token + " " + ClientId.toString() + " " + DataSourcee.getPhoneInfo(this));
         Log.d("API", relacija.getFromID() + " " + relacija.getToID() + " " + date);
 
-        VolleyTool vt = new VolleyTool(this, "https://prometWS.alpetour.si/WS_ArrivaSLO_TimeTable_TimeTableDepartures.aspx");
+        VolleyTool vt = new VolleyTool(this, url);
 
         vt.addParam("cTimeStamp", timestamp);
         vt.addParam("cToken", token);
@@ -179,8 +180,8 @@ public class Display_Schedule_Activity extends AppCompatActivity {
                 }
 
                 try {
-                    JSONArray POSTreply = new JSONArray(response);
-                    iskanaRelacija = DataSourcee.parseJSONResponse(iskanaRelacija, POSTreply);
+                    JSONArray JSONresponse = new JSONArray(response);
+                    iskanaRelacija.setUrnik(DataSourcee.parseJSONResponse(iskanaRelacija, JSONresponse).getUrnik());
                     checkUrnik();
                     relativeLayout.setVisibility(View.VISIBLE);
                     progressBar.setVisibility(View.GONE);

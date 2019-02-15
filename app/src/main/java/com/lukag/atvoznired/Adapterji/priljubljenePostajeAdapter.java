@@ -17,8 +17,10 @@ import com.lukag.atvoznired.Objekti.Relacija;
 import com.lukag.atvoznired.UpravljanjeSPodatki.UpravljanjeSPriljubljenimi;
 import com.lukag.atvoznired.UpravljanjeSPodatki.UpravljanjeZZadnjimiIskanimi;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static com.lukag.atvoznired.MainActivity.EXTRA_MESSAGE;
 
@@ -50,6 +52,8 @@ public class priljubljenePostajeAdapter extends RecyclerView.Adapter<priljubljen
                     String izstopnaID = BuildConstants.seznamPostaj.get(izstopnaPostaja);
                     vstopnaPostajaView.setText(priljubljeneList.get(getAdapterPosition()).getFromName(), false);
                     izstopnaPostajaView.setText(priljubljeneList.get(getAdapterPosition()).getToName(), false);
+                    String formatApi = "yyyy-MM-dd";
+                    SimpleDateFormat ApiFormat = new SimpleDateFormat(formatApi, Locale.GERMAN);
 
                     UpravljanjeZZadnjimiIskanimi.shraniZadnjiIskani(context, vstopnaPostajaView, izstopnaPostajaView, DataSourcee.pridobiCas("dd.MM.yyyy"));
 
@@ -59,10 +63,10 @@ public class priljubljenePostajeAdapter extends RecyclerView.Adapter<priljubljen
                     prenos.add(izstopnaID);
                     prenos.add(izstopnaPostaja);
                     prenos.add(koledar.getText().toString());
+                    prenos.add(DataSourcee.pridobiCas("yyyy-MM-dd"));
                     Intent intent = new Intent(view.getContext(), Display_Schedule_Activity.class);
                     intent.putStringArrayListExtra(EXTRA_MESSAGE, prenos);
                     view.getContext().startActivity(intent);
-
                 }
             });
 

@@ -306,8 +306,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void checkForNewRides() {
-        // TODO: Disable for now
-        /*
         runs = new Runnable() {
             public void run() {
                 // a potentially time consuming task
@@ -318,6 +316,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 swipeContainer.setRefreshing(false);
             }
         };
-        */
     }
 }
