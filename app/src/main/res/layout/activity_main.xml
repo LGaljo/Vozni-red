@@ -175,14 +175,15 @@
 
     </android.support.constraint.ConstraintLayout>
 
-<!-- Container for contents of drawer - use NavigationView to make configuration easier -->
-<android.support.design.widget.NavigationView
-    android:id="@+id/nav_view"
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent"
-    android:layout_gravity="start"
-    android:fitsSystemWindows="true"
-    app:menu="@menu/navigation_menu"
-    app:headerLayout="@layout/navigation_menu_header" />
+    <!-- Container for contents of drawer - use NavigationView to make configuration easier -->
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:menu="@menu/navigation_menu"
+        app:headerLayout="@layout/navigation_menu_header">
+    </android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>

@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-
     <SwitchPreference
-        android:defaultValue="true"
+        android:key="sumniki2"
+        android:summary="a"
+        android:title="a" />
+    <SwitchPreference
+        android:defaultValue="false"
         android:key="sumniki"
         android:summary="V vnosnem polju ignoriraj šumnike (podaljša čas iskanja)"
         android:title="Iskanje brez šumnikov" />
