@@ -50,7 +50,7 @@ public class Display_Schedule_Activity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_display_message);
+        setContentView(R.layout.activity_schedule);
 
         SwipeBackHelper.onCreate(this);
 
@@ -216,7 +216,7 @@ public class Display_Schedule_Activity extends AppCompatActivity {
         TextView cost = (TextView)findViewById(R.id.costh);
         TextView peron = (TextView)findViewById(R.id.peronh);
 
-        Integer allMargins = DataSourcee.calcMargins(this);
+        Integer allMargins = DataSourcee.calcMargins(this, 12);
 
         RelativeLayout.LayoutParams lpStart =   (RelativeLayout.LayoutParams)start.getLayoutParams();
         RelativeLayout.LayoutParams lpEnd =     (RelativeLayout.LayoutParams)end.getLayoutParams();

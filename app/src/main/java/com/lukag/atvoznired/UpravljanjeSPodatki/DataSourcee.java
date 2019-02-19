@@ -97,7 +97,7 @@ public class DataSourcee {
     /**
      * Metoda nastavi obrobe tekstovnih polj glave urnika
      */
-    public static Integer calcMargins(Context context) {
+    public static Integer calcMargins(Context context, int num) {
         Integer allMargins = 0;
         Integer displayWidth = 0;
         Integer contentWidth = DataSourcee.dpToPx(4 * 50 + 60 + 65);
@@ -121,7 +121,7 @@ public class DataSourcee {
         }
 
         allMargins = displayWidth - (contentWidth + layoutPadding);
-        allMargins /= 12;
+        allMargins /= num;
 
         return allMargins;
     }

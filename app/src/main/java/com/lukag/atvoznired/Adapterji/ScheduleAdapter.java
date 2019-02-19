@@ -40,7 +40,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.MyView
             cost = (TextView) view.findViewById(R.id.cost);
             peron = (TextView) view.findViewById(R.id.peron);
 
-            Integer margins = DataSourcee.calcMargins(context);
+            Integer margins = DataSourcee.calcMargins(context, 12);
 
             RelativeLayout.LayoutParams lpStart =   (RelativeLayout.LayoutParams)start.getLayoutParams();
             RelativeLayout.LayoutParams lpEnd =     (RelativeLayout.LayoutParams)end.getLayoutParams();
