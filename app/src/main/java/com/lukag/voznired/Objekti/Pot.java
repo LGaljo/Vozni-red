@@ -1,4 +1,4 @@
-package com.lukag.atvoznired.Objekti;
+package com.lukag.voznired.Objekti;
 
 public class Pot {
     private Integer ID;

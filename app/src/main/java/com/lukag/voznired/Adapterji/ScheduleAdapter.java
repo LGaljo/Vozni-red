@@ -1,4 +1,4 @@
-package com.lukag.atvoznired.Adapterji;
+package com.lukag.voznired.Adapterji;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,13 +12,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request;
-import com.lukag.atvoznired.DisplayRideInfo;
-import com.lukag.atvoznired.Objekti.BuildConstants;
-import com.lukag.atvoznired.Objekti.Relacija;
-import com.lukag.atvoznired.UpravljanjeSPodatki.DataSourcee;
-import com.lukag.atvoznired.Objekti.Pot;
-import com.lukag.atvoznired.R;
-import com.lukag.atvoznired.UpravljanjeSPodatki.VolleyTool;
+import com.lukag.voznired.DisplayRideInfo;
+import com.lukag.voznired.Objekti.BuildConstants;
+import com.lukag.voznired.Objekti.Relacija;
+import com.lukag.voznired.UpravljanjeSPodatki.DataSourcee;
+import com.lukag.voznired.Objekti.Pot;
+import com.lukag.voznired.R;
+import com.lukag.voznired.UpravljanjeSPodatki.VolleyTool;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,8 +28,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import static com.lukag.atvoznired.MainActivity.EXTRA_MESSAGE;
-import static com.lukag.atvoznired.UpravljanjeSPodatki.DataSourcee.newTime;
+import static com.lukag.voznired.MainActivity.EXTRA_MESSAGE;
+import static com.lukag.voznired.UpravljanjeSPodatki.DataSourcee.newTime;
 
 public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.MyViewHolder> {
     private Relacija relacija;

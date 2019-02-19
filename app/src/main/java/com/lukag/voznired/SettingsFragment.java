@@ -1,4 +1,4 @@
-package com.lukag.atvoznired;
+package com.lukag.voznired;
 
 import android.os.Bundle;
 import android.support.v7.preference.PreferenceFragmentCompat;

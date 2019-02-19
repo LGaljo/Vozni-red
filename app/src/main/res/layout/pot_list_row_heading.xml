@@ -11,7 +11,7 @@
     android:paddingTop="@dimen/row_padding_vertical"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingBottom="@dimen/row_padding_vertical"
-    tools:context="com.lukag.atvoznired.DisplaySchedule">
+    tools:context="com.lukag.voznired.DisplaySchedule">
 
     <TextView
         android:id="@+id/starth"

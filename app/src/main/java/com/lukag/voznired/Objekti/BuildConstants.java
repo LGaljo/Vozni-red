@@ -1,4 +1,4 @@
-package com.lukag.atvoznired.Objekti;
+package com.lukag.voznired.Objekti;
 
 import java.util.HashMap;
 

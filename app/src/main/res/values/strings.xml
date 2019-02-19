@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Alpetour vozni red</string>
+    <string name="app_name">Vozni red</string>
     <string name="button_send">Prikaži</string>
     <string name="button_calendar">Koledar</string>
     <string name="vstop">Vstop:</string>
@@ -22,7 +22,6 @@
     <string name="next_ride_mnozina">naslednje vožnje</string>
     <string name="application_info">Application info</string>
     <string name="delete_textedit_field">Delete TextEdit field</string>
-    <string name="alpetour_vozni_red">Alpetour vozni red</string>
     <string name="verzija">Verzija:</string>
     <string name="summary">Alpetour vozni red je odprtokodna aplikacija za prikaz urnika podjetja Arriva (bivši Alpetour).</string>
     <string name="razvijalec">Razvijalec</string>

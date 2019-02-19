@@ -1,9 +1,7 @@
-package com.lukag.atvoznired.Adapterji;
+package com.lukag.voznired.Adapterji;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,20 +9,20 @@ import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 
-import com.lukag.atvoznired.DisplaySchedule;
-import com.lukag.atvoznired.Objekti.BuildConstants;
-import com.lukag.atvoznired.UpravljanjeSPodatki.DataSourcee;
-import com.lukag.atvoznired.R;
-import com.lukag.atvoznired.Objekti.Relacija;
-import com.lukag.atvoznired.UpravljanjeSPodatki.UpravljanjeSPriljubljenimi;
-import com.lukag.atvoznired.UpravljanjeSPodatki.UpravljanjeZZadnjimiIskanimi;
+import com.lukag.voznired.DisplaySchedule;
+import com.lukag.voznired.Objekti.BuildConstants;
+import com.lukag.voznired.UpravljanjeSPodatki.DataSourcee;
+import com.lukag.voznired.R;
+import com.lukag.voznired.Objekti.Relacija;
+import com.lukag.voznired.UpravljanjeSPodatki.UpravljanjeSPriljubljenimi;
+import com.lukag.voznired.UpravljanjeSPodatki.UpravljanjeZZadnjimiIskanimi;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import static com.lukag.atvoznired.MainActivity.EXTRA_MESSAGE;
+import static com.lukag.voznired.MainActivity.EXTRA_MESSAGE;
 
 public class priljubljenePostajeAdapter extends RecyclerView.Adapter<priljubljenePostajeAdapter.MyViewHolder> {
 

@@ -1,4 +1,4 @@
-package com.lukag.atvoznired.UpravljanjeSPodatki;
+package com.lukag.voznired.UpravljanjeSPodatki;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -11,11 +11,11 @@ import android.view.Display;
 import android.view.WindowManager;
 
 import com.android.volley.Request;
-import com.lukag.atvoznired.Adapterji.priljubljenePostajeAdapter;
-import com.lukag.atvoznired.Objekti.BuildConstants;
-import com.lukag.atvoznired.Objekti.Pot;
-import com.lukag.atvoznired.Objekti.Relacija;
-import com.lukag.atvoznired.Objekti.Voznja;
+import com.lukag.voznired.Adapterji.priljubljenePostajeAdapter;
+import com.lukag.voznired.Objekti.BuildConstants;
+import com.lukag.voznired.Objekti.Pot;
+import com.lukag.voznired.Objekti.Relacija;
+import com.lukag.voznired.Objekti.Voznja;
 
 import org.json.JSONArray;
 import org.json.JSONException;

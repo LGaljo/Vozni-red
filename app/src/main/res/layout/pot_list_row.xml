@@ -10,7 +10,7 @@
     android:paddingTop="@dimen/row_padding_vertical"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingBottom="@dimen/row_padding_vertical"
-    tools:context="com.lukag.atvoznired.MainActivity">
+    tools:context="com.lukag.voznired.MainActivity">
 
     <TextView
         android:id="@+id/start"

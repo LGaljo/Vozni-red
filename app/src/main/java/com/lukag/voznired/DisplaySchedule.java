@@ -1,4 +1,4 @@
-package com.lukag.atvoznired;
+package com.lukag.voznired;
 
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
@@ -10,29 +10,22 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.Request;
 import com.jude.swipbackhelper.SwipeBackHelper;
-import com.lukag.atvoznired.Adapterji.ScheduleAdapter;
-import com.lukag.atvoznired.Objekti.BuildConstants;
-import com.lukag.atvoznired.Objekti.Pot;
-import com.lukag.atvoznired.Objekti.Relacija;
-import com.lukag.atvoznired.UpravljanjeSPodatki.DataSourcee;
-import com.lukag.atvoznired.UpravljanjeSPodatki.UpravljanjeSPriljubljenimi;
-import com.lukag.atvoznired.UpravljanjeSPodatki.VolleyTool;
-
-import org.json.JSONArray;
-import org.json.JSONException;
+import com.lukag.voznired.Adapterji.ScheduleAdapter;
+import com.lukag.voznired.Objekti.Pot;
+import com.lukag.voznired.Objekti.Relacija;
+import com.lukag.voznired.UpravljanjeSPodatki.DataSourcee;
+import com.lukag.voznired.UpravljanjeSPodatki.UpravljanjeSPriljubljenimi;
 
 import java.util.ArrayList;
 
-import static com.lukag.atvoznired.MainActivity.EXTRA_MESSAGE;
+import static com.lukag.voznired.MainActivity.EXTRA_MESSAGE;
 
 public class DisplaySchedule extends AppCompatActivity {
     private Relacija iskanaRelacija;

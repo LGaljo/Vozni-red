@@ -1,4 +1,4 @@
-package com.lukag.atvoznired.UpravljanjeSPodatki;
+package com.lukag.voznired.UpravljanjeSPodatki;
 
 import android.content.Context;
 import android.content.SharedPreferences;

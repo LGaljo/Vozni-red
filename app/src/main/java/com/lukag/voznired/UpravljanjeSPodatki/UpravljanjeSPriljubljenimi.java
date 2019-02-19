@@ -1,12 +1,11 @@
-package com.lukag.atvoznired.UpravljanjeSPodatki;
+package com.lukag.voznired.UpravljanjeSPodatki;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
-import com.lukag.atvoznired.MainActivity;
-import com.lukag.atvoznired.Objekti.Pot;
-import com.lukag.atvoznired.Objekti.Relacija;
+import com.lukag.voznired.MainActivity;
+import com.lukag.voznired.Objekti.Pot;
+import com.lukag.voznired.Objekti.Relacija;
 
 import org.json.JSONArray;
 import org.json.JSONException;

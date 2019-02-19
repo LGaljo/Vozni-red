@@ -20,14 +20,13 @@
         app:titleTextColor="@android:color/white">
     </android.support.v7.widget.Toolbar>
 
-
     <TextView
         android:id="@+id/imeAplikacije"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="24dp"
-        android:text="@string/alpetour_vozni_red"
+        android:text="@string/vozni_red"
         android:textColor="@color/infoPage"
         android:textSize="18sp"
         android:textStyle="bold"

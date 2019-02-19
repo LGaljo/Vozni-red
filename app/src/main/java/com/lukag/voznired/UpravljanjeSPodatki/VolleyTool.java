@@ -1,4 +1,4 @@
-package com.lukag.atvoznired.UpravljanjeSPodatki;
+package com.lukag.voznired.UpravljanjeSPodatki;
 
 import android.content.Context;
 import android.util.Log;
@@ -6,10 +6,6 @@ import android.util.Log;
 import com.android.volley.*;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;

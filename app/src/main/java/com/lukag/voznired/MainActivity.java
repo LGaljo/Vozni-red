@@ -1,4 +1,4 @@
-package com.lukag.atvoznired;
+package com.lukag.voznired;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -27,12 +27,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jude.swipbackhelper.SwipeBackHelper;
-import com.lukag.atvoznired.Adapterji.AutoCompleteAdapter;
-import com.lukag.atvoznired.Adapterji.priljubljenePostajeAdapter;
-import com.lukag.atvoznired.Objekti.BuildConstants;
-import com.lukag.atvoznired.UpravljanjeSPodatki.DataSourcee;
-import com.lukag.atvoznired.UpravljanjeSPodatki.UpravljanjeSPriljubljenimi;
-import com.lukag.atvoznired.UpravljanjeSPodatki.UpravljanjeZZadnjimiIskanimi;
+import com.lukag.voznired.Adapterji.AutoCompleteAdapter;
+import com.lukag.voznired.Adapterji.priljubljenePostajeAdapter;
+import com.lukag.voznired.Objekti.BuildConstants;
+import com.lukag.voznired.UpravljanjeSPodatki.DataSourcee;
+import com.lukag.voznired.UpravljanjeSPodatki.UpravljanjeSPriljubljenimi;
+import com.lukag.voznired.UpravljanjeSPodatki.UpravljanjeZZadnjimiIskanimi;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    public static final String EXTRA_MESSAGE = "com.lukag.atvoznired";
+    public static final String EXTRA_MESSAGE = "com.lukag.voznired";
 
     private AutoCompleteTextView vstopnaPostajaView;
     private AutoCompleteTextView izstopnaPostajaView;

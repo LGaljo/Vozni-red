@@ -1,27 +1,20 @@
-package com.lukag.atvoznired.Adapterji;
+package com.lukag.voznired.Adapterji;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
-import com.lukag.atvoznired.Objekti.BuildConstants;
-import com.lukag.atvoznired.R;
-import com.lukag.atvoznired.SettingsActivity;
-import com.lukag.atvoznired.UpravljanjeSPodatki.DataSourcee;
-import com.lukag.atvoznired.UpravljanjeSPodatki.VolleyTool;
+import com.lukag.voznired.Objekti.BuildConstants;
+import com.lukag.voznired.SettingsActivity;
+import com.lukag.voznired.UpravljanjeSPodatki.DataSourcee;
+import com.lukag.voznired.UpravljanjeSPodatki.VolleyTool;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,7 +22,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import static com.lukag.atvoznired.Objekti.BuildConstants.seznamPostaj;
+import static com.lukag.voznired.Objekti.BuildConstants.seznamPostaj;
 
 public class AutoCompleteAdapter extends ArrayAdapter<String> implements Filterable {
     private ArrayList<String> seznamImenPostaj;
@@ -147,7 +140,8 @@ public class AutoCompleteAdapter extends ArrayAdapter<String> implements Filtera
                         add(str);
                     }
                 } else {
-                    addAll(seznamImenPostaj);
+                    //addAll(seznamImenPostaj);
+                    clear();
                 }
                 notifyDataSetChanged();
             }

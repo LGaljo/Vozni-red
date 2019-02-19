@@ -1,7 +1,6 @@
-package com.lukag.atvoznired.Adapterji;
+package com.lukag.voznired.Adapterji;
 
 import android.content.Context;
-import android.media.Image;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,12 +10,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
-import com.lukag.atvoznired.Objekti.BuildConstants;
-import com.lukag.atvoznired.Objekti.Pot;
-import com.lukag.atvoznired.Objekti.Voznja;
-import com.lukag.atvoznired.R;
-import com.lukag.atvoznired.UpravljanjeSPodatki.DataSourcee;
-import com.lukag.atvoznired.UpravljanjeSPodatki.VolleyTool;
+import com.lukag.voznired.Objekti.BuildConstants;
+import com.lukag.voznired.Objekti.Pot;
+import com.lukag.voznired.Objekti.Voznja;
+import com.lukag.voznired.R;
+import com.lukag.voznired.UpravljanjeSPodatki.DataSourcee;
+import com.lukag.voznired.UpravljanjeSPodatki.VolleyTool;
 
 import org.json.JSONArray;
 import org.json.JSONException;

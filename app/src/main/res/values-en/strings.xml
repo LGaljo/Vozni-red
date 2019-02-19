@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Alpetour vozni red</string>
+    <string name="app_name">Schedules</string>
     <string name="button_send">Show</string>
     <string name="izstop">Exit:</string>
     <string name="vstop">Entry:</string>
@@ -23,7 +23,6 @@
     <string name="next_ride_mnozina">next rides</string>
     <string name="application_info">Application info</string>
     <string name="delete_textedit_field">Delete TextEdit field</string>
-    <string name="alpetour_vozni_red">Alpetour schedule</string>
     <string name="verzija">Version:</string>
     <string name="summary">Alpetour Schedule is open source application for displaying schedules of transportation company Arriva (former Alpetour).</string>
     <string name="razvijalec">Developer</string>
