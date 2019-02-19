@@ -2,7 +2,6 @@ package com.lukag.atvoznired;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -21,13 +20,11 @@ import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jude.swipbackhelper.SwipeBackHelper;
 import com.lukag.atvoznired.Adapterji.AutoCompleteAdapter;
@@ -53,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public TextView koledar;
     public String datum;
+    private NavigationView navigationView;
 
     private View contextView;
 
@@ -131,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
+        navigationView.getMenu().getItem(0).setChecked(true);
         pAdapter.notifyDataSetChanged();
     }
 
@@ -180,13 +179,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void handleNavigationMenu() {
         mDrawerLayout = findViewById(R.id.drawer_layout);
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.getMenu().getItem(0).setChecked(true);
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                         int id = menuItem.getItemId();
                         switch (id) {
+                            case R.id.first_screen:
+                                break;
                             case R.id.nav_info:
                                 goToAppInfo();
                                 break;
@@ -305,6 +306,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ImageView delete_vp = (ImageView) findViewById(R.id.delete_vp);
         ImageView delete_ip = (ImageView) findViewById(R.id.delete_ip);
         ImageView swap = (ImageView) findViewById(R.id.swap);
+        navigationView = findViewById(R.id.nav_view);
 
         koledar.setOnClickListener(this);
         submit.setOnClickListener(this);

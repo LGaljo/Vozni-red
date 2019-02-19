@@ -42,4 +42,5 @@
     <string name="peron">Peron</string>
     <string name="navigation_menu_title">Vozni red</string>
     <string name="settings">Nastavitve</string>
+    <string name="vozni_red">Vozni red</string>
 </resources>

@@ -43,4 +43,5 @@
     <string name="peron">Platform</string>
     <string name="navigation_menu_title">Vozni red</string>
     <string name="settings">Settings</string>
+    <string name="vozni_red">Timetables</string>
 </resources>
