@@ -59,6 +59,7 @@ public class DisplaySchedule extends AppCompatActivity {
 
         iskanaRelacija = new Relacija(prenos.get(0), prenos.get(1), prenos.get(2), prenos.get(3), new ArrayList<Pot>());
 
+        // Nastaviš Toolbar in njegove lastnosti
         toolbar.setTitle(iskanaRelacija.getFromName() + " - " + iskanaRelacija.getToName());
         toolbar.setSubtitle(prenos.get(4));
         toolbar.setTitleTextAppearance(getApplicationContext(), R.style.ToolbarTitle);
@@ -66,6 +67,7 @@ public class DisplaySchedule extends AppCompatActivity {
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         setSupportActionBar(toolbar);
 
+        // Nastaviš Adapter in RecyclerView
         ScheduleAdapter sAdapter = new ScheduleAdapter(iskanaRelacija, prenos.get(4), this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);

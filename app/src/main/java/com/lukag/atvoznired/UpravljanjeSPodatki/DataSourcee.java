@@ -36,7 +36,6 @@ public class DataSourcee {
 
     /**
      * Metoda vrne današnji datum v podani obliki
-     *
      * @return - datum v obliki teksta
      */
     public static String pridobiCas(String type) {
@@ -46,6 +45,11 @@ public class DataSourcee {
     }
 
 
+    /**
+     * Metoda vrne MD5 hash
+     * @param string whatever String
+     * @return MD5 hash
+     */
     public static String md5(String string) {
         try {
             MessageDigest digest = MessageDigest.getInstance("MD5");
@@ -57,6 +61,11 @@ public class DataSourcee {
         return null;
     }
 
+    /**
+     * Metoda vrne MAC naslov
+     * @param context Kontekst klicanega razreda
+     * @return MAC naslov
+     */
     public static String getMacAddr(Context context) {
         try {
             WifiManager wifiMan = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
@@ -69,6 +78,11 @@ public class DataSourcee {
         return "";
     }
 
+    /**
+     * Metoda vrne PhoneId
+     * @param context Kontekst klicanega razreda
+     * @return PhoneId
+     */
     public static String getPhoneInfo(Context context) {
         // Dont return IMEI codes
         return "";
@@ -330,6 +344,9 @@ public class DataSourcee {
         return time;
     }
 
+    /**
+     * Metoda odstrani šumnike iz niza
+     */
     public static String odstraniSumnike(String string) {
         string = string.replaceAll("[š]", "s");
         string = string.replaceAll("[č]", "c");

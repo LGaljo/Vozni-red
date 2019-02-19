@@ -161,6 +161,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recyclerView.post(runs);
     }
 
+    /**
+     * S to metodo nastaviš swipe container in kličeš runnable, da posodobi senznam
+     */
     private void manageSwipeContainer() {
         swipeContainer = findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -176,6 +179,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 android.R.color.holo_red_light);
     }
 
+    /**
+     * Nastaviš navigation drawer in nastaviš OnNavigationItemSelectedListener,
+     * da lahko prehajaš med aktivnostmi
+     */
     private void handleNavigationMenu() {
         mDrawerLayout = findViewById(R.id.drawer_layout);
 
@@ -327,7 +334,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String vstopnaID = BuildConstants.seznamPostaj.get(vstopnaPostaja);
         String izstopnaID = BuildConstants.seznamPostaj.get(izstopnaPostaja);
 
-        if (vstopnaPostaja.equals(izstopnaPostaja) || vstopnaPostaja.equals("") || izstopnaPostaja.equals("")) {
+        if (vstopnaID == null || izstopnaID == null) {
+            Snackbar.make(contextView, "Napaka pri iskanju, ne najdem postaje!", Snackbar.LENGTH_LONG).show();
+        } else if (vstopnaPostaja.equals(izstopnaPostaja) || vstopnaPostaja.equals("") || izstopnaPostaja.equals("")) {
             Snackbar.make(contextView, R.string.invalid_search, Snackbar.LENGTH_LONG).show();
         } else {
             prenos.add(vstopnaID);
@@ -335,26 +344,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             prenos.add(izstopnaID);
             prenos.add(izstopnaPostaja);
             prenos.add(datum);
-            submit(prenos);
+            goToSchedule(prenos);
         }
     }
 
     /**
-     * Metoda preide v nov Intent -> DisplaySchedule
-     * @param prenos - arraylist potrebnih parametrov za klic post zahteve
+     * S to metodo se premakneš v nov intent (prikaz urnika)
      */
-    private void submit(ArrayList<String> prenos) {
+    private void goToSchedule(ArrayList<String> prenos) {
         Intent intent = new Intent(MainActivity.this, DisplaySchedule.class);
         intent.putStringArrayListExtra(EXTRA_MESSAGE, prenos);
         startActivity(intent);
     }
 
+    /**
+     * S to metodo se premakneš v nov intent (prikaz informacij)
+     */
     private void goToAppInfo() {
         Intent apinfointent = new Intent(this, DisplayAppInfo.class);
         startActivity(apinfointent);
     }
 
-     private void goToSettings() {
+    /**
+     * S to metodo se premakneš v nov intent (prikaz natavitev)
+     */
+    private void goToSettings() {
         Intent gotosettings = new Intent(this, SettingsActivity.class);
         startActivity(gotosettings);
     }

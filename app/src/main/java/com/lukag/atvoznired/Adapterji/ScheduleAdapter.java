@@ -177,6 +177,8 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.MyView
 
                     ProgressBar progressBar = ((Activity)context).findViewById(R.id.wait_animation);
                     progressBar.setVisibility(View.GONE);
+                    RelativeLayout relativeLayout = ((Activity)context).findViewById(R.id.schedule_heading) ;
+                    relativeLayout.setVisibility(View.VISIBLE);
                     notifyDataSetChanged();
 
                 } catch (JSONException e) {

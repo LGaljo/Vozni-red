@@ -47,6 +47,9 @@ public class AutoCompleteAdapter extends ArrayAdapter<String> implements Filtera
         pridobiSeznam();
     }
 
+    /**
+     * To je metoda, ki z API klicem pridobi seznam vseh postaj in jih shrani v adapter
+     */
     private void pridobiSeznam() {
         try {
             String timestamp = DataSourcee.pridobiCas("yyyyMMddHHmmss");
@@ -92,8 +95,10 @@ public class AutoCompleteAdapter extends ArrayAdapter<String> implements Filtera
         }
     }
 
-    // To je custom filter, s katerim lahko prosto filtram seznam
-    // Omogoča primerjanje besede z šumniki in enako besedo brez šumnikov
+    /**
+     * To je custom filter, s katerim lahko prosto filtram seznam
+     *  Omogoča primerjanje besede s šumniki in enako besedo brez šumnikov
+     */
     @NonNull
     @Override
     public Filter getFilter() {

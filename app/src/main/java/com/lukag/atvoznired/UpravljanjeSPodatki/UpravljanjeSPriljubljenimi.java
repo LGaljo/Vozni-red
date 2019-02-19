@@ -67,7 +67,7 @@ public class UpravljanjeSPriljubljenimi {
     }
 
     /**
-     * Shrani priljubljene iz arraylista v shared preferences
+     * Shrani priljubljene iz arraylista v shared preferences v JSON obliki
      */
     public void shraniPriljubljene() {
         try {
@@ -82,7 +82,10 @@ public class UpravljanjeSPriljubljenimi {
         }
     }
 
-    public JSONObject createJson(ArrayList<Relacija> priljubljeneRelacije) throws JSONException {
+    /**
+     * Metoda naredi JSON objekt iz Arraylista relacij za shrambo v SharedPreferencih
+     */
+    private JSONObject createJson(ArrayList<Relacija> priljubljeneRelacije) throws JSONException {
         JSONArray seznam = new JSONArray();
         JSONObject out = new JSONObject();
 
@@ -104,7 +107,7 @@ public class UpravljanjeSPriljubljenimi {
     }
 
     /**
-     * Shrani priljubljene iz shared preferences v arraylist
+     * Shrani priljubljene iz shared preferences v arraylist relacij
      */
     public static void pridobiPriljubljene() {
         try {
@@ -131,7 +134,7 @@ public class UpravljanjeSPriljubljenimi {
     }
 
     /**
-     * Odstrani priljubljeno lokacijo iz Arraylista
+     * Odstrani priljubljeno relacijo iz Arraylista
      * @param relacija - Relacija za dodati
      */
     public static void odstraniPriljubljeno(Relacija relacija) {

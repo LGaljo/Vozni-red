@@ -1,7 +1,9 @@
 package com.lukag.atvoznired.Adapterji;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,6 +52,7 @@ public class priljubljenePostajeAdapter extends RecyclerView.Adapter<priljubljen
                     String izstopnaPostaja = priljubljeneList.get(getAdapterPosition()).getToName();
                     String vstopnaID = BuildConstants.seznamPostaj.get(vstopnaPostaja);
                     String izstopnaID = BuildConstants.seznamPostaj.get(izstopnaPostaja);
+
                     vstopnaPostajaView.setText(priljubljeneList.get(getAdapterPosition()).getFromName(), false);
                     izstopnaPostajaView.setText(priljubljeneList.get(getAdapterPosition()).getToName(), false);
                     String formatApi = "yyyy-MM-dd";
@@ -64,6 +67,10 @@ public class priljubljenePostajeAdapter extends RecyclerView.Adapter<priljubljen
                     prenos.add(izstopnaPostaja);
                     prenos.add(koledar.getText().toString());
                     prenos.add(DataSourcee.pridobiCas("yyyy-MM-dd"));
+
+                    //View contextView = ((Activity)context).findViewById(R.id.priljubljene_text);
+                    //Snackbar.make(contextView, "Ne najdem željene postaje. Če ponovni poskus ne deluje, izbriši priljubljeno postajo.", Snackbar.LENGTH_LONG).show();
+
                     Intent intent = new Intent(view.getContext(), DisplaySchedule.class);
                     intent.putStringArrayListExtra(EXTRA_MESSAGE, prenos);
                     view.getContext().startActivity(intent);
