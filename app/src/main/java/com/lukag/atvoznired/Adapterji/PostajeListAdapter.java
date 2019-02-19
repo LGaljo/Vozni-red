@@ -66,6 +66,7 @@ public class PostajeListAdapter extends RecyclerView.Adapter<PostajeListAdapter.
             holder.rec_bot.setVisibility(View.INVISIBLE);
         } else if (position == voznje.size() - 1) {
             holder.rec_top.setVisibility(View.INVISIBLE);
+            holder.cas.setText(v.getROD_IPRI());
         } else {
             holder.rec_bot.setVisibility(View.VISIBLE);
             holder.rec_top.setVisibility(View.VISIBLE);

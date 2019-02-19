@@ -1,14 +1,14 @@
 package com.lukag.atvoznired.Objekti;
 
 public class Voznja {
-    public int ROD_ZAP;
-    public String POS_NAZ;
-    public String ROD_IPRI;
-    public int ROD_POS;
-    public String ROD_IODH;
-    public int ROD_STOP;
-    public Double ROD_LAT;
-    public Double ROD_LON;
+    public int ROD_ZAP; // Zaporedno število postaje
+    public String POS_NAZ; // Naziv postaje
+    public String ROD_IPRI; // Čas prihoda
+    public int ROD_POS; // Dolžina postanka
+    public String ROD_IODH; // Čas odhoda
+    public int ROD_STOP; // Ali se ustavi?
+    public Double ROD_LAT; // Latitude
+    public Double ROD_LON; // Longitude
 
     public Voznja() {
     }
