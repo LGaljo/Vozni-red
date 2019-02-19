@@ -34,14 +34,10 @@ import java.util.ArrayList;
 
 import static com.lukag.atvoznired.MainActivity.EXTRA_MESSAGE;
 
-public class Display_Schedule_Activity extends AppCompatActivity {
+public class DisplaySchedule extends AppCompatActivity {
     private Relacija iskanaRelacija;
 
-    private ScheduleAdapter sAdapter;
-
     private RecyclerView recyclerView;
-    private ProgressBar progressBar;
-    private RelativeLayout relativeLayout;
     private FloatingActionButton fab;
     private Toolbar toolbar;
 
@@ -62,7 +58,6 @@ public class Display_Schedule_Activity extends AppCompatActivity {
         setFindViews();
 
         iskanaRelacija = new Relacija(prenos.get(0), prenos.get(1), prenos.get(2), prenos.get(3), new ArrayList<Pot>());
-        POSTiT(iskanaRelacija, prenos.get(4));
 
         toolbar.setTitle(iskanaRelacija.getFromName() + " - " + iskanaRelacija.getToName());
         toolbar.setSubtitle(prenos.get(4));
@@ -71,7 +66,7 @@ public class Display_Schedule_Activity extends AppCompatActivity {
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         setSupportActionBar(toolbar);
 
-        sAdapter = new ScheduleAdapter(iskanaRelacija, this);
+        ScheduleAdapter sAdapter = new ScheduleAdapter(iskanaRelacija, prenos.get(4), this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -99,10 +94,10 @@ public class Display_Schedule_Activity extends AppCompatActivity {
     private void setFindViews() {
         toolbar = findViewById(R.id.VozniRedToolbar);
 
-        progressBar = findViewById(R.id.wait_animation);
+        ProgressBar progressBar = findViewById(R.id.wait_animation);
         progressBar.setVisibility(View.VISIBLE);
 
-        relativeLayout = findViewById(R.id.schedule_heading) ;
+        RelativeLayout relativeLayout = findViewById(R.id.schedule_heading) ;
         relativeLayout.setVisibility(View.GONE);
 
         recyclerView = findViewById(R.id.recycler_view_pogled_urnik);
@@ -139,70 +134,6 @@ public class Display_Schedule_Activity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finish();
-    }
-
-    /**
-     * Metoda od serverja zahteva podatke o voznem redu
-     * @param relacija Objekt, ki hrani podatke o relaciji
-     * @param date Datum potovanja
-     */
-    public void POSTiT(final Relacija relacija, final String date) {
-        String timestamp = DataSourcee.pridobiCas("yyyyMMddHHmmss");
-        String token = DataSourcee.md5(BuildConstants.tokenKey + timestamp);
-        String url = "https://prometWS.alpetour.si/WS_ArrivaSLO_TimeTable_TimeTableDepartures.aspx";
-        StringBuilder ClientId = new StringBuilder();
-        ClientId.append("IMEI: ");
-        ClientId.append(DataSourcee.getPhoneInfo(this));
-        ClientId.append(" , MAC: ");
-        ClientId.append(DataSourcee.getMacAddr(this));
-        Log.d("API", timestamp + " " + token + " " + ClientId.toString() + " " + DataSourcee.getPhoneInfo(this));
-        Log.d("API", relacija.getFromID() + " " + relacija.getToID() + " " + date);
-
-        VolleyTool vt = new VolleyTool(this, url);
-
-        if (relacija.getFromID() == null || relacija.getToID() == null) {
-            returnToMainActivity("Manjkajoč ID postaj");
-        }
-
-        vt.addParam("cTimeStamp", timestamp);
-        vt.addParam("cToken", token);
-        vt.addParam("JPOS_IJPPZ", relacija.getFromID());
-        vt.addParam("JPOS_IJPPK", relacija.getToID());
-        vt.addParam("VZVK_DAT", date); // datum oblike yyyy-MM-dd
-        vt.addParam("ClientId", ClientId.toString()); // IMEI: <PHONE-ID> , MAC: <MAC-ADDRESS>
-        vt.addParam("ClientIdType", DataSourcee.getPhoneInfo(this)); // IMEI
-        vt.addParam("ClientLocationLatitude", "");
-        vt.addParam("ClientLocationLongitude", "");
-        vt.addParam("json", "1");
-
-        vt.executeRequest(Request.Method.POST, new VolleyTool.VolleyCallback() {
-
-            @Override
-            public void getResponse(String response) {
-                if (response.equals("Error")) {
-                    returnToMainActivity("Napaka!");
-                }
-
-                try {
-                    JSONArray JSONresponse = new JSONArray(response);
-                    iskanaRelacija.setUrnik(DataSourcee.parseVozniRed(iskanaRelacija, JSONresponse).getUrnik());
-                    checkUrnik();
-                    relativeLayout.setVisibility(View.VISIBLE);
-                    progressBar.setVisibility(View.GONE);
-                    sAdapter.notifyDataSetChanged();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    returnToMainActivity("Napaka!");
-                }
-            }
-        });
-    }
-
-    private void checkUrnik() {
-        if (iskanaRelacija.getUrnik().size() == 0) {
-            returnToMainActivity("no_connection");
-            this.finish();
-        }
     }
 
     /**
@@ -243,7 +174,7 @@ public class Display_Schedule_Activity extends AppCompatActivity {
      * vrnem na glavni zaslon in izpisem opozorilo, da med postajama ni povezave
      */
     private void returnToMainActivity(String reason) {
-        Intent intent = new Intent(Display_Schedule_Activity.this, MainActivity.class);
+        Intent intent = new Intent(DisplaySchedule.this, MainActivity.class);
         intent.putExtra("reason", reason);
         startActivity(intent);
     }

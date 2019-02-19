@@ -9,9 +9,9 @@ import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 
+import com.lukag.atvoznired.DisplaySchedule;
 import com.lukag.atvoznired.Objekti.BuildConstants;
 import com.lukag.atvoznired.UpravljanjeSPodatki.DataSourcee;
-import com.lukag.atvoznired.Display_Schedule_Activity;
 import com.lukag.atvoznired.R;
 import com.lukag.atvoznired.Objekti.Relacija;
 import com.lukag.atvoznired.UpravljanjeSPodatki.UpravljanjeSPriljubljenimi;
@@ -64,7 +64,7 @@ public class priljubljenePostajeAdapter extends RecyclerView.Adapter<priljubljen
                     prenos.add(izstopnaPostaja);
                     prenos.add(koledar.getText().toString());
                     prenos.add(DataSourcee.pridobiCas("yyyy-MM-dd"));
-                    Intent intent = new Intent(view.getContext(), Display_Schedule_Activity.class);
+                    Intent intent = new Intent(view.getContext(), DisplaySchedule.class);
                     intent.putStringArrayListExtra(EXTRA_MESSAGE, prenos);
                     view.getContext().startActivity(intent);
                 }

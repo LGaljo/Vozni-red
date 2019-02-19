@@ -75,7 +75,7 @@ public class UpravljanjeSPriljubljenimi {
             izbrisiPriljubljene();
             JSONObject jsonObj = createJson(priljubljeneRelacije);
             urejevalnik.putString("seznam", jsonObj.toString());
-            Log.d("JSON", jsonObj.toString());
+            //Log.d("JSON", jsonObj.toString());
             urejevalnik.apply();
         } catch (Exception e) {
             e.printStackTrace();

@@ -28,7 +28,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Display_Schedule_Activity"
+            android:name=".DisplaySchedule"
             android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".DisplayRideInfo"

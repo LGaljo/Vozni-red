@@ -1,21 +1,27 @@
 package com.lukag.atvoznired.Adapterji;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.Request;
 import com.lukag.atvoznired.DisplayRideInfo;
 import com.lukag.atvoznired.Objekti.BuildConstants;
 import com.lukag.atvoznired.Objekti.Relacija;
 import com.lukag.atvoznired.UpravljanjeSPodatki.DataSourcee;
 import com.lukag.atvoznired.Objekti.Pot;
 import com.lukag.atvoznired.R;
+import com.lukag.atvoznired.UpravljanjeSPodatki.VolleyTool;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -71,7 +77,6 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.MyView
                 @Override
                 public void onClick(View v) {
                     openRideInfo(relacija, item.getID());
-                    Log.d("RecyclerView", "OnClick " + item.getID());
                 }
             });
         }
@@ -87,10 +92,12 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.MyView
         }
     }
 
-    public ScheduleAdapter(Relacija relacija, Context context) {
+    public ScheduleAdapter(Relacija relacija, String date, Context context) {
         this.scheduleList = relacija.getUrnik();
         this.relacija = relacija;
         this.context = context;
+
+        pridobiUrnikMedPostajama(date);
     }
 
     @Override
@@ -128,5 +135,54 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.MyView
     @Override
     public int getItemCount() {
         return scheduleList.size();
+    }
+
+
+    /**
+     * Metoda od serverja zahteva podatke o voznem redu
+     */
+    public void pridobiUrnikMedPostajama(String date) {
+        String timestamp = DataSourcee.pridobiCas("yyyyMMddHHmmss");
+        String token = DataSourcee.md5(BuildConstants.tokenKey + timestamp);
+        String url = "https://prometWS.alpetour.si/WS_ArrivaSLO_TimeTable_TimeTableDepartures.aspx";
+        StringBuilder ClientId = new StringBuilder();
+        ClientId.append("IMEI: ");
+        ClientId.append(DataSourcee.getPhoneInfo(context));
+        ClientId.append(" , MAC: ");
+        ClientId.append(DataSourcee.getMacAddr(context));
+        //Log.d("API", timestamp + " " + token + " " + ClientId.toString() + " " + DataSourcee.getPhoneInfo(context));
+        //Log.d("API", relacija.getFromID() + " " + relacija.getToID() + " " + date);
+
+        VolleyTool vt = new VolleyTool(context, url);
+
+        vt.addParam("cTimeStamp", timestamp);
+        vt.addParam("cToken", token);
+        vt.addParam("JPOS_IJPPZ", relacija.getFromID());
+        vt.addParam("JPOS_IJPPK", relacija.getToID());
+        vt.addParam("VZVK_DAT", date); // datum oblike yyyy-MM-dd
+        vt.addParam("ClientId", ClientId.toString()); // IMEI: <PHONE-ID> , MAC: <MAC-ADDRESS>
+        vt.addParam("ClientIdType", DataSourcee.getPhoneInfo(context)); // IMEI
+        vt.addParam("ClientLocationLatitude", "");
+        vt.addParam("ClientLocationLongitude", "");
+        vt.addParam("json", "1");
+
+        vt.executeRequest(Request.Method.POST, new VolleyTool.VolleyCallback() {
+
+            @Override
+            public void getResponse(String response) {
+                try {
+                    JSONArray JSONresponse = new JSONArray(response);
+
+                    relacija.setUrnik(DataSourcee.parseVozniRed(relacija, JSONresponse).getUrnik());
+
+                    ProgressBar progressBar = ((Activity)context).findViewById(R.id.wait_animation);
+                    progressBar.setVisibility(View.GONE);
+                    notifyDataSetChanged();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }

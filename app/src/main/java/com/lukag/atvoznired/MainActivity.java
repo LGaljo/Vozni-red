@@ -340,11 +340,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     /**
-     * Metoda preide v nov Intent -> Display_Schedule_Activity
+     * Metoda preide v nov Intent -> DisplaySchedule
      * @param prenos - arraylist potrebnih parametrov za klic post zahteve
      */
     private void submit(ArrayList<String> prenos) {
-        Intent intent = new Intent(MainActivity.this, Display_Schedule_Activity.class);
+        Intent intent = new Intent(MainActivity.this, DisplaySchedule.class);
         intent.putStringArrayListExtra(EXTRA_MESSAGE, prenos);
         startActivity(intent);
     }
