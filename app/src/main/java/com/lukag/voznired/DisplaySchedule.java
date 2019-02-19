@@ -1,5 +1,6 @@
 package com.lukag.voznired;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,18 +11,26 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.Request;
 import com.jude.swipbackhelper.SwipeBackHelper;
 import com.lukag.voznired.Adapterji.ScheduleAdapter;
+import com.lukag.voznired.Objekti.BuildConstants;
 import com.lukag.voznired.Objekti.Pot;
 import com.lukag.voznired.Objekti.Relacija;
 import com.lukag.voznired.UpravljanjeSPodatki.DataSourcee;
 import com.lukag.voznired.UpravljanjeSPodatki.UpravljanjeSPriljubljenimi;
+import com.lukag.voznired.UpravljanjeSPodatki.VolleyTool;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -29,6 +38,9 @@ import static com.lukag.voznired.MainActivity.EXTRA_MESSAGE;
 
 public class DisplaySchedule extends AppCompatActivity {
     private Relacija iskanaRelacija;
+    private ScheduleAdapter sAdapter;
+    private ProgressBar progressBar;
+    private RelativeLayout relativeLayout;
 
     private RecyclerView recyclerView;
     private FloatingActionButton fab;
@@ -52,6 +64,7 @@ public class DisplaySchedule extends AppCompatActivity {
 
         iskanaRelacija = new Relacija(prenos.get(0), prenos.get(1), prenos.get(2), prenos.get(3), new ArrayList<Pot>());
 
+        pridobiUrnikMedPostajama(iskanaRelacija, prenos.get(4));
         // Nastaviš Toolbar in njegove lastnosti
         toolbar.setTitle(iskanaRelacija.getFromName() + " - " + iskanaRelacija.getToName());
         toolbar.setSubtitle(prenos.get(4));
@@ -61,7 +74,7 @@ public class DisplaySchedule extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         // Nastaviš Adapter in RecyclerView
-        ScheduleAdapter sAdapter = new ScheduleAdapter(iskanaRelacija, prenos.get(4), this);
+        sAdapter = new ScheduleAdapter(iskanaRelacija,  this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -89,10 +102,10 @@ public class DisplaySchedule extends AppCompatActivity {
     private void setFindViews() {
         toolbar = findViewById(R.id.VozniRedToolbar);
 
-        ProgressBar progressBar = findViewById(R.id.wait_animation);
+        progressBar = findViewById(R.id.wait_animation);
         progressBar.setVisibility(View.VISIBLE);
 
-        RelativeLayout relativeLayout = findViewById(R.id.schedule_heading) ;
+        relativeLayout = findViewById(R.id.schedule_heading) ;
         relativeLayout.setVisibility(View.GONE);
 
         recyclerView = findViewById(R.id.recycler_view_pogled_urnik);
@@ -162,6 +175,69 @@ public class DisplaySchedule extends AppCompatActivity {
         length.setLayoutParams(lpLength);
         cost.setLayoutParams(lpCost);
         peron.setLayoutParams(lpPeron);
+    }
+
+    /**
+     * Metoda od serverja zahteva podatke o voznem redu
+     */
+    public void pridobiUrnikMedPostajama(Relacija relacija, String date) {
+        String timestamp = DataSourcee.pridobiCas("yyyyMMddHHmmss");
+        String token = DataSourcee.md5(BuildConstants.tokenKey + timestamp);
+        String url = "https://prometWS.alpetour.si/WS_ArrivaSLO_TimeTable_TimeTableDepartures.aspx";
+        StringBuilder ClientId = new StringBuilder();
+        ClientId.append("IMEI: ");
+        ClientId.append(DataSourcee.getPhoneInfo(this));
+        ClientId.append(" , MAC: ");
+        ClientId.append(DataSourcee.getMacAddr(this));
+        //Log.d("API", timestamp + " " + token + " " + ClientId.toString() + " " + DataSourcee.getPhoneInfo(this));
+        //Log.d("API", relacija.getFromID() + " " + relacija.getToID() + " " + date);
+
+        VolleyTool vt = new VolleyTool(this, url);
+
+        vt.addParam("cTimeStamp", timestamp);
+        vt.addParam("cToken", token);
+        vt.addParam("JPOS_IJPPZ", relacija.getFromID());
+        vt.addParam("JPOS_IJPPK", relacija.getToID());
+        vt.addParam("VZVK_DAT", date); // datum oblike yyyy-MM-dd
+        vt.addParam("ClientId", ClientId.toString()); // IMEI: <PHONE-ID> , MAC: <MAC-ADDRESS>
+        vt.addParam("ClientIdType", DataSourcee.getPhoneInfo(this)); // IMEI
+        vt.addParam("ClientLocationLatitude", "");
+        vt.addParam("ClientLocationLongitude", "");
+        vt.addParam("json", "1");
+
+        vt.executeRequest(Request.Method.POST, new VolleyTool.VolleyCallback() {
+
+            @Override
+            public void getResponse(String response) {
+                try {
+                    JSONArray JSONresponse = new JSONArray(response);
+
+                    JSONObject responseObj = JSONresponse.getJSONObject(0);
+                    int napakaID = responseObj.getInt("Error");
+
+                    if (napakaID != 0) {
+                        String napakaMessage = responseObj.getString("ErrorMsg");
+                        Log.e("API Napaka", napakaMessage);
+
+                        if (napakaID == 11) {
+                            returnToMainActivity("no_connection");
+                        } else {
+                            returnToMainActivity("");
+                        }
+                    }
+
+                    //Log.d("API", response);
+                    iskanaRelacija.setUrnik(DataSourcee.parseVozniRed(iskanaRelacija, JSONresponse).getUrnik());
+
+                    progressBar.setVisibility(View.GONE);
+                    relativeLayout.setVisibility(View.VISIBLE);
+                    sAdapter.notifyDataSetChanged();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     /**

@@ -272,7 +272,6 @@ public class DataSourcee {
                 novaPot.setVvln_zl(obj.getInt("VVLN_ZL"));
                 novaPot.setRod_zapz(obj.getString("ROD_ZAPZ"));
                 novaPot.setRod_zapk(obj.getString("ROD_ZAPK"));
-                // TODO: Nastavi status poteka glede na trenutni čas
                 novaPot.setStatus(true);
 
                 iskanaRelacija.urnikAdd(novaPot);
