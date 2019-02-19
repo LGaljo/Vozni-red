@@ -18,10 +18,12 @@ import com.lukag.atvoznired.Objekti.Pot;
 import com.lukag.atvoznired.R;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import static com.lukag.atvoznired.MainActivity.EXTRA_MESSAGE;
+import static com.lukag.atvoznired.UpravljanjeSPodatki.DataSourcee.newTime;
 
 public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.MyViewHolder> {
     private Relacija relacija;
@@ -107,12 +109,15 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.MyView
         holder.duration.setText(String.format(Locale.GERMAN, "%d min", pot.getRod_cas()));
         holder.length.setText(String.format(Locale.GERMAN, "%d km", pot.getRod_km()));
         holder.cost.setText(String.format(Locale.GERMAN, "%.1f €", pot.getVzcl_cen()));
+
         if (!pot.getRod_per().equals("")) {
             holder.peron.setText(pot.getRod_per());
         } else {
             holder.peron.setText("  ");
         }
-        if (!pot.isStatus()) {
+
+        Date time2 = newTime(pot.getRod_iodh());
+        if (!DataSourcee.primerjajCas(time2)) {
             holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.over));
         } else {
             holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.pending));

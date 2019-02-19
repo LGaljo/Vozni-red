@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="40dp"
     android:clickable="true"
     android:focusable="true"
     android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -15,7 +15,7 @@
     <TextView
         android:id="@+id/start"
         android:layout_width="50dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:gravity="center"
@@ -27,7 +27,7 @@
     <TextView
         android:id="@+id/end"
         android:layout_width="50dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/start"
         android:gravity="center"
@@ -39,7 +39,7 @@
     <TextView
         android:id="@+id/length"
         android:layout_width="60dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/end"
         android:gravity="center"
@@ -51,7 +51,7 @@
     <TextView
         android:id="@+id/duration"
         android:layout_width="50dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/length"
         android:gravity="center"
@@ -63,7 +63,7 @@
     <TextView
         android:id="@+id/cost"
         android:layout_width="50dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/duration"
         android:gravity="center"
@@ -75,7 +75,7 @@
     <TextView
         android:id="@+id/peron"
         android:layout_width="65dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/cost"
         android:gravity="center"
