@@ -1,8 +1,12 @@
 package com.lukag.voznired;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Point;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
@@ -18,6 +22,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Display;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AutoCompleteTextView;
@@ -64,6 +69,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private UpravljanjeSPriljubljenimi favs;
     private DatePickerDialog.OnDateSetListener date;
 
+    private static final int PEEK_DRAWER_TIME_SECONDS = 2000;
+    private static final int PEEK_DRAWER_START_DELAY_TIME_SECONDS = 1000;
+    private long downTime;
+    private long eventTime;
+    private float x = 0.0f;
+    private float y = 100.0f;
+    private int metaState = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,6 +115,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // Pripravim SwipeContainer in njegove barve
         manageSwipeContainer();
+
+        // Poskrbi za peek navigation drawerja
+        prikaziNavDrawer();
     }
 
     @Override
@@ -210,6 +226,52 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         return true;
                     }
                 });
+    }
+
+    /**
+     * Prikazi namig, da obstaja Navigation Drawer. Pokaži ga samo 3 krat.
+     */
+    private void prikaziNavDrawer() {
+        SharedPreferences peekCount = getSharedPreferences("peekDrawer", Context.MODE_PRIVATE);
+
+        int numberOfEvents = peekCount.getInt("num", -1);
+
+        if (numberOfEvents == -1) {
+            SharedPreferences.Editor urejevalnik = peekCount.edit();
+            urejevalnik.putInt("num", 3);
+            urejevalnik.apply();
+        } else if (numberOfEvents > 0) {
+            // Zamakni pričetek animacije za pojavljanje navigation drawerja
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    peekDrawer();
+                }
+            }, (long) (PEEK_DRAWER_START_DELAY_TIME_SECONDS));
+            SharedPreferences.Editor urejevalnik = peekCount.edit();
+            urejevalnik.putInt("num", numberOfEvents - 1);
+            urejevalnik.apply();
+        }
+
+    }
+
+    private void peekDrawer() {
+        downTime = SystemClock.uptimeMillis();
+        eventTime = SystemClock.uptimeMillis() + 100;
+        MotionEvent motionEvent = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_DOWN, x, y, metaState);
+        mDrawerLayout.dispatchTouchEvent(motionEvent);
+        motionEvent.recycle();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                downTime = SystemClock.uptimeMillis();
+                eventTime = SystemClock.uptimeMillis() + 100;
+                MotionEvent motionEvent = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_UP, x, y, metaState);
+                mDrawerLayout.dispatchTouchEvent(motionEvent);
+                motionEvent.recycle();
+            }
+        }, (long) (PEEK_DRAWER_TIME_SECONDS));
     }
 
     /**
