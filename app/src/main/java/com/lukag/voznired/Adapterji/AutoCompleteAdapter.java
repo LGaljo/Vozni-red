@@ -6,11 +6,13 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 
 import com.android.volley.Request;
+import com.lukag.voznired.MainActivity;
 import com.lukag.voznired.Objekti.BuildConstants;
 import com.lukag.voznired.SettingsActivity;
 import com.lukag.voznired.UpravljanjeSPodatki.DataSourcee;
@@ -76,6 +78,7 @@ public class AutoCompleteAdapter extends ArrayAdapter<String> implements Filtera
                                 String imePostaje = postaja.getString("POS_NAZ");
                                 seznamPostaj.put(imePostaje, idPostaje);
                                 seznamImenPostaj.add(imePostaje);
+                                MainActivity.progressBar.setVisibility(View.INVISIBLE);
                             }
                         }
                     } catch (JSONException e) {

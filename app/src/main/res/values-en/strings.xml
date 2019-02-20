@@ -45,4 +45,5 @@
     <string name="vozni_red">Timetables</string>
     <string name="duplicated_search">Prosim vnesite obe postaji</string>
     <string name="error_search">Error, cannot find stations!</string>
+    <string name="long_loading">Loading of stations is taking longer than expected. Please wait a moment.</string>
 </resources>

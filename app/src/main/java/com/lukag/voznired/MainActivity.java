@@ -29,6 +29,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private AutoCompleteTextView vstopnaPostajaView;
     private AutoCompleteTextView izstopnaPostajaView;
     private Calendar calendarView;
+    public static ProgressBar progressBar;
 
     private DrawerLayout mDrawerLayout;
 
@@ -118,7 +120,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         manageSwipeContainer();
 
         // Poskrbi za peek navigation drawerja
-        prikaziNavDrawer();
+        prikaziNavDrawerHint();
+
+        final Snackbar t = Snackbar.make(contextView, R.string.long_loading, Snackbar.LENGTH_LONG);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (progressBar.getVisibility() == View.VISIBLE) {
+                    t.show();
+                }
+            }
+        }, (long) (1000));
     }
 
     @Override
@@ -232,7 +245,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * Prikazi namig, da obstaja Navigation Drawer. Pokaži ga samo 3 krat.
      */
-    private void prikaziNavDrawer() {
+    private void prikaziNavDrawerHint() {
         SharedPreferences peekCount = getSharedPreferences("peekDrawer", Context.MODE_PRIVATE);
 
         int numberOfEvents = peekCount.getInt("num", -1);
@@ -241,6 +254,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             SharedPreferences.Editor urejevalnik = peekCount.edit();
             urejevalnik.putInt("num", 3);
             urejevalnik.apply();
+            // Zamakni pričetek animacije za pojavljanje navigation drawerja
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    peekDrawer();
+                }
+            }, (long) (PEEK_DRAWER_START_DELAY_TIME_SECONDS));
         } else if (numberOfEvents > 0) {
             // Zamakni pričetek animacije za pojavljanje navigation drawerja
             new Handler().postDelayed(new Runnable() {
@@ -377,6 +397,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ImageView delete_ip = (ImageView) findViewById(R.id.delete_ip);
         ImageView swap = (ImageView) findViewById(R.id.swap);
         navigationView = findViewById(R.id.nav_view);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         koledar.setOnClickListener(this);
         submit.setOnClickListener(this);
