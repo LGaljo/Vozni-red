@@ -30,6 +30,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jude.swipbackhelper.SwipeBackHelper;
 import com.lukag.voznired.Adapterji.AutoCompleteAdapter;
@@ -396,10 +397,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String vstopnaID = BuildConstants.seznamPostaj.get(vstopnaPostaja);
         String izstopnaID = BuildConstants.seznamPostaj.get(izstopnaPostaja);
 
-        if (vstopnaID == null || izstopnaID == null) {
-            Snackbar.make(contextView, "Napaka pri iskanju, ne najdem postaje!", Snackbar.LENGTH_LONG).show();
-        } else if (vstopnaPostaja.equals(izstopnaPostaja) || vstopnaPostaja.equals("") || izstopnaPostaja.equals("")) {
-            Snackbar.make(contextView, R.string.invalid_search, Snackbar.LENGTH_LONG).show();
+        if (vstopnaPostaja.equals("") || izstopnaPostaja.equals("")) {
+            Toast.makeText(this, R.string.empty_search, Toast.LENGTH_LONG).show();
+        } else if (vstopnaID == null || izstopnaID == null) {
+            Toast.makeText(this, getString(R.string.error_search), Toast.LENGTH_LONG).show();
+        } else if (vstopnaPostaja.equals(izstopnaPostaja)) {
+            Toast.makeText(this, R.string.duplicated_search, Toast.LENGTH_LONG).show();
         } else {
             prenos.add(vstopnaID);
             prenos.add(vstopnaPostaja);

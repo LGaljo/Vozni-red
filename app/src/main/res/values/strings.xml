@@ -15,7 +15,7 @@
     <string name="fav_already_saved">Relacija je že med priljubljenimi</string>
     <string name="no_connection">Med postajama ni povezave</string>
     <string name="error">Napaka!</string>
-    <string name="invalid_search">Neveljavno iskanje</string>
+    <string name="empty_search">Prosim vnesite obe postaji</string>
     <string name="next_ride">naslednja vožnja</string>
     <string name="tomorrow">jutri</string>
     <string name="next_ride_dvojina">naslednji vožnji</string>
@@ -42,4 +42,6 @@
     <string name="navigation_menu_title">Vozni red</string>
     <string name="settings">Nastavitve</string>
     <string name="vozni_red">Vozni red</string>
+    <string name="duplicated_search">Prosim vnesite različni postaji</string>
+    <string name="error_search">Napaka pri iskanju, ne najdem postaje!</string>
 </resources>

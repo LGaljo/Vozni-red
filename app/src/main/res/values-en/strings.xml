@@ -14,7 +14,7 @@
     <string name="priljubljene">Favourites:</string>
     <string name="fav_already_saved">Connection is already saved</string>
     <string name="no_connection">No connection at this moment</string>
-    <string name="invalid_search">Invalid search</string>
+    <string name="empty_search">Please write both stations</string>
     <string name="fav_saved">Saved to favourites</string>
     <string name="error">Error!</string>
     <string name="next_ride">next ride</string>
@@ -43,4 +43,6 @@
     <string name="navigation_menu_title">Vozni red</string>
     <string name="settings">Settings</string>
     <string name="vozni_red">Timetables</string>
+    <string name="duplicated_search">Prosim vnesite obe postaji</string>
+    <string name="error_search">Error, cannot find stations!</string>
 </resources>
