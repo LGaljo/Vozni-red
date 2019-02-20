@@ -134,13 +134,12 @@ public class AutoCompleteAdapter extends ArrayAdapter<String> implements Filtera
             protected void publishResults(CharSequence constraint, FilterResults results) {
 
                 if (results != null && results.count > 0) {
+                    ArrayList<String> filteredList = (ArrayList<String>) ((ArrayList<String>)results.values).clone();
                     clear();
-                    ArrayList<String> filteredList = (ArrayList<String>) results.values;
                     for (String str : filteredList) {
                         add(str);
                     }
                 } else {
-                    //addAll(seznamImenPostaj);
                     clear();
                 }
                 notifyDataSetChanged();
