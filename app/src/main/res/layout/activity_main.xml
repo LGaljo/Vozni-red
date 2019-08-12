@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#252525"
-        tools:context="com.lukag.voznired.MainActivity">
+        tools:context="com.lukag.voznired.ui.MainActivity">
 
         <AutoCompleteTextView
             android:id="@+id/vstopna_text"

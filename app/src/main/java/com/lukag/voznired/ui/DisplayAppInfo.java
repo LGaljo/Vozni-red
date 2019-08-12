@@ -1,31 +1,38 @@
-package com.lukag.voznired;
+package com.lukag.voznired.ui;
 
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.jude.swipbackhelper.SwipeBackHelper;
+import com.lukag.voznired.BuildConfig;
+import com.lukag.voznired.R;
 
-public class SettingsActivity extends AppCompatActivity {
-    public static final String ISKANJE_S_SUMNIKI = "sumniki";
-
+public class DisplayAppInfo extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_preferences);
+        setContentView(R.layout.activity_app_info);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.settings);
+        SwipeBackHelper.onCreate(this);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.VozniRedToolbar);
+        toolbar.setTitle(R.string.about);
         toolbar.setTitleTextAppearance(getApplicationContext(), R.style.ToolbarTitle);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         setSupportActionBar(toolbar);
 
-        SwipeBackHelper.onCreate(this);
+        TextView version = (TextView) findViewById(R.id.verzijaTW);
 
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.content_frame, new SettingsFragment())
-                .commit();
+        try {
+            String ver = BuildConfig.VERSION_NAME;
+            version.setText(ver);
+        } catch (Exception e) {
+            e.printStackTrace();
+            version.setText("err");
+        }
     }
 
     @Override

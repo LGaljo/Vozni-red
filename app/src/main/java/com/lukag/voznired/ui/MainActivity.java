@@ -1,4 +1,4 @@
-package com.lukag.voznired;
+package com.lukag.voznired.ui;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
@@ -10,7 +10,6 @@ import android.os.SystemClock;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.android.volley.Request;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -25,34 +24,27 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.Display;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jude.swipbackhelper.SwipeBackHelper;
+import com.lukag.voznired.R;
 import com.lukag.voznired.adapters.AutoCompleteAdapter;
 import com.lukag.voznired.adapters.priljubljenePostajeAdapter;
 import com.lukag.voznired.helpers.BuildConstants;
 import com.lukag.voznired.helpers.DataSourcee;
 import com.lukag.voznired.helpers.UpravljanjeSPriljubljenimi;
 import com.lukag.voznired.helpers.UpravljanjeZZadnjimiIskanimi;
-import com.lukag.voznired.helpers.VolleyTool;
 import com.lukag.voznired.models.ResponseDepartureStations;
 import com.lukag.voznired.models.Station;
 import com.lukag.voznired.retrofit_interface.APICalls;
 import com.lukag.voznired.retrofit_interface.RetrofitFactory;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -75,7 +67,6 @@ import static com.lukag.voznired.helpers.BuildConstants.PEEK_DRAWER_START_DELAY_
 import static com.lukag.voznired.helpers.BuildConstants.PEEK_DRAWER_TIME_SECONDS;
 import static com.lukag.voznired.helpers.BuildConstants.INTENT_VSTOPNA_ID;
 import static com.lukag.voznired.helpers.BuildConstants.INTENT_VSTOPNA_IME;
-import static com.lukag.voznired.helpers.BuildConstants.seznamPostaj;
 
 public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_MESSAGE = "com.lukag.voznired";

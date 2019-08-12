@@ -1,4 +1,4 @@
-package com.lukag.voznired;
+package com.lukag.voznired.ui;
 
 import android.content.Intent;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -19,9 +19,9 @@ import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.jude.swipbackhelper.SwipeBackHelper;
+import com.lukag.voznired.R;
 import com.lukag.voznired.adapters.ScheduleAdapter;
 import com.lukag.voznired.helpers.BuildConstants;
-import com.lukag.voznired.models.Pot;
 import com.lukag.voznired.models.Relacija;
 import com.lukag.voznired.helpers.DataSourcee;
 import com.lukag.voznired.helpers.UpravljanjeSPriljubljenimi;
@@ -33,7 +33,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import static com.lukag.voznired.MainActivity.EXTRA_MESSAGE;
 import static com.lukag.voznired.helpers.BuildConstants.INTENT_DATUM;
 import static com.lukag.voznired.helpers.BuildConstants.INTENT_IZSTOPNA_ID;
 import static com.lukag.voznired.helpers.BuildConstants.INTENT_IZSTOPNA_IME;

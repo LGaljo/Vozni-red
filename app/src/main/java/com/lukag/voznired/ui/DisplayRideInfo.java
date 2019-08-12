@@ -1,4 +1,4 @@
-package com.lukag.voznired;
+package com.lukag.voznired.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,12 +11,13 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.jude.swipbackhelper.SwipeBackHelper;
+import com.lukag.voznired.R;
 import com.lukag.voznired.adapters.PostajeListAdapter;
 import com.lukag.voznired.helpers.BuildConstants;
 
 import java.util.ArrayList;
 
-import static com.lukag.voznired.MainActivity.EXTRA_MESSAGE;
+import static com.lukag.voznired.ui.MainActivity.EXTRA_MESSAGE;
 
 public class DisplayRideInfo extends AppCompatActivity {
     private TextView text;

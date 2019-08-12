@@ -30,4 +30,6 @@ public class BuildConstants {
     public static final String INTENT_IZSTOPNA_IME = "com.lukag.voznired.constants.vstopna_ime";
     public static final String INTENT_VSTOPNA_IME = "com.lukag.voznired.constants.izstopna_ime";
     public static final String INTENT_DATUM = "com.lukag.voznired.constants.datum";
+
+    public static final String ISKANJE_S_SUMNIKI = "sumniki";
 }

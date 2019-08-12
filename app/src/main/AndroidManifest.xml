@@ -13,14 +13,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.lukag.voznired.SettingsActivity"
+        <activity android:name="com.lukag.voznired.ui.SettingsActivity"
             android:label="Settings"
-            android:parentActivityName="com.lukag.voznired.MainActivity">
+            android:parentActivityName="com.lukag.voznired.ui.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.lukag.voznired.MainActivity"/>
+                android:value="com.lukag.voznired.ui.MainActivity"/>
         </activity>
-        <activity android:name="com.lukag.voznired.MainActivity">
+        <activity android:name="com.lukag.voznired.ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -28,14 +28,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.lukag.voznired.DisplaySchedule"
-            android:parentActivityName="com.lukag.voznired.MainActivity"/>
+            android:name="com.lukag.voznired.ui.DisplaySchedule"
+            android:parentActivityName="com.lukag.voznired.ui.MainActivity"/>
         <activity
-            android:name="com.lukag.voznired.DisplayRideInfo"
-            android:parentActivityName="com.lukag.voznired.MainActivity"/>
+            android:name="com.lukag.voznired.ui.DisplayRideInfo"
+            android:parentActivityName="com.lukag.voznired.ui.MainActivity"/>
         <activity
-            android:name="com.lukag.voznired.DisplayAppInfo"
-            android:parentActivityName="com.lukag.voznired.MainActivity"/>
+            android:name="com.lukag.voznired.ui.DisplayAppInfo"
+            android:parentActivityName="com.lukag.voznired.ui.MainActivity"/>
     </application>
 
 </manifest>

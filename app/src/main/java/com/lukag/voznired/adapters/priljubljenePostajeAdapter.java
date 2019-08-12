@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 
-import com.lukag.voznired.DisplaySchedule;
+import com.lukag.voznired.ui.DisplaySchedule;
 import com.lukag.voznired.helpers.DataSourcee;
 import com.lukag.voznired.R;
 import com.lukag.voznired.models.Relacija;
@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import static com.lukag.voznired.MainActivity.EXTRA_MESSAGE;
+import static com.lukag.voznired.ui.MainActivity.EXTRA_MESSAGE;
 
 public class priljubljenePostajeAdapter extends RecyclerView.Adapter<priljubljenePostajeAdapter.MyViewHolder> {
 

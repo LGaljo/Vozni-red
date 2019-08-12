@@ -8,35 +8,17 @@ import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
 
 import android.util.Log;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 
-import com.android.volley.Request;
-import com.lukag.voznired.helpers.BuildConstants;
-import com.lukag.voznired.SettingsActivity;
+import com.lukag.voznired.ui.SettingsActivity;
 import com.lukag.voznired.helpers.DataSourcee;
-import com.lukag.voznired.helpers.VolleyTool;
-import com.lukag.voznired.models.ResponseDepartureStations;
 import com.lukag.voznired.models.Station;
-import com.lukag.voznired.retrofit_interface.APICalls;
-import com.lukag.voznired.retrofit_interface.RetrofitFactory;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-
-import static com.lukag.voznired.helpers.BuildConstants.BASE_URL;
-import static com.lukag.voznired.helpers.BuildConstants.seznamPostaj;
+import static com.lukag.voznired.helpers.BuildConstants.ISKANJE_S_SUMNIKI;
 
 public class AutoCompleteAdapter extends ArrayAdapter<Station> implements Filterable {
     private static final String TAG = AutoCompleteAdapter.class.getSimpleName();
@@ -68,7 +50,7 @@ public class AutoCompleteAdapter extends ArrayAdapter<Station> implements Filter
                 suggestions.clear();
 
                 if (constraint != null) {
-                    sumniki_pref = sp.getBoolean(SettingsActivity.ISKANJE_S_SUMNIKI, false);
+                    sumniki_pref = sp.getBoolean(ISKANJE_S_SUMNIKI, false);
 
                     for (Station str : seznamPostaj) {
                         // Odstrani šumnike za uporabnike, ki jih ne uporabljajo

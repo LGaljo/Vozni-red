@@ -3,7 +3,7 @@ package com.lukag.voznired.helpers;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.lukag.voznired.MainActivity;
+import com.lukag.voznired.ui.MainActivity;
 import com.lukag.voznired.models.Pot;
 import com.lukag.voznired.models.Relacija;
 

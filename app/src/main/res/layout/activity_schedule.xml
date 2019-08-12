@@ -6,7 +6,7 @@
     android:theme="@style/AppTheme"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.lukag.voznired.MainActivity">
+    tools:context="com.lukag.voznired.ui.MainActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/VozniRedToolbar"
