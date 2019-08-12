@@ -69,7 +69,7 @@ public class DisplaySchedule extends AppCompatActivity {
 
         setFindViews();
 
-        iskanaRelacija = new Relacija(v_id, iz_id,v_ime, iz_ime, new ArrayList<>());
+        iskanaRelacija = new Relacija(v_id, v_ime, iz_id, iz_ime, new ArrayList<>());
 
         pridobiUrnikMedPostajama(iskanaRelacija, dat);
         // Nastaviš Toolbar in njegove lastnosti
@@ -91,14 +91,11 @@ public class DisplaySchedule extends AppCompatActivity {
         setMarginsToHeading();
         sAdapter.notifyDataSetChanged();
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (favs.dodajPriljubljeno(iskanaRelacija)) {
-                    Snackbar.make(view, R.string.fav_saved, Snackbar.LENGTH_LONG).show();
-                } else {
-                    Snackbar.make(view, R.string.fav_already_saved, Snackbar.LENGTH_LONG).show();
-                }
+        fab.setOnClickListener(view -> {
+            if (favs.dodajPriljubljeno(iskanaRelacija)) {
+                Snackbar.make(view, R.string.fav_saved, Snackbar.LENGTH_LONG).show();
+            } else {
+                Snackbar.make(view, R.string.fav_already_saved, Snackbar.LENGTH_LONG).show();
             }
         });
     }

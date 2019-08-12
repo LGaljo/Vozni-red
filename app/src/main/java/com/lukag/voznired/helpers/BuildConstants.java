@@ -6,7 +6,7 @@ import java.util.HashMap;
 
 public class BuildConstants {
     final static public String tokenKey = "R300_VozniRed_2015";
-    public static HashMap<String, String> seznamPostaj = new HashMap<>();
+    public static final String EXTRA_MESSAGE = "com.lukag.voznired";
     public static Relacija relacija;
 
     public static BuildConstants buildConstants;
@@ -20,9 +20,9 @@ public class BuildConstants {
         return buildConstants;
     }
 
-
     public static final int PEEK_DRAWER_TIME_SECONDS = 2000;
     public static final int PEEK_DRAWER_START_DELAY_TIME_SECONDS = 1000;
+
     public static final String BASE_URL = "https://prometWS.alpetour.si/";
 
     public static final String INTENT_VSTOPNA_ID = "com.lukag.voznired.constants.vstopna_id";

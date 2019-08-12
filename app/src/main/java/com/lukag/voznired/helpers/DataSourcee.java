@@ -11,7 +11,7 @@ import android.view.Display;
 import android.view.WindowManager;
 
 import com.android.volley.Request;
-import com.lukag.voznired.adapters.priljubljenePostajeAdapter;
+import com.lukag.voznired.adapters.PriljubljenePostajeAdapter;
 import com.lukag.voznired.models.Pot;
 import com.lukag.voznired.models.Relacija;
 import com.lukag.voznired.models.Voznja;
@@ -145,7 +145,7 @@ public class DataSourcee {
      * @param context  kontekst razreda
      * @param pAdapter adapter za priljubljene postaje
      */
-    public static void findNextRides(Context context, final priljubljenePostajeAdapter pAdapter) {
+    public static void findNextRides(Context context, final PriljubljenePostajeAdapter pAdapter) {
         // Če se ob zagonu zgodi, da ne moreš dobiti idjev zaradi manjkajočega seznama,
         // ga poskusi ustvariti še enkrat
         if (UpravljanjeSPriljubljenimi.priljubljeneRelacije.isEmpty()) {

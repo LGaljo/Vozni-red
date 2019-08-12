@@ -36,7 +36,7 @@ import android.widget.Toast;
 import com.jude.swipbackhelper.SwipeBackHelper;
 import com.lukag.voznired.R;
 import com.lukag.voznired.adapters.AutoCompleteAdapter;
-import com.lukag.voznired.adapters.priljubljenePostajeAdapter;
+import com.lukag.voznired.adapters.PriljubljenePostajeAdapter;
 import com.lukag.voznired.helpers.BuildConstants;
 import com.lukag.voznired.helpers.DataSourcee;
 import com.lukag.voznired.helpers.UpravljanjeSPriljubljenimi;
@@ -49,6 +49,7 @@ import com.lukag.voznired.retrofit_interface.RetrofitFactory;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -69,7 +70,6 @@ import static com.lukag.voznired.helpers.BuildConstants.INTENT_VSTOPNA_ID;
 import static com.lukag.voznired.helpers.BuildConstants.INTENT_VSTOPNA_IME;
 
 public class MainActivity extends AppCompatActivity {
-    public static final String EXTRA_MESSAGE = "com.lukag.voznired";
     public static final String TAG = MainActivity.class.getSimpleName();
 
     @BindView(R.id.vstopna_text) AutoCompleteTextView vstopnaPostajaView;
@@ -80,27 +80,19 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.progressBar) ProgressBar progressBar;
 
     private Calendar calendarView;
-
     private DrawerLayout mDrawerLayout;
 
     public String datum;
-
-    private View contextView;
+    private HashMap<String, String> seznamPostaj = new HashMap<>();
 
     private SwipeRefreshLayout swipeContainer;
-    private priljubljenePostajeAdapter pAdapter;
+    private PriljubljenePostajeAdapter pAdapter;
 
     public static Runnable runs;
     public static Boolean sourcesFound = true;
 
     private UpravljanjeSPriljubljenimi favs;
     private DatePickerDialog.OnDateSetListener date;
-
-    private long downTime;
-    private long eventTime;
-    private float x = 0.0f;
-    private float y = 100.0f;
-    private int metaState = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,24 +124,16 @@ public class MainActivity extends AppCompatActivity {
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         // V vnosna polja nastavim zadnje iskane
-        //UpravljanjeZZadnjimiIskanimi.nastaviZadnjiIskani(this, vstopnaPostajaView, izstopnaPostajaView, koledar);
+        UpravljanjeZZadnjimiIskanimi.nastaviZadnjiIskani(this, vstopnaPostajaView, izstopnaPostajaView, koledar);
 
         // Pripravim recyclerview za uporabo in nastavim instanco za uporabo SharedPref
-        //prikazPriljubljenihRecycler();
+        prikazPriljubljenihRecycler();
 
         // Pripravim SwipeContainer in njegove barve
-        //manageSwipeContainer();
+        manageSwipeContainer();
 
         // Poskrbi za peek navigation drawerja
-        //prikaziNavDrawerHint();
-
-        final Snackbar t = Snackbar.make(contextView, R.string.long_loading, Snackbar.LENGTH_LONG);
-
-        new Handler().postDelayed(() -> {
-            if (progressBar.getVisibility() == View.VISIBLE) {
-                t.show();
-            }
-        }, (long) (1000));
+        prikaziNavDrawerHint();
     }
 
     @Override
@@ -181,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
     private void intentManager() {
         Intent intent = getIntent();
         String reason = intent.getStringExtra("reason");
-        contextView = findViewById(R.id.priljubljene_text);
+        View contextView = findViewById(R.id.priljubljene_text);
 
         if (reason != null && reason.equals("no_connection")) {
             Snackbar.make(contextView, R.string.no_connection, Snackbar.LENGTH_LONG).show();
@@ -195,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
         favs.setContext(this);
 
         // Pripravi RecyclerView za prikaz priljubljenih relacij
-        pAdapter = new priljubljenePostajeAdapter(UpravljanjeSPriljubljenimi.priljubljeneRelacije, this, vstopnaPostajaView, izstopnaPostajaView, favs, koledar);
+        pAdapter = new PriljubljenePostajeAdapter(UpravljanjeSPriljubljenimi.priljubljeneRelacije, this, vstopnaPostajaView, izstopnaPostajaView);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -229,8 +213,7 @@ public class MainActivity extends AppCompatActivity {
         navigationView.getMenu().getItem(0).setChecked(true);
         navigationView.setNavigationItemSelectedListener(
                 menuItem -> {
-                    int id = menuItem.getItemId();
-                    switch (id) {
+                    switch (menuItem.getItemId()) {
                         case R.id.first_screen:
                             break;
                         case R.id.nav_info:
@@ -262,43 +245,33 @@ public class MainActivity extends AppCompatActivity {
             urejevalnik.putInt("num", 3);
             urejevalnik.apply();
             // Zamakni pričetek animacije za pojavljanje navigation drawerja
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    peekDrawer();
-                }
-            }, (long) (PEEK_DRAWER_START_DELAY_TIME_SECONDS));
+            new Handler().postDelayed(this::peekDrawer, (long) (PEEK_DRAWER_START_DELAY_TIME_SECONDS));
         } else if (numberOfEvents > 0) {
             // Zamakni pričetek animacije za pojavljanje navigation drawerja
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    peekDrawer();
-                }
-            }, (long) (PEEK_DRAWER_START_DELAY_TIME_SECONDS));
+            new Handler().postDelayed(this::peekDrawer, (long) (PEEK_DRAWER_START_DELAY_TIME_SECONDS));
             SharedPreferences.Editor urejevalnik = peekCount.edit();
             urejevalnik.putInt("num", numberOfEvents - 1);
             urejevalnik.apply();
         }
-
     }
 
     private void peekDrawer() {
-        downTime = SystemClock.uptimeMillis();
-        eventTime = SystemClock.uptimeMillis() + 100;
+        float x = 0.0f;
+        float y = 100.0f;
+        int metaState = 0;
+
+        long downTime = SystemClock.uptimeMillis();
+        long eventTime = SystemClock.uptimeMillis() + 100;
         MotionEvent motionEvent = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_DOWN, x, y, metaState);
         mDrawerLayout.dispatchTouchEvent(motionEvent);
         motionEvent.recycle();
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                downTime = SystemClock.uptimeMillis();
-                eventTime = SystemClock.uptimeMillis() + 100;
-                MotionEvent motionEvent = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_UP, x, y, metaState);
-                mDrawerLayout.dispatchTouchEvent(motionEvent);
-                motionEvent.recycle();
-            }
+        new Handler().postDelayed(() -> {
+            long downTime2 = SystemClock.uptimeMillis();
+            long eventTime2 = SystemClock.uptimeMillis() + 100;
+            MotionEvent motionEvent1 = MotionEvent.obtain(downTime2, eventTime2, MotionEvent.ACTION_UP, x, y, metaState);
+            mDrawerLayout.dispatchTouchEvent(motionEvent1);
+            motionEvent1.recycle();
         }, (long) (PEEK_DRAWER_TIME_SECONDS));
     }
 
@@ -306,7 +279,6 @@ public class MainActivity extends AppCompatActivity {
      * Metoda preveri pravilnost vnosa podatkov in
      * sestavi ArrayList za prenos podatkov
      */
-
     @OnClick(R.id.submit)
     public void submit() {
         // Gumb za iskanje urnika
@@ -315,8 +287,8 @@ public class MainActivity extends AppCompatActivity {
 
         String vstopnaPostaja = vstopnaPostajaView.getText().toString();
         String izstopnaPostaja = izstopnaPostajaView.getText().toString();
-        String vstopnaID = BuildConstants.seznamPostaj.get(vstopnaPostaja);
-        String izstopnaID = BuildConstants.seznamPostaj.get(izstopnaPostaja);
+        String vstopnaID = seznamPostaj.get(vstopnaPostaja);
+        String izstopnaID = seznamPostaj.get(izstopnaPostaja);
 
         if (vstopnaPostaja.equals("") || izstopnaPostaja.equals("")) {
             Toast.makeText(this, R.string.empty_search, Toast.LENGTH_LONG).show();
@@ -387,6 +359,10 @@ public class MainActivity extends AppCompatActivity {
                         progressBar.setVisibility(View.GONE);
 
                         ArrayList<Station> stations = (ArrayList<Station>)response.body().get(0).getDepartureStations();
+
+                        for (Station s : stations) {
+                            seznamPostaj.put(s.getPOS_NAZ(), s.getJPOS_IJPP());
+                        }
 
                         AutoCompleteAdapter aca = new AutoCompleteAdapter(getApplicationContext(), R.layout.autocomplete_list_item, stations);
                         AutoCompleteAdapter aca2 = new AutoCompleteAdapter(getApplicationContext(), R.layout.autocomplete_list_item, stations);

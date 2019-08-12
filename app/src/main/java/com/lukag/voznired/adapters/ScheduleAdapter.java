@@ -22,7 +22,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import static com.lukag.voznired.ui.MainActivity.EXTRA_MESSAGE;
+import static com.lukag.voznired.helpers.BuildConstants.EXTRA_MESSAGE;
 import static com.lukag.voznired.helpers.DataSourcee.newTime;
 
 public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.MyViewHolder> {

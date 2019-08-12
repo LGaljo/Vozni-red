@@ -17,7 +17,8 @@ import com.lukag.voznired.helpers.BuildConstants;
 
 import java.util.ArrayList;
 
-import static com.lukag.voznired.ui.MainActivity.EXTRA_MESSAGE;
+import static com.lukag.voznired.helpers.BuildConstants.EXTRA_MESSAGE;
+
 
 public class DisplayRideInfo extends AppCompatActivity {
     private TextView text;
