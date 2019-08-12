@@ -34,6 +34,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import static com.lukag.voznired.MainActivity.EXTRA_MESSAGE;
+import static com.lukag.voznired.helpers.BuildConstants.INTENT_DATUM;
+import static com.lukag.voznired.helpers.BuildConstants.INTENT_IZSTOPNA_ID;
+import static com.lukag.voznired.helpers.BuildConstants.INTENT_IZSTOPNA_IME;
+import static com.lukag.voznired.helpers.BuildConstants.INTENT_VSTOPNA_ID;
+import static com.lukag.voznired.helpers.BuildConstants.INTENT_VSTOPNA_IME;
 
 public class DisplaySchedule extends AppCompatActivity {
     private Relacija iskanaRelacija;
@@ -55,18 +60,22 @@ public class DisplaySchedule extends AppCompatActivity {
         SwipeBackHelper.onCreate(this);
 
         Intent intent = getIntent();
-        ArrayList<String> prenos = intent.getStringArrayListExtra(EXTRA_MESSAGE);
+        String v_id = intent.getStringExtra(INTENT_VSTOPNA_ID);
+        String iz_id = intent.getStringExtra(INTENT_IZSTOPNA_ID);
+        String v_ime = intent.getStringExtra(INTENT_VSTOPNA_IME);
+        String iz_ime = intent.getStringExtra(INTENT_IZSTOPNA_IME);
+        String dat = intent.getStringExtra(INTENT_DATUM);
 
         favs = UpravljanjeSPriljubljenimi.getInstance();
 
         setFindViews();
 
-        iskanaRelacija = new Relacija(prenos.get(0), prenos.get(1), prenos.get(2), prenos.get(3), new ArrayList<Pot>());
+        iskanaRelacija = new Relacija(v_id, iz_id,v_ime, iz_ime, new ArrayList<>());
 
-        pridobiUrnikMedPostajama(iskanaRelacija, prenos.get(4));
+        pridobiUrnikMedPostajama(iskanaRelacija, dat);
         // Nastaviš Toolbar in njegove lastnosti
         toolbar.setTitle(iskanaRelacija.getFromName() + " - " + iskanaRelacija.getToName());
-        toolbar.setSubtitle(prenos.get(4));
+        toolbar.setSubtitle(dat);
         toolbar.setTitleTextAppearance(getApplicationContext(), R.style.ToolbarTitle);
         toolbar.setSubtitleTextAppearance(getApplicationContext(), R.style.ToolbarSubTitle);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);

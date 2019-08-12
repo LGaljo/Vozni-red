@@ -68,8 +68,13 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 import static com.lukag.voznired.helpers.BuildConstants.BASE_URL;
+import static com.lukag.voznired.helpers.BuildConstants.INTENT_DATUM;
+import static com.lukag.voznired.helpers.BuildConstants.INTENT_IZSTOPNA_ID;
+import static com.lukag.voznired.helpers.BuildConstants.INTENT_IZSTOPNA_IME;
 import static com.lukag.voznired.helpers.BuildConstants.PEEK_DRAWER_START_DELAY_TIME_SECONDS;
 import static com.lukag.voznired.helpers.BuildConstants.PEEK_DRAWER_TIME_SECONDS;
+import static com.lukag.voznired.helpers.BuildConstants.INTENT_VSTOPNA_ID;
+import static com.lukag.voznired.helpers.BuildConstants.INTENT_VSTOPNA_IME;
 import static com.lukag.voznired.helpers.BuildConstants.seznamPostaj;
 
 public class MainActivity extends AppCompatActivity {
@@ -306,12 +311,37 @@ public class MainActivity extends AppCompatActivity {
         }, (long) (PEEK_DRAWER_TIME_SECONDS));
     }
 
+    /**
+     * Metoda preveri pravilnost vnosa podatkov in
+     * sestavi ArrayList za prenos podatkov
+     */
+
     @OnClick(R.id.submit)
     public void submit() {
         // Gumb za iskanje urnika
         UpravljanjeZZadnjimiIskanimi.shraniZadnjiIskani(MainActivity.this,
                 vstopnaPostajaView, izstopnaPostajaView, koledar.getText().toString());
-        preveriParametre();
+
+        String vstopnaPostaja = vstopnaPostajaView.getText().toString();
+        String izstopnaPostaja = izstopnaPostajaView.getText().toString();
+        String vstopnaID = BuildConstants.seznamPostaj.get(vstopnaPostaja);
+        String izstopnaID = BuildConstants.seznamPostaj.get(izstopnaPostaja);
+
+        if (vstopnaPostaja.equals("") || izstopnaPostaja.equals("")) {
+            Toast.makeText(this, R.string.empty_search, Toast.LENGTH_LONG).show();
+        } else if (vstopnaID == null || izstopnaID == null) {
+            Toast.makeText(this, getString(R.string.error_search), Toast.LENGTH_LONG).show();
+        } else if (vstopnaPostaja.equals(izstopnaPostaja)) {
+            Toast.makeText(this, R.string.duplicated_search, Toast.LENGTH_LONG).show();
+        } else {
+            Intent intent = new Intent(this, DisplaySchedule.class);
+            intent.putExtra(INTENT_VSTOPNA_ID, vstopnaID);
+            intent.putExtra(INTENT_VSTOPNA_IME, vstopnaPostaja);
+            intent.putExtra(INTENT_IZSTOPNA_ID, izstopnaID);
+            intent.putExtra(INTENT_IZSTOPNA_IME, izstopnaPostaja);
+            intent.putExtra(INTENT_DATUM, datum);
+            startActivity(intent);
+        }
     }
 
     @OnClick(R.id.delete_vp)
@@ -366,7 +396,6 @@ public class MainActivity extends AppCompatActivity {
                         progressBar.setVisibility(View.GONE);
 
                         ArrayList<Station> stations = (ArrayList<Station>)response.body().get(0).getDepartureStations();
-                        Log.d(TAG, "onResponse: stations " + stations.size());
 
                         AutoCompleteAdapter aca = new AutoCompleteAdapter(getApplicationContext(), R.layout.autocomplete_list_item, stations);
                         AutoCompleteAdapter aca2 = new AutoCompleteAdapter(getApplicationContext(), R.layout.autocomplete_list_item, stations);
@@ -427,43 +456,6 @@ public class MainActivity extends AppCompatActivity {
                 datum = ApiFormat.format(calendarView.getTime());
             }
         };
-    }
-
-    /**
-     * Metoda preveri pravilnost vnosa podatkov in
-     * sestavi ArrayList za prenos podatkov
-     */
-    private void preveriParametre() {
-        ArrayList<String> prenos = new ArrayList<>();
-
-        String vstopnaPostaja = vstopnaPostajaView.getText().toString();
-        String izstopnaPostaja = izstopnaPostajaView.getText().toString();
-        String vstopnaID = BuildConstants.seznamPostaj.get(vstopnaPostaja);
-        String izstopnaID = BuildConstants.seznamPostaj.get(izstopnaPostaja);
-
-        if (vstopnaPostaja.equals("") || izstopnaPostaja.equals("")) {
-            Toast.makeText(this, R.string.empty_search, Toast.LENGTH_LONG).show();
-        } else if (vstopnaID == null || izstopnaID == null) {
-            Toast.makeText(this, getString(R.string.error_search), Toast.LENGTH_LONG).show();
-        } else if (vstopnaPostaja.equals(izstopnaPostaja)) {
-            Toast.makeText(this, R.string.duplicated_search, Toast.LENGTH_LONG).show();
-        } else {
-            prenos.add(vstopnaID);
-            prenos.add(vstopnaPostaja);
-            prenos.add(izstopnaID);
-            prenos.add(izstopnaPostaja);
-            prenos.add(datum);
-            goToSchedule(prenos);
-        }
-    }
-
-    /**
-     * S to metodo se premakneš v nov intent (prikaz urnika)
-     */
-    private void goToSchedule(ArrayList<String> prenos) {
-        Intent intent = new Intent(MainActivity.this, DisplaySchedule.class);
-        intent.putStringArrayListExtra(EXTRA_MESSAGE, prenos);
-        startActivity(intent);
     }
 
     /**
