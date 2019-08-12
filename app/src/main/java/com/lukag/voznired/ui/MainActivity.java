@@ -39,8 +39,8 @@ import com.lukag.voznired.adapters.AutoCompleteAdapter;
 import com.lukag.voznired.adapters.PriljubljenePostajeAdapter;
 import com.lukag.voznired.helpers.BuildConstants;
 import com.lukag.voznired.helpers.DataSourcee;
-import com.lukag.voznired.helpers.UpravljanjeSPriljubljenimi;
-import com.lukag.voznired.helpers.UpravljanjeZZadnjimiIskanimi;
+import com.lukag.voznired.helpers.ManageFavs;
+import com.lukag.voznired.helpers.ManageLastSearch;
 import com.lukag.voznired.models.ResponseDepartureStations;
 import com.lukag.voznired.models.Station;
 import com.lukag.voznired.retrofit_interface.APICalls;
@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
     public static Runnable runs;
     public static Boolean sourcesFound = true;
 
-    private UpravljanjeSPriljubljenimi favs;
+    private ManageFavs favs;
     private DatePickerDialog.OnDateSetListener date;
 
     @Override
@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
         pridobiSeznam();
 
         // Pripravi instanco koledarja za uporabo
-        obNastavitviDatuma();
+        setCalendarView();
 
         // Nastavi layout in listener za klike
         handleNavigationMenu();
@@ -124,7 +124,10 @@ public class MainActivity extends AppCompatActivity {
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         // V vnosna polja nastavim zadnje iskane
-        UpravljanjeZZadnjimiIskanimi.nastaviZadnjiIskani(this, vstopnaPostajaView, izstopnaPostajaView, koledar);
+        ManageLastSearch.nastaviZadnjiIskani(this, vstopnaPostajaView, izstopnaPostajaView);
+
+        favs = ManageFavs.getInstance();
+        favs.setContext(this);
 
         // Pripravim recyclerview za uporabo in nastavim instanco za uporabo SharedPref
         prikazPriljubljenihRecycler();
@@ -175,11 +178,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void prikazPriljubljenihRecycler() {
-        favs = UpravljanjeSPriljubljenimi.getInstance();
-        favs.setContext(this);
-
         // Pripravi RecyclerView za prikaz priljubljenih relacij
-        pAdapter = new PriljubljenePostajeAdapter(UpravljanjeSPriljubljenimi.priljubljeneRelacije, this, vstopnaPostajaView, izstopnaPostajaView);
+        pAdapter = new PriljubljenePostajeAdapter(ManageFavs.priljubljeneRelacije, this, vstopnaPostajaView, izstopnaPostajaView);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -217,10 +217,12 @@ public class MainActivity extends AppCompatActivity {
                         case R.id.first_screen:
                             break;
                         case R.id.nav_info:
-                            goToAppInfo();
+                            Intent apinfointent = new Intent(this, DisplayAppInfo.class);
+                            startActivity(apinfointent);
                             break;
                         case R.id.nav_settings:
-                            goToSettings();
+                            Intent gotosettings = new Intent(this, SettingsActivity.class);
+                            startActivity(gotosettings);
                             break;
                         default:
                             break;
@@ -282,8 +284,7 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.submit)
     public void submit() {
         // Gumb za iskanje urnika
-        UpravljanjeZZadnjimiIskanimi.shraniZadnjiIskani(MainActivity.this,
-                vstopnaPostajaView, izstopnaPostajaView, koledar.getText().toString());
+        ManageLastSearch.shraniZadnjiIskani(MainActivity.this, vstopnaPostajaView, izstopnaPostajaView);
 
         String vstopnaPostaja = vstopnaPostajaView.getText().toString();
         String izstopnaPostaja = izstopnaPostajaView.getText().toString();
@@ -326,8 +327,7 @@ public class MainActivity extends AppCompatActivity {
         String tmp = izstopnaPostajaView.getText().toString();
         izstopnaPostajaView.setText(vstopnaPostajaView.getText(), false);
         vstopnaPostajaView.setText(tmp, false);
-        UpravljanjeZZadnjimiIskanimi.shraniZadnjiIskani(MainActivity.this,
-                vstopnaPostajaView, izstopnaPostajaView, koledar.getText().toString());
+        ManageLastSearch.shraniZadnjiIskani(MainActivity.this, vstopnaPostajaView, izstopnaPostajaView);
     }
 
     @OnClick(R.id.textCalendar)
@@ -405,7 +405,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Metoda pripravi koledar
      */
-    private void obNastavitviDatuma() {
+    private void setCalendarView() {
         calendarView = Calendar.getInstance();
 
         date = new DatePickerDialog.OnDateSetListener() {
@@ -423,22 +423,6 @@ public class MainActivity extends AppCompatActivity {
                 datum = ApiFormat.format(calendarView.getTime());
             }
         };
-    }
-
-    /**
-     * S to metodo se premakneš v nov intent (prikaz informacij)
-     */
-    private void goToAppInfo() {
-        Intent apinfointent = new Intent(this, DisplayAppInfo.class);
-        startActivity(apinfointent);
-    }
-
-    /**
-     * S to metodo se premakneš v nov intent (prikaz natavitev)
-     */
-    private void goToSettings() {
-        Intent gotosettings = new Intent(this, SettingsActivity.class);
-        startActivity(gotosettings);
     }
 
     private void checkForNewRides() {

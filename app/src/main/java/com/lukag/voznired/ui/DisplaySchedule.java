@@ -24,7 +24,7 @@ import com.lukag.voznired.adapters.ScheduleAdapter;
 import com.lukag.voznired.helpers.BuildConstants;
 import com.lukag.voznired.models.Relacija;
 import com.lukag.voznired.helpers.DataSourcee;
-import com.lukag.voznired.helpers.UpravljanjeSPriljubljenimi;
+import com.lukag.voznired.helpers.ManageFavs;
 import com.lukag.voznired.helpers.VolleyTool;
 
 import org.json.JSONArray;
@@ -49,7 +49,7 @@ public class DisplaySchedule extends AppCompatActivity {
     private FloatingActionButton fab;
     private Toolbar toolbar;
 
-    private UpravljanjeSPriljubljenimi favs;
+    private ManageFavs favs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +65,7 @@ public class DisplaySchedule extends AppCompatActivity {
         String iz_ime = intent.getStringExtra(INTENT_IZSTOPNA_IME);
         String dat = intent.getStringExtra(INTENT_DATUM);
 
-        favs = UpravljanjeSPriljubljenimi.getInstance();
+        favs = ManageFavs.getInstance();
 
         setFindViews();
 

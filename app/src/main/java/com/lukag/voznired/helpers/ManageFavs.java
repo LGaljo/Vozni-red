@@ -13,21 +13,21 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class UpravljanjeSPriljubljenimi {
+public class ManageFavs {
 
-    private static UpravljanjeSPriljubljenimi upravljanjeSPriljubljenimi;
+    private static ManageFavs upravljanjeSPriljubljenimi;
 
     private Context context;
     private static SharedPreferences shramba;
     private static int size;
     public static ArrayList<Relacija> priljubljeneRelacije;
 
-    private UpravljanjeSPriljubljenimi() {
+    private ManageFavs() {
     }
 
-    public static UpravljanjeSPriljubljenimi getInstance() {
+    public static ManageFavs getInstance() {
         if (upravljanjeSPriljubljenimi == null) {
-            upravljanjeSPriljubljenimi = new UpravljanjeSPriljubljenimi();
+            upravljanjeSPriljubljenimi = new ManageFavs();
         }
 
         return upravljanjeSPriljubljenimi;

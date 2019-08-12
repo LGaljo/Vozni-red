@@ -148,12 +148,12 @@ public class DataSourcee {
     public static void findNextRides(Context context, final PriljubljenePostajeAdapter pAdapter) {
         // Če se ob zagonu zgodi, da ne moreš dobiti idjev zaradi manjkajočega seznama,
         // ga poskusi ustvariti še enkrat
-        if (UpravljanjeSPriljubljenimi.priljubljeneRelacije.isEmpty()) {
-            UpravljanjeSPriljubljenimi.pridobiPriljubljene();
+        if (ManageFavs.priljubljeneRelacije.isEmpty()) {
+            ManageFavs.pridobiPriljubljene();
         }
 
-        for (final int i[] = {0}; i[0] < UpravljanjeSPriljubljenimi.priljubljeneRelacije.size(); i[0]++) {
-            final Relacija iskana = UpravljanjeSPriljubljenimi.priljubljeneRelacije.get(i[0]);
+        for (final int i[] = {0}; i[0] < ManageFavs.priljubljeneRelacije.size(); i[0]++) {
+            final Relacija iskana = ManageFavs.priljubljeneRelacije.get(i[0]);
 
             String timestamp = DataSourcee.pridobiCas("yyyyMMddHHmmss");
             String token = DataSourcee.md5(BuildConstants.tokenKey + timestamp);
@@ -210,9 +210,9 @@ public class DataSourcee {
                     iskana.setNextRide(nextRide);
 
                     int f = 0;
-                    for (Relacija rel_3 : UpravljanjeSPriljubljenimi.priljubljeneRelacije) {
+                    for (Relacija rel_3 : ManageFavs.priljubljeneRelacije) {
                         if (rel_3.getToName().equals(iskana.getToName()) && rel_3.getFromName().equals(iskana.getFromName())) {
-                            UpravljanjeSPriljubljenimi.priljubljeneRelacije.set(f, iskana);
+                            ManageFavs.priljubljeneRelacije.set(f, iskana);
                             pAdapter.notifyDataSetChanged();
                             break;
                         }
