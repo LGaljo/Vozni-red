@@ -1,6 +1,7 @@
 package com.lukag.voznired.models;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Relacija {
@@ -78,5 +79,17 @@ public class Relacija {
 
     public void setNextRide(String[] nextRide) {
         this.nextRide = nextRide;
+    }
+
+    @Override
+    public String toString() {
+        return "Relacija{" +
+                "fromID='" + fromID + '\'' +
+                ", fromName='" + fromName + '\'' +
+                ", toID='" + toID + '\'' +
+                ", toName='" + toName + '\'' +
+                ", urnik=" + urnik +
+                ", nextRide=" + Arrays.toString(nextRide) +
+                '}';
     }
 }

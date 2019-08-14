@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,36 +12,46 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.lukag.voznired.ui.DisplayRideInfo;
-import com.lukag.voznired.helpers.BuildConstants;
 import com.lukag.voznired.models.Relacija;
 import com.lukag.voznired.helpers.DataSourcee;
 import com.lukag.voznired.models.Pot;
 import com.lukag.voznired.R;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import static com.lukag.voznired.helpers.BuildConstants.EXTRA_MESSAGE;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+import static com.lukag.voznired.helpers.BuildConstants.INTENT_IZSTOPNA_IME;
+import static com.lukag.voznired.helpers.BuildConstants.INTENT_OVR_SIF;
+import static com.lukag.voznired.helpers.BuildConstants.INTENT_REG_ISIF;
+import static com.lukag.voznired.helpers.BuildConstants.INTENT_ROD_ZAPK;
+import static com.lukag.voznired.helpers.BuildConstants.INTENT_ROD_ZAPZ;
+import static com.lukag.voznired.helpers.BuildConstants.INTENT_SPOD_SIF;
+import static com.lukag.voznired.helpers.BuildConstants.INTENT_VSTOPNA_IME;
+import static com.lukag.voznired.helpers.BuildConstants.INTENT_VVLN_ZL;
 import static com.lukag.voznired.helpers.DataSourcee.newTime;
 
 public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.MyViewHolder> {
+    private static final String TAG = ScheduleAdapter.class.getSimpleName();
+
     private Relacija relacija;
     private List<Pot> scheduleList;
     private Context context;
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView start, end, duration, length, cost, peron;
+    class MyViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.start) TextView start;
+        @BindView(R.id.end) TextView end;
+        @BindView(R.id.duration) TextView duration;
+        @BindView(R.id.length) TextView length;
+        @BindView(R.id.cost) TextView cost;
+        @BindView(R.id.peron) TextView peron;
 
-        public MyViewHolder(View view) {
+        MyViewHolder(View view) {
             super(view);
-            start = (TextView) view.findViewById(R.id.start);
-            end = (TextView) view.findViewById(R.id.end);
-            duration = (TextView) view.findViewById(R.id.duration);
-            length = (TextView) view.findViewById(R.id.length);
-            cost = (TextView) view.findViewById(R.id.cost);
-            peron = (TextView) view.findViewById(R.id.peron);
+            ButterKnife.bind(this, view);
 
             Integer margins = DataSourcee.calcMargins(context, 12);
 
@@ -67,22 +78,23 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.MyView
         }
 
         public void bind(final Pot item) {
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    openRideInfo(relacija, item.getID());
-                    //Log.d("RecyclerView", "OnClick " + item.getID());
-                }
-            });
+            itemView.setOnClickListener(v -> openRideInfo(relacija, item.getID()));
         }
 
-        private void openRideInfo(Relacija relacija, int PotID) {
-            ArrayList<String> prenos = new ArrayList<>();
-            prenos.add(Integer.toString(PotID));
-            BuildConstants buildConstants = BuildConstants.getInstance();
-            buildConstants.relacija = relacija;
+        private void openRideInfo(Relacija relacija, int rideID) {
             Intent intent = new Intent(context, DisplayRideInfo.class);
-            intent.putStringArrayListExtra(EXTRA_MESSAGE, prenos);
+            intent.putExtra(INTENT_VSTOPNA_IME, relacija.getFromName());
+            intent.putExtra(INTENT_IZSTOPNA_IME, relacija.getToName());
+
+            intent.putExtra(INTENT_SPOD_SIF, relacija.getUrnik().get(rideID).getSpod_sif());
+            intent.putExtra(INTENT_REG_ISIF, relacija.getUrnik().get(rideID).getReg_isif());
+            intent.putExtra(INTENT_OVR_SIF, relacija.getUrnik().get(rideID).getOvr_sif());
+            intent.putExtra(INTENT_VVLN_ZL, relacija.getUrnik().get(rideID).getVvln_zl());
+            intent.putExtra(INTENT_ROD_ZAPZ, relacija.getUrnik().get(rideID).getRod_zapz());
+            intent.putExtra(INTENT_ROD_ZAPK, relacija.getUrnik().get(rideID).getRod_zapk());
+
+            Log.d(TAG, "openRideInfo: " + relacija);
+
             context.startActivity(intent);
         }
     }
@@ -116,6 +128,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.MyView
             holder.peron.setText("  ");
         }
 
+        // TODO primerjaj s pravim casom
         Date time2 = newTime(pot.getRod_iodh());
         if (!DataSourcee.primerjajCas(time2)) {
             holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.over));

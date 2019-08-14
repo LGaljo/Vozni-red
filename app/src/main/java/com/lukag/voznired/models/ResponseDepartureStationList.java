@@ -2,19 +2,19 @@ package com.lukag.voznired.models;
 
 import java.util.ArrayList;
 
-public class ResponseDepartureStations {
-    private ArrayList<Station> DepartureStations;
+public class ResponseDepartureStationList {
+    private ArrayList<StationsList> DepartureStationList;
     private String Error;
     private String ErrorMsg;
 
-    public ResponseDepartureStations() {
+    public ResponseDepartureStationList() {
     }
 
-    public ArrayList<Station> getDepartureStations() {
-        return DepartureStations;
+    public ArrayList<StationsList> getDepartureStationList() {
+        return DepartureStationList;
     }
-    public void setDepartureStations(ArrayList<Station> departureStations) {
-        this.DepartureStations = departureStations;
+    public void setDepartureStationList(ArrayList<StationsList> departureStationList) {
+        DepartureStationList = departureStationList;
     }
     public String getError() {
         return Error;

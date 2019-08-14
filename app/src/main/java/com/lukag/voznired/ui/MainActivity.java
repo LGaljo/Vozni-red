@@ -358,7 +358,7 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         progressBar.setVisibility(View.GONE);
 
-                        ArrayList<Station> stations = (ArrayList<Station>)response.body().get(0).getDepartureStations();
+                        ArrayList<Station> stations = response.body().get(0).getDepartureStations();
 
                         for (Station s : stations) {
                             seznamPostaj.put(s.getPOS_NAZ(), s.getJPOS_IJPP());

@@ -27,26 +27,6 @@ public class Pot {
 
     private boolean status;
 
-    public Pot(Integer ID, String ovr_sif, String reg_isif, int rod_cas, String rod_iodh, String rod_ipri, int rod_km, String rod_opo, String rod_per, String rod_zapk, String rod_zapz, String rpr_naz, String rpr_sif, int spod_sif, int vvln_zl, long vzcl_cen, boolean status) {
-        this.ID = ID;
-        this.ovr_sif = ovr_sif;
-        this.reg_isif = reg_isif;
-        this.rod_cas = rod_cas;
-        this.rod_iodh = rod_iodh;
-        this.rod_ipri = rod_ipri;
-        this.rod_km = rod_km;
-        this.rod_opo = rod_opo;
-        this.rod_per = rod_per;
-        this.rod_zapk = rod_zapk;
-        this.rod_zapz = rod_zapz;
-        this.rpr_naz = rpr_naz;
-        this.rpr_sif = rpr_sif;
-        this.spod_sif = spod_sif;
-        this.vvln_zl = vvln_zl;
-        this.vzcl_cen = vzcl_cen;
-        this.status = status;
-    }
-
     public Pot() {
     }
 
@@ -184,5 +164,28 @@ public class Pot {
 
     public void setStatus(boolean status) {
         this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "Pot{" +
+                "ID=" + ID +
+                ", ovr_sif='" + ovr_sif + '\'' +
+                ", reg_isif='" + reg_isif + '\'' +
+                ", rod_cas=" + rod_cas +
+                ", rod_iodh='" + rod_iodh + '\'' +
+                ", rod_ipri='" + rod_ipri + '\'' +
+                ", rod_km=" + rod_km +
+                ", rod_opo='" + rod_opo + '\'' +
+                ", rod_per='" + rod_per + '\'' +
+                ", rod_zapk='" + rod_zapk + '\'' +
+                ", rod_zapz='" + rod_zapz + '\'' +
+                ", rpr_naz='" + rpr_naz + '\'' +
+                ", rpr_sif='" + rpr_sif + '\'' +
+                ", spod_sif=" + spod_sif +
+                ", vvln_zl=" + vvln_zl +
+                ", vzcl_cen=" + vzcl_cen +
+                ", status=" + status +
+                '}';
     }
 }

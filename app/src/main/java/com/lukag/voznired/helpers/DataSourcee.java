@@ -43,7 +43,6 @@ public class DataSourcee {
         return format.format(calendar.getTime());
     }
 
-
     /**
      * Metoda vrne MD5 hash
      * @param string whatever String
@@ -278,6 +277,7 @@ public class DataSourcee {
         return iskanaRelacija;
     }
 
+/*
     public static ArrayList<Voznja> parseVoznje(JSONArray response) {
         ArrayList<Voznja> voznje = new ArrayList<>();
 
@@ -316,6 +316,8 @@ public class DataSourcee {
         }
         return voznje;
     }
+*/
+
 
     /**
      * Iz String vrne objekt Date
