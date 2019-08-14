@@ -2,23 +2,22 @@ package com.lukag.voznired.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
-
-import android.util.Log;
-import android.view.MenuItem;
 
 import com.jude.swipbackhelper.SwipeBackHelper;
 import com.lukag.voznired.R;
 import com.lukag.voznired.adapters.PostajeListAdapter;
 import com.lukag.voznired.helpers.BuildConstants;
 import com.lukag.voznired.helpers.DataSourcee;
-import com.lukag.voznired.models.Pot;
+import com.lukag.voznired.models.Departure;
 import com.lukag.voznired.models.ResponseDepartureStationList;
 import com.lukag.voznired.models.StationsList;
 import com.lukag.voznired.retrofit_interface.APICalls;
@@ -60,26 +59,23 @@ public class DisplayRideInfo extends AppCompatActivity {
         String v_ime = intent.getStringExtra(INTENT_VSTOPNA_IME);
         String iz_ime = intent.getStringExtra(INTENT_IZSTOPNA_IME);
 
-        Pot pot = new Pot();
-        pot.setOvr_sif(intent.getStringExtra(INTENT_OVR_SIF));
-        pot.setSpod_sif(intent.getIntExtra(INTENT_SPOD_SIF, 0));
-        pot.setReg_isif(intent.getStringExtra(INTENT_REG_ISIF));
-        pot.setVvln_zl(intent.getIntExtra(INTENT_VVLN_ZL, 0));
-        pot.setRod_zapz(intent.getStringExtra(INTENT_ROD_ZAPZ));
-        pot.setRod_zapk(intent.getStringExtra(INTENT_ROD_ZAPK));
-
-        Log.d(TAG, "onCreate: " + pot);
-
         toolbar.setTitle(v_ime + " - " + iz_ime);
         toolbar.setTitleTextAppearance(getApplicationContext(), R.style.ToolbarTitle);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         setSupportActionBar(toolbar);
 
-        pridobiPodrobnostiOVoznji(pot);
+        Departure departure = new Departure();
+        departure.setOVR_SIF(intent.getStringExtra(INTENT_OVR_SIF));
+        departure.setSPOD_SIF(intent.getIntExtra(INTENT_SPOD_SIF, 0));
+        departure.setREG_ISIF(intent.getStringExtra(INTENT_REG_ISIF));
+        departure.setVVLN_ZL(intent.getIntExtra(INTENT_VVLN_ZL, 0));
+        departure.setROD_ZAPZ(intent.getStringExtra(INTENT_ROD_ZAPZ));
+        departure.setROD_ZAPK(intent.getStringExtra(INTENT_ROD_ZAPK));
+
+        pridobiPodrobnostiOVoznji(departure);
     }
 
-
-    private void pridobiPodrobnostiOVoznji(Pot pot) {
+    private void pridobiPodrobnostiOVoznji(Departure departure) {
         String timestamp = DataSourcee.pridobiCas("yyyyMMddHHmmss");
         String token = DataSourcee.md5(BuildConstants.tokenKey + timestamp);
 
@@ -87,8 +83,8 @@ public class DisplayRideInfo extends AppCompatActivity {
         APICalls apiCalls = retrofit.create(APICalls.class);
 
         Call<List<ResponseDepartureStationList>> call = apiCalls.getDepartureStationList(timestamp,
-                token, Integer.toString(pot.getSpod_sif()), pot.getReg_isif(), pot.getOvr_sif(),
-                Integer.toString(pot.getVvln_zl()), pot.getRod_zapz(), pot.getRod_zapk(), "1");
+                token, Integer.toString(departure.getSPOD_SIF()), departure.getREG_ISIF(), departure.getOVR_SIF(),
+                Integer.toString(departure.getVVLN_ZL()), departure.getROD_ZAPZ(), departure.getROD_ZAPK(), "1");
 
         call.enqueue(new retrofit2.Callback<List<ResponseDepartureStationList>>() {
             @Override

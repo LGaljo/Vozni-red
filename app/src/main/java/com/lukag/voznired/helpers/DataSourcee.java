@@ -12,9 +12,8 @@ import android.view.WindowManager;
 
 import com.android.volley.Request;
 import com.lukag.voznired.adapters.PriljubljenePostajeAdapter;
-import com.lukag.voznired.models.Pot;
+import com.lukag.voznired.models.Departure;
 import com.lukag.voznired.models.Relacija;
-import com.lukag.voznired.models.Voznja;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,7 +24,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -185,8 +183,8 @@ public class DataSourcee {
 
                     int ind = 0;
                     boolean found = false;
-                    for (Pot pot : iskana.getUrnik()) {
-                        Date time2 = newTime(pot.getRod_iodh());
+                    for (Departure departure : iskana.getUrnik()) {
+                        Date time2 = newTime(departure.getROD_IODH());
                         if (primerjajCas(time2)) {
                             found = true;
                             break;
@@ -196,12 +194,12 @@ public class DataSourcee {
 
                     String[] nextRide = new String[3];
                     if (found) {
-                        nextRide[0] = iskana.getUrnik().get(ind).getRod_iodh();
+                        nextRide[0] = iskana.getUrnik().get(ind).getROD_IODH();
                         if (iskana.getUrnik().size() >= 2 + ind) {
-                            nextRide[1] = iskana.getUrnik().get(ind + 1).getRod_iodh();
+                            nextRide[1] = iskana.getUrnik().get(ind + 1).getROD_IODH();
                         }
                         if (iskana.getUrnik().size() >= 3 + ind) {
-                            nextRide[2] = iskana.getUrnik().get(ind + 2).getRod_iodh();
+                            nextRide[2] = iskana.getUrnik().get(ind + 2).getROD_IODH();
                         }
                     } else {
                         nextRide[0] = "tomorrow";
@@ -240,35 +238,35 @@ public class DataSourcee {
                 Log.e("API Napaka", napakaMessage);
             }
 
-            JSONArray schedule = responseObj.getJSONArray("Departures");
+            JSONArray schedule = responseObj.getJSONArray("Departure");
 
             if (schedule.length() == 0) {
                 return iskanaRelacija;
             }
 
             for (int i = 0; i < schedule.length(); i++) {
-                Pot novaPot = new Pot();
+                Departure novaDeparture = new Departure();
                 JSONObject obj = schedule.getJSONObject(i);
 
-                novaPot.setID(i);
-                novaPot.setSpod_sif(obj.getInt("SPOD_SIF"));
-                novaPot.setReg_isif(obj.getString("REG_ISIF"));
-                novaPot.setRpr_sif(obj.getString("RPR_SIF"));
-                novaPot.setRpr_naz(obj.getString("RPR_NAZ"));
-                novaPot.setOvr_sif(obj.getString("OVR_SIF"));
-                novaPot.setRod_iodh(obj.getString("ROD_IODH"));
-                novaPot.setRod_ipri(obj.getString("ROD_IPRI"));
-                novaPot.setRod_cas(obj.getInt("ROD_CAS"));
-                novaPot.setRod_per(obj.getString("ROD_PER"));
-                novaPot.setRod_km(obj.getInt("ROD_KM"));
-                novaPot.setRod_opo(obj.getString("ROD_OPO"));
-                novaPot.setVzcl_cen(obj.getDouble("VZCL_CEN"));
-                novaPot.setVvln_zl(obj.getInt("VVLN_ZL"));
-                novaPot.setRod_zapz(obj.getString("ROD_ZAPZ"));
-                novaPot.setRod_zapk(obj.getString("ROD_ZAPK"));
-                novaPot.setStatus(true);
+                novaDeparture.setID(i);
+                novaDeparture.setSPOD_SIF(obj.getInt("SPOD_SIF"));
+                novaDeparture.setREG_ISIF(obj.getString("REG_ISIF"));
+                novaDeparture.setRPR_SIF(obj.getString("RPR_SIF"));
+                novaDeparture.setRPR_NAZ(obj.getString("RPR_NAZ"));
+                novaDeparture.setOVR_SIF(obj.getString("OVR_SIF"));
+                novaDeparture.setROD_IODH(obj.getString("ROD_IODH"));
+                novaDeparture.setROD_IPRI(obj.getString("ROD_IPRI"));
+                novaDeparture.setROD_CAS(obj.getInt("ROD_CAS"));
+                novaDeparture.setROD_PER(obj.getString("ROD_PER"));
+                novaDeparture.setROD_KM(obj.getInt("ROD_KM"));
+                novaDeparture.setROD_OPO(obj.getString("ROD_OPO"));
+                novaDeparture.setVZCL_CEN(obj.getDouble("VZCL_CEN"));
+                novaDeparture.setVVLN_ZL(obj.getInt("VVLN_ZL"));
+                novaDeparture.setROD_ZAPZ(obj.getString("ROD_ZAPZ"));
+                novaDeparture.setROD_ZAPK(obj.getString("ROD_ZAPK"));
+                novaDeparture.setStatus(true);
 
-                iskanaRelacija.urnikAdd(novaPot);
+                iskanaRelacija.urnikAdd(novaDeparture);
             }
         } catch (JSONException e) {
             Log.e("getResponse", "Napaka v pri parsanju JSON datoteke");
@@ -276,48 +274,6 @@ public class DataSourcee {
 
         return iskanaRelacija;
     }
-
-/*
-    public static ArrayList<Voznja> parseVoznje(JSONArray response) {
-        ArrayList<Voznja> voznje = new ArrayList<>();
-
-        Log.d("API voznje", response.toString());
-
-        try {
-            JSONObject responseObj = response.getJSONObject(0);
-            int napakaID = responseObj.getInt("Error");
-
-            if (napakaID != 0) {
-                String napakaMessage = responseObj.getString("ErrorMsg");
-                Log.e("API Napaka", napakaMessage);
-            }
-
-            JSONArray seznamVozenj = responseObj.getJSONArray("DepartureStationList");
-
-            for (int i = 0; i < seznamVozenj.length(); i++) {
-                Voznja voznja = new Voznja();
-                JSONObject obj = seznamVozenj.getJSONObject(i);
-                Log.d("API voznje", obj.toString());
-
-                voznja.setROD_ZAP(obj.getInt("ROD_ZAP"));
-                voznja.setPOS_NAZ(obj.getString("POS_NAZ"));
-                voznja.setROD_IPRI(obj.getString("ROD_IPRI"));
-                voznja.setROD_POS(obj.getInt("ROD_POS"));
-                voznja.setROD_IODH(obj.getString("ROD_IODH"));
-                voznja.setROD_STOP(obj.getInt("ROD_STOP"));
-                voznja.setROD_LAT(obj.getDouble("ROD_LAT"));
-                voznja.setROD_LON(obj.getDouble("ROD_LON"));
-
-                voznje.add(voznja);
-            }
-        } catch (JSONException e) {
-            Log.e("getResponse", "Napaka v pri parsanju JSON datoteke");
-            e.printStackTrace();
-        }
-        return voznje;
-    }
-*/
-
 
     /**
      * Iz String vrne objekt Date

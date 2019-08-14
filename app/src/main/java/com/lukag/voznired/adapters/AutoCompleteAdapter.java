@@ -2,17 +2,15 @@ package com.lukag.voznired.adapters;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-
-import androidx.annotation.LayoutRes;
-import androidx.annotation.NonNull;
-import androidx.preference.PreferenceManager;
-
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 
-import com.lukag.voznired.ui.SettingsActivity;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.preference.PreferenceManager;
+
 import com.lukag.voznired.helpers.DataSourcee;
 import com.lukag.voznired.models.Station;
 

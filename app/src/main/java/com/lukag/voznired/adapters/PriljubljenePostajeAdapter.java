@@ -2,19 +2,20 @@ package com.lukag.voznired.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 
-import com.lukag.voznired.ui.DisplaySchedule;
-import com.lukag.voznired.helpers.DataSourcee;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.lukag.voznired.R;
-import com.lukag.voznired.models.Relacija;
+import com.lukag.voznired.helpers.DataSourcee;
 import com.lukag.voznired.helpers.ManageFavs;
 import com.lukag.voznired.helpers.ManageLastSearch;
+import com.lukag.voznired.models.Relacija;
+import com.lukag.voznired.ui.DisplaySchedule;
 
 import java.util.List;
 

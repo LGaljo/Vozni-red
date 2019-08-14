@@ -1,10 +1,11 @@
 package com.lukag.voznired.ui;
 
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.jude.swipbackhelper.SwipeBackHelper;
 import com.lukag.voznired.BuildConfig;

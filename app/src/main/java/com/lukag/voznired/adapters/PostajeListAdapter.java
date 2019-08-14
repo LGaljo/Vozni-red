@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.lukag.voznired.R;
 import com.lukag.voznired.models.StationsList;
-import com.lukag.voznired.models.Voznja;
 
 import java.util.ArrayList;
 

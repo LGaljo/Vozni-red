@@ -3,9 +3,9 @@ package com.lukag.voznired.helpers;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.lukag.voznired.ui.MainActivity;
-import com.lukag.voznired.models.Pot;
+import com.lukag.voznired.models.Departure;
 import com.lukag.voznired.models.Relacija;
+import com.lukag.voznired.ui.MainActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -121,7 +121,7 @@ public class ManageFavs {
                 String tN = obj.getString("toN");
                 String fD = obj.getString("fromID");
                 String tD = obj.getString("toID");
-                Relacija nova = new Relacija(fD, fN, tD, tN, new ArrayList<Pot>());
+                Relacija nova = new Relacija(fD, fN, tD, tN, new ArrayList<Departure>());
                 priljubljeneRelacije.add(nova);
             }
 

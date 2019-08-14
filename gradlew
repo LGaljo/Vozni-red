@@ -2,7 +2,7 @@
 
 ##############################################################################
 ##
-##  Gradle rod_iodh up script for UN*X
+##  Gradle ROD_IODH up script for UN*X
 ##
 ##############################################################################
 
@@ -62,7 +62,7 @@ cd "$SAVED" >/dev/null
 
 CLASSPATH=$APP_HOME/gradle/wrapper/gradle-wrapper.jar
 
-# Determine the Java command to use to rod_iodh the JVM.
+# Determine the Java command to use to ROD_IODH the JVM.
 if [ -n "$JAVA_HOME" ] ; then
     if [ -x "$JAVA_HOME/jre/sh/java" ] ; then
         # IBM's JDK on AIX uses strange locations for the executables

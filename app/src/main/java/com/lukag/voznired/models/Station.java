@@ -19,9 +19,4 @@ public class Station {
     public void setPOS_NAZ(String POS_NAZ) {
         this.POS_NAZ = POS_NAZ;
     }
-
-    @Override
-    public String toString() {
-        return POS_NAZ;
-    }
 }

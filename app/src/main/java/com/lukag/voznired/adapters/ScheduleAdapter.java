@@ -2,23 +2,22 @@ package com.lukag.voznired.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.lukag.voznired.ui.DisplayRideInfo;
-import com.lukag.voznired.models.Relacija;
-import com.lukag.voznired.helpers.DataSourcee;
-import com.lukag.voznired.models.Pot;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.lukag.voznired.R;
+import com.lukag.voznired.helpers.DataSourcee;
+import com.lukag.voznired.models.Departure;
+import com.lukag.voznired.models.Relacija;
+import com.lukag.voznired.ui.DisplayRideInfo;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
@@ -38,16 +37,22 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.MyView
     private static final String TAG = ScheduleAdapter.class.getSimpleName();
 
     private Relacija relacija;
-    private List<Pot> scheduleList;
+    private Date current_date;
     private Context context;
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.start) TextView start;
-        @BindView(R.id.end) TextView end;
-        @BindView(R.id.duration) TextView duration;
-        @BindView(R.id.length) TextView length;
-        @BindView(R.id.cost) TextView cost;
-        @BindView(R.id.peron) TextView peron;
+        @BindView(R.id.start)
+        TextView start;
+        @BindView(R.id.end)
+        TextView end;
+        @BindView(R.id.duration)
+        TextView duration;
+        @BindView(R.id.length)
+        TextView length;
+        @BindView(R.id.cost)
+        TextView cost;
+        @BindView(R.id.peron)
+        TextView peron;
 
         MyViewHolder(View view) {
             super(view);
@@ -55,19 +60,19 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.MyView
 
             Integer margins = DataSourcee.calcMargins(context, 12);
 
-            RelativeLayout.LayoutParams lpStart =   (RelativeLayout.LayoutParams)start.getLayoutParams();
-            RelativeLayout.LayoutParams lpEnd =     (RelativeLayout.LayoutParams)end.getLayoutParams();
-            RelativeLayout.LayoutParams lpDuration =(RelativeLayout.LayoutParams)duration.getLayoutParams();
-            RelativeLayout.LayoutParams lpLength =  (RelativeLayout.LayoutParams)length.getLayoutParams();
-            RelativeLayout.LayoutParams lpCost =    (RelativeLayout.LayoutParams)cost.getLayoutParams();
-            RelativeLayout.LayoutParams lpPeron =    (RelativeLayout.LayoutParams)peron.getLayoutParams();
+            RelativeLayout.LayoutParams lpStart = (RelativeLayout.LayoutParams) start.getLayoutParams();
+            RelativeLayout.LayoutParams lpEnd = (RelativeLayout.LayoutParams) end.getLayoutParams();
+            RelativeLayout.LayoutParams lpDuration = (RelativeLayout.LayoutParams) duration.getLayoutParams();
+            RelativeLayout.LayoutParams lpLength = (RelativeLayout.LayoutParams) length.getLayoutParams();
+            RelativeLayout.LayoutParams lpCost = (RelativeLayout.LayoutParams) cost.getLayoutParams();
+            RelativeLayout.LayoutParams lpPeron = (RelativeLayout.LayoutParams) peron.getLayoutParams();
 
-            lpStart.setMargins      (margins,0, margins,0);
-            lpEnd.setMargins        (margins,0, margins,0);
-            lpDuration.setMargins   (margins,0, margins,0);
-            lpLength.setMargins     (margins,0, margins,0);
-            lpCost.setMargins       (margins,0, margins,0);
-            lpPeron.setMargins      (margins,0, margins,0);
+            lpStart.setMargins(margins, 0, margins, 0);
+            lpEnd.setMargins(margins, 0, margins, 0);
+            lpDuration.setMargins(margins, 0, margins, 0);
+            lpLength.setMargins(margins, 0, margins, 0);
+            lpCost.setMargins(margins, 0, margins, 0);
+            lpPeron.setMargins(margins, 0, margins, 0);
 
             start.setLayoutParams(lpStart);
             end.setLayoutParams(lpEnd);
@@ -77,7 +82,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.MyView
             peron.setLayoutParams(lpPeron);
         }
 
-        public void bind(final Pot item) {
+        void bind(final Departure item) {
             itemView.setOnClickListener(v -> openRideInfo(relacija, item.getID()));
         }
 
@@ -86,27 +91,26 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.MyView
             intent.putExtra(INTENT_VSTOPNA_IME, relacija.getFromName());
             intent.putExtra(INTENT_IZSTOPNA_IME, relacija.getToName());
 
-            intent.putExtra(INTENT_SPOD_SIF, relacija.getUrnik().get(rideID).getSpod_sif());
-            intent.putExtra(INTENT_REG_ISIF, relacija.getUrnik().get(rideID).getReg_isif());
-            intent.putExtra(INTENT_OVR_SIF, relacija.getUrnik().get(rideID).getOvr_sif());
-            intent.putExtra(INTENT_VVLN_ZL, relacija.getUrnik().get(rideID).getVvln_zl());
-            intent.putExtra(INTENT_ROD_ZAPZ, relacija.getUrnik().get(rideID).getRod_zapz());
-            intent.putExtra(INTENT_ROD_ZAPK, relacija.getUrnik().get(rideID).getRod_zapk());
-
-            Log.d(TAG, "openRideInfo: " + relacija);
+            intent.putExtra(INTENT_SPOD_SIF, relacija.getUrnik().get(rideID).getSPOD_SIF());
+            intent.putExtra(INTENT_REG_ISIF, relacija.getUrnik().get(rideID).getREG_ISIF());
+            intent.putExtra(INTENT_OVR_SIF, relacija.getUrnik().get(rideID).getOVR_SIF());
+            intent.putExtra(INTENT_VVLN_ZL, relacija.getUrnik().get(rideID).getVVLN_ZL());
+            intent.putExtra(INTENT_ROD_ZAPZ, relacija.getUrnik().get(rideID).getROD_ZAPZ());
+            intent.putExtra(INTENT_ROD_ZAPK, relacija.getUrnik().get(rideID).getROD_ZAPK());
 
             context.startActivity(intent);
         }
     }
 
-    public ScheduleAdapter(Relacija relacija, Context context) {
-        this.scheduleList = relacija.getUrnik();
+    public ScheduleAdapter(Relacija relacija, Date current_date, Context context) {
         this.relacija = relacija;
+        this.current_date = current_date;
         this.context = context;
     }
 
+    @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.pot_list_row, parent, false);
 
@@ -114,32 +118,32 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.MyView
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
-        Pot pot = scheduleList.get(position);
-        holder.start.setText(pot.getRod_iodh());
-        holder.end.setText(pot.getRod_ipri());
-        holder.duration.setText(String.format(Locale.GERMAN, "%d min", pot.getRod_cas()));
-        holder.length.setText(String.format(Locale.GERMAN, "%d km", pot.getRod_km()));
-        holder.cost.setText(String.format(Locale.GERMAN, "%.1f €", pot.getVzcl_cen()));
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+        Departure departure = relacija.getUrnik().get(position);
+        holder.start.setText(departure.getROD_IODH());
+        holder.end.setText(departure.getROD_IPRI());
+        holder.duration.setText(String.format(Locale.GERMAN, "%d min", departure.getROD_CAS()));
+        holder.length.setText(String.format(Locale.GERMAN, "%d km", departure.getROD_KM()));
+        holder.cost.setText(String.format(Locale.GERMAN, "%.1f €", departure.getVZCL_CEN()));
 
-        if (!pot.getRod_per().equals("")) {
-            holder.peron.setText(pot.getRod_per());
+        if (departure.getROD_PER() != null && !departure.getROD_PER().equals("")) {
+            holder.peron.setText(departure.getROD_PER());
         } else {
             holder.peron.setText("  ");
         }
 
         // TODO primerjaj s pravim casom
-        Date time2 = newTime(pot.getRod_iodh());
+        Date time2 = newTime(departure.getROD_IODH());
         if (!DataSourcee.primerjajCas(time2)) {
             holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.over));
         } else {
             holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.pending));
         }
-        holder.bind(scheduleList.get(position));
+        holder.bind(relacija.getUrnik().get(position));
     }
 
     @Override
     public int getItemCount() {
-        return scheduleList.size();
+        return relacija.getUrnik().size();
     }
 }
