@@ -1,7 +1,9 @@
 package com.lukag.voznired.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +19,16 @@ import com.lukag.voznired.models.Departure;
 import com.lukag.voznired.models.Relacija;
 import com.lukag.voznired.ui.DisplayRideInfo;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.lukag.voznired.helpers.BuildConstants.INTENT_IZSTOPNA_IME;
 import static com.lukag.voznired.helpers.BuildConstants.INTENT_OVR_SIF;
 import static com.lukag.voznired.helpers.BuildConstants.INTENT_REG_ISIF;
@@ -38,7 +44,11 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.MyView
 
     private Relacija relacija;
     private Date current_date;
+    private Date searched_date;
     private Context context;
+
+    @SuppressLint("SimpleDateFormat")
+    private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.start)
@@ -82,8 +92,8 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.MyView
             peron.setLayoutParams(lpPeron);
         }
 
-        void bind(final Departure item) {
-            itemView.setOnClickListener(v -> openRideInfo(relacija, item.getID()));
+        void bind(final Departure item, int position) {
+            itemView.setOnClickListener(v -> openRideInfo(relacija, position));
         }
 
         private void openRideInfo(Relacija relacija, int rideID) {
@@ -98,14 +108,18 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.MyView
             intent.putExtra(INTENT_ROD_ZAPZ, relacija.getUrnik().get(rideID).getROD_ZAPZ());
             intent.putExtra(INTENT_ROD_ZAPK, relacija.getUrnik().get(rideID).getROD_ZAPK());
 
+            intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+
             context.startActivity(intent);
         }
     }
 
-    public ScheduleAdapter(Relacija relacija, Date current_date, Context context) {
+    public ScheduleAdapter(Relacija relacija, Date date, Context context) {
         this.relacija = relacija;
-        this.current_date = current_date;
         this.context = context;
+        this.searched_date = date;
+        Calendar calendar = Calendar.getInstance();
+        this.current_date = calendar.getTime();
     }
 
     @NonNull
@@ -132,14 +146,21 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.MyView
             holder.peron.setText("  ");
         }
 
-        // TODO primerjaj s pravim casom
-        Date time2 = newTime(departure.getROD_IODH());
-        if (!DataSourcee.primerjajCas(time2)) {
+        Date departure_date = new Date();
+        try {
+            departure_date = sdf.parse(departure.getROD_IODH());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        departure_date = new Date(searched_date.getTime() + departure_date.getTime());
+
+        if (current_date.after(departure_date)) {
             holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.over));
         } else {
             holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.pending));
         }
-        holder.bind(relacija.getUrnik().get(position));
+        holder.bind(relacija.getUrnik().get(position), position);
     }
 
     @Override

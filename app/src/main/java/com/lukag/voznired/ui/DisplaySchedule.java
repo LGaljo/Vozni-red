@@ -1,5 +1,6 @@
 package com.lukag.voznired.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,9 +40,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,6 +61,7 @@ import static com.lukag.voznired.helpers.BuildConstants.INTENT_IZSTOPNA_ID;
 import static com.lukag.voznired.helpers.BuildConstants.INTENT_IZSTOPNA_IME;
 import static com.lukag.voznired.helpers.BuildConstants.INTENT_VSTOPNA_ID;
 import static com.lukag.voznired.helpers.BuildConstants.INTENT_VSTOPNA_IME;
+import static com.lukag.voznired.helpers.DataSourcee.pridobiCas;
 
 public class DisplaySchedule extends AppCompatActivity {
     private static final String TAG = DisplaySchedule.class.getSimpleName();
@@ -187,7 +194,7 @@ public class DisplaySchedule extends AppCompatActivity {
     public void pridobiUrnikMedPostajama2(Relacija relacija, String date) {
         Retrofit retrofit = RetrofitFactory.getInstance(BASE_URL);
         APICalls apiCalls = retrofit.create(APICalls.class);
-        String timestamp = DataSourcee.pridobiCas("yyyyMMddHHmmss");
+        String timestamp = pridobiCas("yyyyMMddHHmmss");
         String token = DataSourcee.md5(BuildConstants.tokenKey + timestamp);
         String ClientId = "IMEI: " + DataSourcee.getPhoneInfo(this) +
                 " , MAC: " + DataSourcee.getMacAddr(this);
@@ -216,8 +223,17 @@ public class DisplaySchedule extends AppCompatActivity {
 
                     iskanaRelacija.setUrnik((responseDepartures.getDepartures()));
 
+                    @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    Date time = new Date();
+                    try {
+                        time = sdf.parse(date);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
                     // Nastaviš Adapter in RecyclerView
-                    sAdapter = new ScheduleAdapter(iskanaRelacija, new Date(), getApplicationContext());
+                    sAdapter = new ScheduleAdapter(iskanaRelacija, time, getApplicationContext());
+
                     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
                     recyclerView.setLayoutManager(mLayoutManager);
                     recyclerView.setItemAnimator(new DefaultItemAnimator());
