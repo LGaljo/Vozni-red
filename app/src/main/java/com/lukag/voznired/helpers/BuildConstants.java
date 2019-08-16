@@ -23,6 +23,7 @@ public class BuildConstants {
     public static final String INTENT_ROD_ZAPK = "com.lukag.voznired.constants.ROD_ZAPK";
 
     public static final String STORAGE_FAVS = "com.lukag.voznired.constants.favorite_rides";
+    public static final String STORAGE_INFO_TIMES = "com.lukag.voznired.constants.open_info_times";
 
     public static final String ISKANJE_S_SUMNIKI = "sumniki";
 }

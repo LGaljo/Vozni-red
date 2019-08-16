@@ -16,26 +16,27 @@ import com.lukag.voznired.R;import com.lukag.voznired.models.StationsList;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
-public class PostajeListAdapter extends RecyclerView.Adapter<PostajeListAdapter.MyViewHolder> {
+public class PostajeListAdapter extends RecyclerView.Adapter<PostajeListAdapter.ViewHolder> {
     private static final String TAG = PostajeListAdapter.class.getSimpleName();
 
     private ArrayList<StationsList> voznje;
     private Context context;
 
-    class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView postaja, cas;
-        ImageView circle, rec_bot, rec_top;
+    class ViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.postaja) TextView postaja;
+        @BindView(R.id.cas) TextView cas;
+        @BindView(R.id.circle) ImageView circle;
+        @BindView(R.id.rectangle_bottom) ImageView rec_bot;
+        @BindView(R.id.rectangle_top) ImageView rec_top;
 
-        MyViewHolder(View view) {
+        ViewHolder(View view) {
             super(view);
-
-            postaja = view.findViewById(R.id.postaja);
-            cas = view.findViewById(R.id.cas);
-            circle = view.findViewById(R.id.circle);
-            rec_bot = view.findViewById(R.id.rectangle_bottom);
-            rec_top = view.findViewById(R.id.rectangle_top);
+            ButterKnife.bind(this, view);
         }
 
         void bind(StationsList voznja) {
@@ -63,15 +64,15 @@ public class PostajeListAdapter extends RecyclerView.Adapter<PostajeListAdapter.
 
     @Override
     @NonNull
-    public PostajeListAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.postaje_list_item, parent, false);
 
-        return new PostajeListAdapter.MyViewHolder(itemView);
+        return new ViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PostajeListAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         StationsList v = voznje.get(position);
         holder.postaja.setText(v.getPOS_NAZ());
         holder.cas.setText(v.getROD_IODH());

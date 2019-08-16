@@ -2,8 +2,11 @@ package com.lukag.voznired.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +15,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.jude.swipbackhelper.SwipeBackHelper;
 import com.lukag.voznired.R;
 import com.lukag.voznired.adapters.PostajeListAdapter;
@@ -41,6 +45,7 @@ import static com.lukag.voznired.helpers.BuildConstants.INTENT_ROD_ZAPZ;
 import static com.lukag.voznired.helpers.BuildConstants.INTENT_SPOD_SIF;
 import static com.lukag.voznired.helpers.BuildConstants.INTENT_VSTOPNA_IME;
 import static com.lukag.voznired.helpers.BuildConstants.INTENT_VVLN_ZL;
+import static com.lukag.voznired.helpers.BuildConstants.STORAGE_INFO_TIMES;
 
 public class DisplayRideInfo extends AppCompatActivity {
     private static final String TAG = DisplayRideInfo.class.getSimpleName();
@@ -73,6 +78,18 @@ public class DisplayRideInfo extends AppCompatActivity {
         departure.setROD_ZAPK(intent.getStringExtra(INTENT_ROD_ZAPK));
 
         pridobiPodrobnostiOVoznji(departure);
+
+        prikaziPomocZaPrikazMape();
+    }
+
+    private void prikaziPomocZaPrikazMape() {
+        int times = PreferenceManager.getDefaultSharedPreferences(this).getInt(STORAGE_INFO_TIMES, 0);
+
+        if (times < 6) {
+            View contextView = findViewById(android.R.id.content);
+            Snackbar.make(contextView, getString(R.string.ride_info_maps), Snackbar.LENGTH_LONG).show();
+            PreferenceManager.getDefaultSharedPreferences(this).edit().putInt(STORAGE_INFO_TIMES, times + 1).apply();
+        }
     }
 
     private void pridobiPodrobnostiOVoznji(Departure departure) {
@@ -97,7 +114,6 @@ public class DisplayRideInfo extends AppCompatActivity {
                     recyclerView.setLayoutManager(mLayoutManager);
                     recyclerView.setItemAnimator(new DefaultItemAnimator());
                     recyclerView.setAdapter(postajeListAdapter);
-
                 }
             }
 
