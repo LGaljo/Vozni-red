@@ -444,7 +444,7 @@ public class MainActivity extends AppCompatActivity {
         // Če se ob zagonu zgodi, da ne moreš dobiti idjev zaradi manjkajočega seznama,
         // ga poskusi ustvariti še enkrat
         if (ManageFavs.priljubljeneRelacije.isEmpty()) {
-            ManageFavs.pridobiPriljubljene();
+            return;
         }
 
         for (Relacija r : ManageFavs.priljubljeneRelacije) {
@@ -498,8 +498,6 @@ public class MainActivity extends AppCompatActivity {
             ind++;
         }
 
-        Log.d(TAG, "onResponse: found " + found);
-
         ArrayList<String> nextRide = new ArrayList<>();
         if (found) {
             nextRide.add(r.getUrnik().get(ind).getROD_IODH());
@@ -524,6 +522,4 @@ public class MainActivity extends AppCompatActivity {
             f++;
         }
     }
-
-
 }

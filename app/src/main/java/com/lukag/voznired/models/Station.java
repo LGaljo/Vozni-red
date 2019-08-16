@@ -1,5 +1,7 @@
 package com.lukag.voznired.models;
 
+import androidx.annotation.NonNull;
+
 public class Station {
     private String JPOS_IJPP;
     private String POS_NAZ;
@@ -18,5 +20,11 @@ public class Station {
     }
     public void setPOS_NAZ(String POS_NAZ) {
         this.POS_NAZ = POS_NAZ;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return POS_NAZ;
     }
 }

@@ -2,7 +2,6 @@ package com.lukag.voznired.helpers;
 
 public class BuildConstants {
     final static public String tokenKey = "R300_VozniRed_2015";
-    public static final String EXTRA_MESSAGE = "com.lukag.voznired";
 
     public static final int PEEK_DRAWER_TIME_SECONDS = 2000;
     public static final int PEEK_DRAWER_START_DELAY_TIME_SECONDS = 1000;
@@ -23,6 +22,7 @@ public class BuildConstants {
     public static final String INTENT_ROD_ZAPZ = "com.lukag.voznired.constants.ROD_ZAPZ";
     public static final String INTENT_ROD_ZAPK = "com.lukag.voznired.constants.ROD_ZAPK";
 
+    public static final String STORAGE_FAVS = "com.lukag.voznired.constants.favorite_rides";
 
     public static final String ISKANJE_S_SUMNIKI = "sumniki";
 }

@@ -86,6 +86,7 @@ public class PriljubljenePostajeAdapter extends RecyclerView.Adapter<Priljubljen
         this.izstopnaPostajaView = ip;
     }
 
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
@@ -102,7 +103,7 @@ public class PriljubljenePostajeAdapter extends RecyclerView.Adapter<Priljubljen
         }
         Relacija rel = priljubljeneList.get(position);
         if (rel != null) {
-            holder.priljubljenaPostaja.setText(rel.getFromName() + " - " + rel.getToName());
+            holder.priljubljenaPostaja.setText(String.format("%s - %s", rel.getFromName(), rel.getToName()));
             holder.priljubljenaPostajaNextRide.setText(appendNextRide(rel));
         }
     }

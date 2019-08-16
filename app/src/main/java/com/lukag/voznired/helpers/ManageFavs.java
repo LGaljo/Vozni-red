@@ -2,8 +2,9 @@ package com.lukag.voznired.helpers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.util.Log;
 
-import com.lukag.voznired.models.Departure;
 import com.lukag.voznired.models.Relacija;
 import com.lukag.voznired.ui.MainActivity;
 
@@ -13,13 +14,13 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import static com.lukag.voznired.helpers.BuildConstants.STORAGE_FAVS;
+
 public class ManageFavs {
+    public static final String TAG = ManageFavs.class.getSimpleName();
 
     private static ManageFavs upravljanjeSPriljubljenimi;
-
-    private Context context;
     private static SharedPreferences shramba;
-    private static int size;
     public static ArrayList<Relacija> priljubljeneRelacije;
 
     private ManageFavs() {
@@ -31,28 +32,17 @@ public class ManageFavs {
         }
 
         return upravljanjeSPriljubljenimi;
-   }
+    }
 
-   public void setContext(Context context) {
-       this.context = context;
-       shramba = this.context.getSharedPreferences("priljubljenePostaje", Context.MODE_PRIVATE);
-       size = shramba.getInt("number", 0);
-       priljubljeneRelacije = new ArrayList<>();
-       pridobiPriljubljene();
-   }
-
-    /**
-     * Metoda izbriše shrambo priljubljenih lokacij in
-     * nastavi število priljubljenih na nič
-     */
-    private void izbrisiPriljubljene() {
-        SharedPreferences.Editor urejevalnik = shramba.edit();
-        urejevalnik.clear();
-        urejevalnik.apply();
+    public void setContext(Context context) {
+        shramba = PreferenceManager.getDefaultSharedPreferences(context);
+        priljubljeneRelacije = new ArrayList<>();
+        pridobiPriljubljene();
     }
 
     /**
      * Metoda preveri ali je podana relacija v seznamu priljubljeni
+     *
      * @param relacija - objekt relacije
      * @return true - če je relacija že med priljubljenimi, drugače vrne false
      */
@@ -70,12 +60,8 @@ public class ManageFavs {
      */
     public void shraniPriljubljene() {
         try {
-            SharedPreferences.Editor urejevalnik = shramba.edit();
-            izbrisiPriljubljene();
-            JSONObject jsonObj = createJson(priljubljeneRelacije);
-            urejevalnik.putString("seznam", jsonObj.toString());
-            //Log.d("JSON", jsonObj.toString());
-            urejevalnik.apply();
+            shramba.edit().remove(STORAGE_FAVS).apply();
+            shramba.edit().putString(STORAGE_FAVS, createJson(priljubljeneRelacije).toString()).apply();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -111,7 +97,7 @@ public class ManageFavs {
     public static void pridobiPriljubljene() {
         try {
             priljubljeneRelacije.clear();
-            String json = shramba.getString("seznam", "");
+            String json = shramba.getString(STORAGE_FAVS, "");
             JSONObject jsonObject = new JSONObject(json);
             JSONArray array = jsonObject.getJSONArray("seznam");
 
@@ -121,7 +107,7 @@ public class ManageFavs {
                 String tN = obj.getString("toN");
                 String fD = obj.getString("fromID");
                 String tD = obj.getString("toID");
-                Relacija nova = new Relacija(fD, fN, tD, tN, new ArrayList<Departure>());
+                Relacija nova = new Relacija(fD, fN, tD, tN, new ArrayList<>());
                 priljubljeneRelacije.add(nova);
             }
 
@@ -132,12 +118,15 @@ public class ManageFavs {
 
     /**
      * Odstrani priljubljeno relacijo iz Arraylista
+     *
      * @param relacija - Relacija za dodati
      */
     public static void odstraniPriljubljeno(Relacija relacija) {
         for (int i = 0; i < priljubljeneRelacije.size(); i++) {
-            if (priljubljeneRelacije.get(i).getFromName().equals(relacija.getFromName()) && priljubljeneRelacije.get(i).getToName().equals(relacija.getToName())) {
+            if (priljubljeneRelacije.get(i).getFromName().equals(relacija.getFromName()) &&
+                    priljubljeneRelacije.get(i).getToName().equals(relacija.getToName())) {
                 priljubljeneRelacije.remove(i);
+                Log.d(TAG, "odstraniPriljubljeno: Removed one");
                 MainActivity.runs.run();
                 break;
             }
@@ -146,6 +135,7 @@ public class ManageFavs {
 
     /**
      * Shrani priljubljeno lokacijo v Arraylist
+     *
      * @param nova - Nova relacija za dodati
      */
     public boolean dodajPriljubljeno(Relacija nova) {
