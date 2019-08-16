@@ -40,7 +40,10 @@ import com.lukag.voznired.helpers.BuildConstants;
 import com.lukag.voznired.helpers.DataSourcee;
 import com.lukag.voznired.helpers.ManageFavs;
 import com.lukag.voznired.helpers.ManageLastSearch;
+import com.lukag.voznired.models.Departure;
+import com.lukag.voznired.models.Relacija;
 import com.lukag.voznired.models.ResponseDepartureStations;
+import com.lukag.voznired.models.ResponseDepartures;
 import com.lukag.voznired.models.Station;
 import com.lukag.voznired.retrofit_interface.APICalls;
 import com.lukag.voznired.retrofit_interface.RetrofitFactory;
@@ -48,6 +51,7 @@ import com.lukag.voznired.retrofit_interface.RetrofitFactory;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -67,6 +71,9 @@ import static com.lukag.voznired.helpers.BuildConstants.INTENT_VSTOPNA_ID;
 import static com.lukag.voznired.helpers.BuildConstants.INTENT_VSTOPNA_IME;
 import static com.lukag.voznired.helpers.BuildConstants.PEEK_DRAWER_START_DELAY_TIME_SECONDS;
 import static com.lukag.voznired.helpers.BuildConstants.PEEK_DRAWER_TIME_SECONDS;
+import static com.lukag.voznired.helpers.DataSourcee.newTime;
+import static com.lukag.voznired.helpers.DataSourcee.pridobiCas;
+import static com.lukag.voznired.helpers.DataSourcee.primerjajCas;
 
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = MainActivity.class.getSimpleName();
@@ -88,7 +95,6 @@ public class MainActivity extends AppCompatActivity {
     private PriljubljenePostajeAdapter pAdapter;
 
     public static Runnable runs;
-    public static Boolean sourcesFound = true;
 
     private ManageFavs favs;
     private DatePickerDialog.OnDateSetListener date;
@@ -147,8 +153,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        koledar.setText(DataSourcee.pridobiCas("dd.MM.yyyy"));
-        datum = DataSourcee.pridobiCas("yyyy-MM-dd");
+        koledar.setText(pridobiCas("dd.MM.yyyy"));
+        datum = pridobiCas("yyyy-MM-dd");
     }
 
     @Override
@@ -339,7 +345,7 @@ public class MainActivity extends AppCompatActivity {
      * To je metoda, ki z API klicem pridobi seznam vseh postaj in jih shrani v adapter
      */
     private void pridobiSeznam() {
-        String timestamp = DataSourcee.pridobiCas("yyyyMMddHHmmss");
+        String timestamp = pridobiCas("yyyyMMddHHmmss");
         String token = DataSourcee.md5(BuildConstants.tokenKey + timestamp);
 
         Retrofit retrofit = RetrofitFactory.getInstance(BASE_URL);
@@ -426,12 +432,98 @@ public class MainActivity extends AppCompatActivity {
 
     private void checkForNewRides() {
         runs = () -> {
-            // a potentially time consuming task
-            while (sourcesFound) {
-                // wait
-            }
-            DataSourcee.findNextRides(MainActivity.this, pAdapter);
+            findNextRides();
             swipeContainer.setRefreshing(false);
         };
     }
+
+    /**
+     * Metoda poišče naslednje tri vožnje za vsako priljubljeno relacijo
+     */
+    public void findNextRides() {
+        // Če se ob zagonu zgodi, da ne moreš dobiti idjev zaradi manjkajočega seznama,
+        // ga poskusi ustvariti še enkrat
+        if (ManageFavs.priljubljeneRelacije.isEmpty()) {
+            ManageFavs.pridobiPriljubljene();
+        }
+
+        for (Relacija r : ManageFavs.priljubljeneRelacije) {
+            Retrofit retrofit = RetrofitFactory.getInstance(BASE_URL);
+            APICalls apiCalls = retrofit.create(APICalls.class);
+            String timestamp = pridobiCas("yyyyMMddHHmmss");
+            String token = DataSourcee.md5(BuildConstants.tokenKey + timestamp);
+            String ClientId = "IMEI: " + DataSourcee.getPhoneInfo(this) +
+                    " , MAC: " + DataSourcee.getMacAddr(this);
+
+            Call<List<ResponseDepartures>> call = apiCalls.getDepartures(timestamp, token, r.getFromID(),
+                    r.getToID(), pridobiCas("yyyy-MM-dd"), ClientId, DataSourcee.getPhoneInfo(this), "", "", "1");
+
+            call.enqueue(new retrofit2.Callback<List<ResponseDepartures>>() {
+                @Override
+                public void onResponse(@NonNull Call<List<ResponseDepartures>> call, @NonNull Response<List<ResponseDepartures>> response) {
+                    if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
+                        ResponseDepartures responseDepartures = response.body().get(0);
+
+                        if (Integer.parseInt(responseDepartures.getError()) != 0) {
+                            String napakaMessage = responseDepartures.getErrorMsg();
+                            Log.e("API Napaka", napakaMessage);
+                        }
+
+                        r.setUrnik(responseDepartures.getDepartures());
+
+                        setNextRides(r);
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<List<ResponseDepartures>> call, @NonNull Throwable t) {
+                    Log.d(TAG, "onFailure: " + t.getMessage());
+                }
+            });
+        }
+    }
+
+    /**
+     * Najde in nastavi naslednje tri vožnje
+     */
+    private void setNextRides(Relacija r) {
+        int ind = 0;
+        boolean found = false;
+        for (Departure departure : r.getUrnik()) {
+            Date time2 = newTime(departure.getROD_IODH());
+            if (primerjajCas(time2)) {
+                found = true;
+                break;
+            }
+            ind++;
+        }
+
+        Log.d(TAG, "onResponse: found " + found);
+
+        ArrayList<String> nextRide = new ArrayList<>();
+        if (found) {
+            nextRide.add(r.getUrnik().get(ind).getROD_IODH());
+            if (r.getUrnik().size() >= 2 + ind) {
+                nextRide.add(r.getUrnik().get(ind + 1).getROD_IODH());
+            }
+            if (r.getUrnik().size() >= 3 + ind) {
+                nextRide.add(r.getUrnik().get(ind + 2).getROD_IODH());
+            }
+        } else {
+            nextRide.add("tomorrow");
+        }
+        r.setNextRide(nextRide);
+
+        int f = 0;
+        for (Relacija rel_3 : ManageFavs.priljubljeneRelacije) {
+            if (rel_3.getToName().equals(r.getToName()) && rel_3.getFromName().equals(r.getFromName())) {
+                ManageFavs.priljubljeneRelacije.set(f, r);
+                pAdapter.notifyDataSetChanged();
+                break;
+            }
+            f++;
+        }
+    }
+
+
 }

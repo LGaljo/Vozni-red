@@ -9,11 +9,11 @@ public class Relacija {
     private String toID;
     private String toName;
     private List<Departure> urnik;
-    private String[] nextRide;
+    private ArrayList<String> nextRide;
 
     public Relacija() {
         this.urnik = new ArrayList<>();
-        this.nextRide = new String[3];
+        this.nextRide = new ArrayList<>();
     }
 
     public Relacija(String fromID, String fromName, String toID, String toName, List<Departure> urnik) {
@@ -22,7 +22,7 @@ public class Relacija {
         this.toID = toID;
         this.toName = toName;
         this.urnik = urnik;
-        this.nextRide = new String[3];
+        this.nextRide = new ArrayList<>();
     }
 
     public void urnikAdd(Departure novaDeparture) {
@@ -62,10 +62,10 @@ public class Relacija {
     public void setUrnik(List<Departure> urnik) {
         this.urnik = urnik;
     }
-    public String[] getNextRide() {
+    public ArrayList<String> getNextRide() {
         return nextRide;
     }
-    public void setNextRide(String[] nextRide) {
+    public void setNextRide(ArrayList<String> nextRide) {
         this.nextRide = nextRide;
     }
 }

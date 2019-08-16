@@ -3,7 +3,6 @@ package com.lukag.voznired.adapters;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +36,6 @@ import static com.lukag.voznired.helpers.BuildConstants.INTENT_ROD_ZAPZ;
 import static com.lukag.voznired.helpers.BuildConstants.INTENT_SPOD_SIF;
 import static com.lukag.voznired.helpers.BuildConstants.INTENT_VSTOPNA_IME;
 import static com.lukag.voznired.helpers.BuildConstants.INTENT_VVLN_ZL;
-import static com.lukag.voznired.helpers.DataSourcee.newTime;
 
 public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.MyViewHolder> {
     private static final String TAG = ScheduleAdapter.class.getSimpleName();

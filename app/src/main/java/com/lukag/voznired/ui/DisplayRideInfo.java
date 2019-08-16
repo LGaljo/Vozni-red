@@ -92,7 +92,7 @@ public class DisplayRideInfo extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
                     ResponseDepartureStationList responseDepartureStationsList = response.body().get(0);
                     ArrayList<StationsList> stationsLists = responseDepartureStationsList.getDepartureStationList();
-                    PostajeListAdapter postajeListAdapter = new PostajeListAdapter(stationsLists);
+                    PostajeListAdapter postajeListAdapter = new PostajeListAdapter(stationsLists, getApplicationContext());
                     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
                     recyclerView.setLayoutManager(mLayoutManager);
                     recyclerView.setItemAnimator(new DefaultItemAnimator());

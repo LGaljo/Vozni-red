@@ -18,36 +18,24 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.Request;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.jude.swipbackhelper.SwipeBackHelper;
 import com.lukag.voznired.R;
-import com.lukag.voznired.adapters.PostajeListAdapter;
 import com.lukag.voznired.adapters.ScheduleAdapter;
 import com.lukag.voznired.helpers.BuildConstants;
 import com.lukag.voznired.helpers.DataSourcee;
 import com.lukag.voznired.helpers.ManageFavs;
-import com.lukag.voznired.helpers.VolleyTool;
 import com.lukag.voznired.models.Relacija;
-import com.lukag.voznired.models.ResponseDepartureStationList;
 import com.lukag.voznired.models.ResponseDepartures;
-import com.lukag.voznired.models.StationsList;
 import com.lukag.voznired.retrofit_interface.APICalls;
 import com.lukag.voznired.retrofit_interface.RetrofitFactory;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -65,6 +53,7 @@ import static com.lukag.voznired.helpers.DataSourcee.pridobiCas;
 
 public class DisplaySchedule extends AppCompatActivity {
     private static final String TAG = DisplaySchedule.class.getSimpleName();
+
     @BindView(R.id.VozniRedToolbar)
     Toolbar toolbar;
     @BindView(R.id.wait_animation)

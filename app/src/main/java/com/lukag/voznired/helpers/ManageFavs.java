@@ -128,8 +128,6 @@ public class ManageFavs {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        MainActivity.sourcesFound = false;
     }
 
     /**

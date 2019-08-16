@@ -2,12 +2,14 @@ package com.lukag.voznired.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lukag.voznired.R;
@@ -28,18 +30,19 @@ import static com.lukag.voznired.helpers.BuildConstants.INTENT_IZSTOPNA_IME;
 import static com.lukag.voznired.helpers.BuildConstants.INTENT_VSTOPNA_ID;
 import static com.lukag.voznired.helpers.BuildConstants.INTENT_VSTOPNA_IME;
 
-public class PriljubljenePostajeAdapter extends RecyclerView.Adapter<PriljubljenePostajeAdapter.MyViewHolder> {
+public class PriljubljenePostajeAdapter extends RecyclerView.Adapter<PriljubljenePostajeAdapter.ViewHolder> {
+    private static final String TAG = PriljubljenePostajeAdapter.class.getSimpleName();
 
     private List<Relacija> priljubljeneList;
     private Context context;
     private AutoCompleteTextView vstopnaPostajaView;
     private AutoCompleteTextView izstopnaPostajaView;
 
-    class MyViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.priljubljena_postaja) TextView priljubljenaPostaja;
         @BindView(R.id.priljubljena_postaja_next_ride) TextView priljubljenaPostajaNextRide;
 
-        MyViewHolder(final View view) {
+        ViewHolder(final View view) {
             super(view);
             ButterKnife.bind(this, view);
 
@@ -84,15 +87,19 @@ public class PriljubljenePostajeAdapter extends RecyclerView.Adapter<Priljubljen
     }
 
     @Override
-    public PriljubljenePostajeAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.priljubljena_postaja_row, parent, false);
 
-        return new PriljubljenePostajeAdapter.MyViewHolder(itemView);
+        return new ViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(PriljubljenePostajeAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        if (priljubljeneList.isEmpty()) {
+            Log.d(TAG, "onBindViewHolder: List empty");
+            return;
+        }
         Relacija rel = priljubljeneList.get(position);
         if (rel != null) {
             holder.priljubljenaPostaja.setText(rel.getFromName() + " - " + rel.getToName());
@@ -101,9 +108,9 @@ public class PriljubljenePostajeAdapter extends RecyclerView.Adapter<Priljubljen
     }
 
     private String appendNextRide(Relacija rel) {
-        if (rel.getNextRide() == null || rel.getNextRide()[0] == null || rel.getNextRide()[0].equals("")) {
+        if (rel.getNextRide() == null || rel.getNextRide().isEmpty() || rel.getNextRide().get(0) == null || rel.getNextRide().get(0).equals("")) {
             return "";
-        } else if (rel.getNextRide()[0].equals("tomorrow")) {
+        } else if (rel.getNextRide().get(0).equals("tomorrow")) {
             return "\n" + context.getResources().getString(R.string.next_ride)+ ": " +
                     context.getResources().getString(R.string.tomorrow);
         } else {
