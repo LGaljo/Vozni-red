@@ -49,4 +49,7 @@
     <string name="ride_info_maps">To show station on map, click on list entry</string>
     <string name="try_again">Try again</string>
     <string name="error_stations">Error receiving stations list</string>
+    <string name="search">Search</string>
+    <string name="no_data_to_show">Ni postaj za prikaz</string>
+    <string name="seznam_postaj">List of stations</string>
 </resources>

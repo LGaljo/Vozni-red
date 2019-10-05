@@ -241,6 +241,10 @@ public class MainActivity extends AppCompatActivity {
                             Intent gotosettings = new Intent(this, SettingsActivity.class);
                             startActivity(gotosettings);
                             break;
+                        case R.id.nav_station_list:
+                            Intent openlist = new Intent(this, DisplayStationsList.class);
+                            startActivity(openlist);
+                            break;
                         default:
                             break;
                     }

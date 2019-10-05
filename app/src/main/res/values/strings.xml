@@ -48,4 +48,7 @@
     <string name="ride_info_maps">Za prikaz postaje na zemljevidu, kliknete na vnos v seznamu</string>
     <string name="try_again">Poskusi znova</string>
     <string name="error_stations">Napaka pri pridobivanju postaj</string>
+    <string name="search">Išči</string>
+    <string name="no_data_to_show">Ni postaj za prikaz</string>
+    <string name="seznam_postaj">Seznam postaj</string>
 </resources>

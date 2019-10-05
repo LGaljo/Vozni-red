@@ -13,30 +13,38 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.lukag.voznired.ui.SettingsActivity"
+        <activity android:name=".ui.DisplayStationsList">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.SettingsActivity"
             android:label="Settings"
-            android:parentActivityName="com.lukag.voznired.ui.MainActivity">
+            android:parentActivityName=".ui.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.lukag.voznired.ui.MainActivity"/>
+                android:value="com.lukag.voznired.ui.MainActivity" />
         </activity>
-        <activity android:name="com.lukag.voznired.ui.MainActivity">
+        <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.DEFAULT" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
+
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
         <activity
-            android:name="com.lukag.voznired.ui.DisplaySchedule"
-            android:parentActivityName="com.lukag.voznired.ui.MainActivity"/>
+            android:name=".ui.DisplaySchedule"
+            android:parentActivityName=".ui.MainActivity" />
         <activity
-            android:name="com.lukag.voznired.ui.DisplayRideInfo"
-            android:parentActivityName="com.lukag.voznired.ui.MainActivity"/>
+            android:name=".ui.DisplayRideInfo"
+            android:parentActivityName=".ui.MainActivity" />
         <activity
-            android:name="com.lukag.voznired.ui.DisplayAppInfo"
-            android:parentActivityName="com.lukag.voznired.ui.MainActivity"/>
+            android:name=".ui.DisplayAppInfo"
+            android:parentActivityName=".ui.MainActivity" />
     </application>
 
 </manifest>

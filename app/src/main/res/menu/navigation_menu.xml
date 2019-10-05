@@ -10,6 +10,10 @@
             android:icon="@drawable/ic_settings_black_24dp"
             android:title="@string/settings" />
         <item
+            android:id="@+id/nav_station_list"
+            android:icon="@drawable/ic_circle_on_stick"
+            android:title="@string/seznam_postaj" />
+        <item
             android:id="@+id/nav_info"
             android:icon="@drawable/ic_info"
             android:title="@string/about" />
