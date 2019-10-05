@@ -47,4 +47,6 @@
     <string name="error_search">Error, cannot find stations!</string>
     <string name="long_loading">Loading of stations is taking longer than expected. Please wait a moment.</string>
     <string name="ride_info_maps">To show station on map, click on list entry</string>
+    <string name="try_again">Try again</string>
+    <string name="error_stations">Error receiving stations list</string>
 </resources>

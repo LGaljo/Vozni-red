@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +33,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+import com.jakewharton.processphoenix.ProcessPhoenix;
 import com.jude.swipbackhelper.SwipeBackHelper;
 import com.lukag.voznired.R;
 import com.lukag.voznired.adapters.AutoCompleteAdapter;
@@ -78,12 +80,22 @@ import static com.lukag.voznired.helpers.DataSourcee.primerjajCas;
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = MainActivity.class.getSimpleName();
 
-    @BindView(R.id.vstopna_text) AutoCompleteTextView vstopnaPostajaView;
-    @BindView(R.id.izstopna_text) AutoCompleteTextView izstopnaPostajaView;
-    @BindView(R.id.recycler_view_pogled_priljubljenih) RecyclerView recyclerView;
-    @BindView(R.id.textCalendar) TextView koledar;
-    @BindView(R.id.nav_view) NavigationView navigationView;
-    @BindView(R.id.progressBar) ProgressBar progressBar;
+    @BindView(R.id.vstopna_text)
+    AutoCompleteTextView vstopnaPostajaView;
+    @BindView(R.id.izstopna_text)
+    AutoCompleteTextView izstopnaPostajaView;
+    @BindView(R.id.recycler_view_pogled_priljubljenih)
+    RecyclerView recyclerView;
+    @BindView(R.id.textCalendar)
+    TextView koledar;
+    @BindView(R.id.nav_view)
+    NavigationView navigationView;
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
+    @BindView(R.id.mask)
+    ImageView mask;
+    @BindView(R.id.progress_info)
+    TextView progress_info;
 
     private Calendar calendarView;
     private DrawerLayout mDrawerLayout;
@@ -341,6 +353,11 @@ public class MainActivity extends AppCompatActivity {
                 calendarView.get(Calendar.MONTH), calendarView.get(Calendar.DAY_OF_MONTH)).show();
     }
 
+    @OnClick(R.id.mask)
+    public void doNothing() {
+        // do nothing - catch touches
+    }
+
     /**
      * To je metoda, ki z API klicem pridobi seznam vseh postaj in jih shrani v adapter
      */
@@ -359,9 +376,15 @@ public class MainActivity extends AppCompatActivity {
                     ResponseDepartureStations responseDepartureStations = response.body().get(0);
                     if (!responseDepartureStations.getError().equals("0")) {
                         View contextView = findViewById(android.R.id.content);
-                        Snackbar.make(contextView, "Napaka 1 pri pridobivanju postaj", Snackbar.LENGTH_INDEFINITE).show();
+                        Snackbar.make(contextView, getString(R.string.error_stations), Snackbar.LENGTH_INDEFINITE)
+                                .setAction(getString(R.string.try_again), (View v) -> {
+                                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                    ProcessPhoenix.triggerRebirth(getApplicationContext(), intent);
+                                }).show();
                     } else {
                         progressBar.setVisibility(View.GONE);
+                        mask.setVisibility(View.GONE);
+                        progress_info.setVisibility(View.GONE);
 
                         ArrayList<Station> stations = response.body().get(0).getDepartureStations();
 
@@ -391,7 +414,11 @@ public class MainActivity extends AppCompatActivity {
             public void onFailure(@NonNull Call<List<ResponseDepartureStations>> call, @NonNull Throwable t) {
                 Log.d(TAG, "onFailure: " + t.getMessage());
                 View contextView = findViewById(android.R.id.content);
-                Snackbar.make(contextView, "Napaka 2 pri pridobivanju postaj", Snackbar.LENGTH_INDEFINITE).show();
+                Snackbar.make(contextView, getString(R.string.error_stations), Snackbar.LENGTH_INDEFINITE)
+                        .setAction(getString(R.string.try_again), (View v) -> {
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            ProcessPhoenix.triggerRebirth(getApplicationContext(), intent);
+                        }).show();
             }
         });
     }

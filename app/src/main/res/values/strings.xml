@@ -46,4 +46,6 @@
     <string name="error_search">Napaka pri iskanju, ne najdem postaje!</string>
     <string name="long_loading">Nalaganje postaj traja dlje časa kot pričakovano. Prosimo počakajte trenutek</string>
     <string name="ride_info_maps">Za prikaz postaje na zemljevidu, kliknete na vnos v seznamu</string>
+    <string name="try_again">Poskusi znova</string>
+    <string name="error_stations">Napaka pri pridobivanju postaj</string>
 </resources>
