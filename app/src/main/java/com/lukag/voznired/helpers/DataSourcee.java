@@ -1,5 +1,6 @@
 package com.lukag.voznired.helpers;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Point;
@@ -10,32 +11,14 @@ import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
-import androidx.annotation.NonNull;
-
-import com.lukag.voznired.adapters.PriljubljenePostajeAdapter;
-import com.lukag.voznired.models.Departure;
-import com.lukag.voznired.models.Relacija;
-import com.lukag.voznired.models.ResponseDepartures;
-import com.lukag.voznired.retrofit_interface.APICalls;
-import com.lukag.voznired.retrofit_interface.RetrofitFactory;
-
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
 import java.util.Locale;
-
-import retrofit2.Call;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-
-import static com.lukag.voznired.helpers.BuildConstants.BASE_URL;
 
 public class DataSourcee {
     private static final String TAG = DataSourcee.class.getSimpleName();
@@ -49,8 +32,16 @@ public class DataSourcee {
     public static String md5(String string) {
         try {
             MessageDigest digest = MessageDigest.getInstance("MD5");
-            digest.update(string.getBytes(), 0, string.length());
-            return new BigInteger(1, digest.digest()).toString(16);
+            digest.update(string.getBytes());
+            String bi = new BigInteger(1, digest.digest()).toString(16);
+            if (bi.length() < 32) {
+                String ret = "";
+                for (int i = 0; i < (32 - bi.length()); i++) {
+                    ret = "0".concat(ret);
+                }
+                return ret.concat(bi);
+            }
+            return bi;
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
@@ -63,9 +54,11 @@ public class DataSourcee {
      * @param context Kontekst klicanega razreda
      * @return MAC naslov
      */
+    @SuppressLint("HardwareIds")
     public static String getMacAddr(Context context) {
         try {
             WifiManager wifiMan = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            assert wifiMan != null;
             WifiInfo wifiInf = wifiMan.getConnectionInfo();
             return wifiInf.getMacAddress();
 
@@ -102,7 +95,7 @@ public class DataSourcee {
      * @param dp - vrednost density independent pixel
      * @return - vrednost piklsov
      */
-    public static int dpToPx(int dp) {
+    private static int dpToPx(int dp) {
         return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
     }
 
@@ -110,13 +103,14 @@ public class DataSourcee {
      * Metoda nastavi obrobe tekstovnih polj glave urnika
      */
     public static Integer calcMargins(Context context, int num) {
-        Integer allMargins = 0;
-        Integer displayWidth = 0;
-        Integer contentWidth = DataSourcee.dpToPx(4 * 50 + 60 + 65);
-        Integer layoutPadding = DataSourcee.dpToPx(32);
+        int allMargins;
+        int displayWidth = 0;
+        int contentWidth = DataSourcee.dpToPx(4 * 50 + 60 + 65);
+        int layoutPadding = DataSourcee.dpToPx(32);
 
         try {
             WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+            assert wm != null;
             Display display = wm.getDefaultDisplay();
             DisplayMetrics displaymatrics = new DisplayMetrics();
             display.getMetrics(displaymatrics);
@@ -151,6 +145,7 @@ public class DataSourcee {
 
         try {
             time = sdf.parse(pridobiCas("dd.MM.yyyy") + " " + timeStr);
+            assert time != null;
             calendar.setTime(time);
         } catch (ParseException e) {
             e.printStackTrace();
