@@ -34,14 +34,7 @@ public class DataSourcee {
             MessageDigest digest = MessageDigest.getInstance("MD5");
             digest.update(string.getBytes());
             String bi = new BigInteger(1, digest.digest()).toString(16);
-            if (bi.length() < 32) {
-                String ret = "";
-                for (int i = 0; i < (32 - bi.length()); i++) {
-                    ret = "0".concat(ret);
-                }
-                return ret.concat(bi);
-            }
-            return bi;
+            return String.format("%32s", bi).replace(" ", "0");
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
