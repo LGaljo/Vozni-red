@@ -7,7 +7,6 @@ import android.graphics.Point;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 

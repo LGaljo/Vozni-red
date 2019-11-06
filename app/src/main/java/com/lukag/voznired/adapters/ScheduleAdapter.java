@@ -22,7 +22,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -115,6 +117,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.MyView
     public ScheduleAdapter(Relacija relacija, Date date, Context context) {
         this.relacija = relacija;
         this.context = context;
+        // yyyy-MM-dd
         this.searched_date = date;
         Calendar calendar = Calendar.getInstance();
         this.current_date = calendar.getTime();
@@ -144,14 +147,20 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.MyView
             holder.peron.setText("  ");
         }
 
+        Calendar mCalendar = new GregorianCalendar();
+        TimeZone mTimeZone = mCalendar.getTimeZone();
+//        int mGMTOffset = mTimeZone.getRawOffset();
+
         Date departure_date = new Date();
         try {
+            sdf.setTimeZone(mTimeZone);
             departure_date = sdf.parse(departure.getROD_IODH());
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
-        departure_date = new Date(searched_date.getTime() + departure_date.getTime());
+        // Datum + 1 ura
+        departure_date = new Date(searched_date.getTime() + departure_date.getTime() + 1000*60*60);
 
         if (current_date.after(departure_date)) {
             holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.over));
