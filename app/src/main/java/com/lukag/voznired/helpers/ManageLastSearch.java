@@ -2,8 +2,9 @@ package com.lukag.voznired.helpers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.widget.AutoCompleteTextView;
+
+import androidx.preference.PreferenceManager;
 
 public class ManageLastSearch {
     /**

@@ -67,3 +67,7 @@ fastlane/test_output
 fastlane/readme.md
 app/release/
 app/debug/output.json
+
+.idea/
+
+gradle/wrapper/

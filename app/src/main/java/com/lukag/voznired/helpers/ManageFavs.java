@@ -2,8 +2,9 @@ package com.lukag.voznired.helpers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.util.Log;
+
+import androidx.preference.PreferenceManager;
 
 import com.lukag.voznired.models.Relacija;
 import com.lukag.voznired.ui.MainActivity;
@@ -98,6 +99,9 @@ public class ManageFavs {
         try {
             priljubljeneRelacije.clear();
             String json = shramba.getString(STORAGE_FAVS, "");
+            if (json.length() == 0) {
+                return;
+            }
             JSONObject jsonObject = new JSONObject(json);
             JSONArray array = jsonObject.getJSONArray("seznam");
 

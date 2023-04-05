@@ -231,8 +231,6 @@ public class MainActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(
                 menuItem -> {
                     switch (menuItem.getItemId()) {
-                        case R.id.first_screen:
-                            break;
                         case R.id.nav_info:
                             Intent apinfointent = new Intent(this, DisplayAppInfo.class);
                             startActivity(apinfointent);
@@ -264,10 +262,10 @@ public class MainActivity extends AppCompatActivity {
             urejevalnik.putInt("num", 3);
             urejevalnik.apply();
             // Zamakni pričetek animacije za pojavljanje navigation drawerja
-            new Handler().postDelayed(this::peekDrawer, (long) (PEEK_DRAWER_START_DELAY_TIME_SECONDS));
+            new Handler().postDelayed(this::peekDrawer, PEEK_DRAWER_START_DELAY_TIME_SECONDS);
         } else if (numberOfEvents > 0) {
             // Zamakni pričetek animacije za pojavljanje navigation drawerja
-            new Handler().postDelayed(this::peekDrawer, (long) (PEEK_DRAWER_START_DELAY_TIME_SECONDS));
+            new Handler().postDelayed(this::peekDrawer, PEEK_DRAWER_START_DELAY_TIME_SECONDS);
             SharedPreferences.Editor urejevalnik = peekCount.edit();
             urejevalnik.putInt("num", numberOfEvents - 1);
             urejevalnik.apply();
@@ -291,7 +289,7 @@ public class MainActivity extends AppCompatActivity {
             MotionEvent motionEvent1 = MotionEvent.obtain(downTime2, eventTime2, MotionEvent.ACTION_UP, x, y, metaState);
             mDrawerLayout.dispatchTouchEvent(motionEvent1);
             motionEvent1.recycle();
-        }, (long) (PEEK_DRAWER_TIME_SECONDS));
+        }, (PEEK_DRAWER_TIME_SECONDS));
     }
 
     /**

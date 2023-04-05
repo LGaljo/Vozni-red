@@ -155,19 +155,20 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.MyView
         try {
             sdf.setTimeZone(mTimeZone);
             departure_date = sdf.parse(departure.getROD_IODH());
-        } catch (ParseException e) {
+
+            // Datum + 1 ura
+            departure_date = new Date(searched_date.getTime() + departure_date.getTime() + 1000*60*60);
+
+            if (current_date.after(departure_date)) {
+                holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.over));
+            } else {
+                holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.pending));
+            }
+            holder.bind(relacija.getUrnik().get(position), position);
+        } catch (ParseException | NullPointerException e) {
             e.printStackTrace();
         }
 
-        // Datum + 1 ura
-        departure_date = new Date(searched_date.getTime() + departure_date.getTime() + 1000*60*60);
-
-        if (current_date.after(departure_date)) {
-            holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.over));
-        } else {
-            holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.pending));
-        }
-        holder.bind(relacija.getUrnik().get(position), position);
     }
 
     @Override
